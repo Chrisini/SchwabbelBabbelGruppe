@@ -13,7 +13,7 @@
 /* -l ... load: any .txt, .c, ... file, which follows the command  */
 /* from openGame												   */
 /* -a ... algorithm: b (brainfuck), c (computer / chrisy)		   */
-/*																   */
+/* -h ... usage message + quit									   */
 /* quit game with 'Z'											   */
 /* save it with 'Y' for yes and type in a filename 				   */
 /*-----------------------------------------------------------------*/
@@ -28,7 +28,7 @@
 #include <windows.h>
 
 // defines ------------------
-#define DEBUG 1
+#define DEBUG 0
 #define MAX_FILENAME_LENGTH 100
 
 // prototypes ------------------
@@ -42,15 +42,12 @@ void computerName(int playerindex, char player[100]); // computer name is genera
 char playerChooses(char player[100], int fieldWidth, int iWhoTurn); // player chooses field
 char computerChooses(char choosen_algorithm, int fieldWidth, int fieldHeight, char fieldEntrys[fieldWidth][fieldHeight], int me); // computer chooses field (algorithms)
 void fillingArray(int fieldWidth, int fieldHeight, char fieldEntrys[fieldWidth][fieldHeight], char choice, int iWhoTurn); // filling array with choosen field
-int evaluateFour(int fieldWidth, int fieldHeight, char fieldEntrys[fieldWidth][fieldHeight]); // evaluates if someone has won
+int evaluateFour(int fieldWidth, int fieldHeight, char fieldEntrys[fieldWidth][fieldHeight], int iWhoTurn); // evaluates if someone has won
 void saveGame(int fieldWidth, int fieldHeight, char fieldEntrys[fieldWidth][fieldHeight]); // save game (fileoutput)
 
 // Algorithm, that chooses randomly any letter, without caring about the game
 char brainfuck_algorithm(int fieldWidth){
-
-	srand(time(NULL));
 	return (rand()%fieldWidth) + 65; // 0 - width; A-1
-
 }
 
 // my algorithm
@@ -69,7 +66,7 @@ char chrisy_algorithm(int fwidth, int fheight, char fEntrys[fwidth][fheight], in
 	int j, i; // counter of columns and rows
 
 	// for finding highest
-	char tmp = brainfuck_algorithm(fwidth);
+	char choosenLetter = brainfuck_algorithm(fwidth);
 	int highest = 0;
 
 	printf("MY NUMBER: %c\n", me);
@@ -90,6 +87,8 @@ char chrisy_algorithm(int fwidth, int fheight, char fEntrys[fwidth][fheight], in
 						evalArray[j][i] += 10;
 					}
 				}
+
+				// VERTICALLY ***************************************
 
 				// my way - vertically
 				// there can't be chips above me
@@ -144,6 +143,8 @@ char chrisy_algorithm(int fwidth, int fheight, char fEntrys[fwidth][fheight], in
 					}
 				}
 
+				// HORIZONTALLY ***************************************
+
 				// my way - horizontally
 				if(evalArray[j][i] != 0){
 					// entrys to the right
@@ -180,8 +181,6 @@ char chrisy_algorithm(int fwidth, int fheight, char fEntrys[fwidth][fheight], in
 					}
 				}
 
-
-
 				// destroy rivals way - horizontally
 				if(evalArray[j][i] != 0){
 					// entrys to the right
@@ -206,6 +205,7 @@ char chrisy_algorithm(int fwidth, int fheight, char fEntrys[fwidth][fheight], in
 					}
 				}
 
+				// DIAGONALLY ***************************************
 
 				// my way - diagonally, could be more precise
 				if(evalArray[j][i] != 0){
@@ -278,7 +278,7 @@ char chrisy_algorithm(int fwidth, int fheight, char fEntrys[fwidth][fheight], in
 				}
 
 
-				// destroying evals way - diagonally, could be more precise
+				// destroying evals way - diagonally
 				if(evalArray[j][i] != 0){
 					// entrys diagonally down (0/0 - w/h)
 					//pos
@@ -327,29 +327,30 @@ char chrisy_algorithm(int fwidth, int fheight, char fEntrys[fwidth][fheight], in
 			}
 		}
 
-	// jedes durchgehen, mit nächstem vergleichen, wenn höher, ist dieses das höchste
-
-	printf("evaluation printer\n");
-
+	#if DEBUG
+		printf("evaluation printer\n");
+	#endif
 
 	// find the highest evaluation
 	// if there are "two highest", first one is taken
 	for(j = 0; j < fwidth; j++){
-		printf("absatz\n");
+		#if DEBUG
+			printf("absatz\n");
+		#endif
 		for(i = 0; i < fheight; i++){
-			printf("eval array: %d\n", evalArray[j][i]);
-
+			#if DEBUG
+				printf("eval array: %d\n", evalArray[j][i]);
+			#endif
 			if(highest < evalArray[j][i]){
 				highest = evalArray[j][i];
-				tmp = j + 65;
+				choosenLetter = j + 65;
 			}
 			
 		}
 
 	}
 
-	return tmp;
-
+	return choosenLetter;
 
 }
 
@@ -364,7 +365,7 @@ char checkCommandParam (int argc, char *argv[], char player[2][100], char fileNa
 
 	extern char *optarg;
 
-	while ( (c = getopt (argc, argv, "a:m:l:")) != -1) {
+	while ( (c = getopt (argc, argv, "a:m:l:h")) != -1) {
 		switch (c) {
  
 			case 'a':
@@ -406,8 +407,6 @@ char checkCommandParam (int argc, char *argv[], char player[2][100], char fileNa
 					
 					break;
 			case 'l':
-				// TODO mehr überprüfung
-
 				if(sizeof(optarg) < MAX_FILENAME_LENGTH){
 					int iCharToPointer;
 					for(iCharToPointer = 0; iCharToPointer < 100; iCharToPointer ++){
@@ -416,6 +415,15 @@ char checkCommandParam (int argc, char *argv[], char player[2][100], char fileNa
 
 				}
 				
+				break;
+			case'h':
+			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 13);
+				printf("Usage Message\n");
+				printf("Command line example: a.exe -m pvc -l loadgame.txt -a -b\n-m ... mode: pvp, pvc, cvc (p = player, vs, c = computer)\n");
+				printf("-l ... load: FILENAME\n-a ... algorithm: b (brainfuck), c (computer / chrisy)\n");
+				printf("quit game with 'Z', save it with 'Y' for yes and type in a filename\n");
+			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 15);
+				exit(EXIT_SUCCESS);
 				break;
 			case '?' :
 					printf ("Unknown option encountered\n");
@@ -447,14 +455,15 @@ void openGame(char fileName[100], int fieldWidth, int fieldHeight, char fieldEnt
 	openFile = fopen(fileName, "r");
 
 	if(openFile == NULL){
-		perror("ERROR: open file");
+		perror("Error Message");
 		exit(EXIT_FAILURE);
 	}else{
 		#if DEBUG
 			printf("Able to read\n");
 		#endif
 
-		while(i < ((fieldWidth*2)*(fieldHeight*2))){
+		// while(i < ((fieldWidth*2)*(fieldHeight*2))){
+		while (!feof(openFile)) {
 			c = fgetc (openFile);
 			if(c == ' '){
 				columnCounter ++;
@@ -474,21 +483,11 @@ void openGame(char fileName[100], int fieldWidth, int fieldHeight, char fieldEnt
 			i++;
 		}
 	}
-
-/*
-	if (ferror(openFile) || feof(openFile) != 0){
-		printf ("Error, sorry, cannot open the file, new game generated");
-		int iColumn, iRow;
-		for(iColumn = 0; iColumn < fieldWidth; iColumn++){
-			for(iRow = 0; iRow < fieldHeight; iRow++){
-				fieldEntrys [iColumn][iRow] = 32; // 32
-			}
-		}
-		clearerr (openFile);
+	if (ferror(openFile)){
+		perror("Error Message");
+		exit(EXIT_FAILURE);
 	}
-*/
 
-	// TODO: solve problem
 	fflush(openFile);
 	fclose(openFile); 
 }
@@ -532,17 +531,12 @@ void fieldPrinter(int fieldWidth, int fieldHeight, char fieldEntrys[fieldWidth][
 		for(i = 0; i < fieldWidth; i++){
 			if(fieldEntrys[i][iRow] == '1'){
 				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 10*16);
-				printf("%c", fieldEntrys[i][iRow]);
-				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , +15);
-				printf(" ");
 			}else if(fieldEntrys[i][iRow] == '2'){
 				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 14*16);
-				printf("%c", fieldEntrys[i][iRow]);
-				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 15);
-				printf(" ");
-			}else{
-				printf("%c ", fieldEntrys[i][iRow]);
 			}
+			printf("%c", fieldEntrys[i][iRow]);
+			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , +15);
+			printf(" ");
 			printf("%c ", 124);
 		}
 		printf("\n%c", 43);
@@ -577,15 +571,13 @@ char playerChooses(char player[100], int fieldWidth, int iWhoTurn){
 
 	if(iWhoTurn == 1){
 			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 10);
-			printf("%s", player);
-			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 15);
-			printf("> ");
 	}else if(iWhoTurn == 2){	
 			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 14);
-			printf("%s", player);
-			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 15);
-			printf("> ");
 	}
+
+	printf("%s", player);
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 15);
+	printf("> ");
 
 	choosenColumn = toupper(getc(stdin));
 	fflush(stdin);
@@ -654,109 +646,65 @@ void fillingArray(int fieldWidth, int fieldHeight, char fieldEntrys[fieldWidth][
 }
 
 // this function evaluates, if there are 4 chips in a line: either diagonally, horizontally or vertically
-// TODO function is able to be shorten (with loops)
-int evaluateFour(int fieldWidth, int fieldHeight, char fieldEntrys[fieldWidth][fieldHeight]){
+int evaluateFour(int fieldWidth, int fieldHeight, char fieldEntrys[fieldWidth][fieldHeight], int iWhoTurn){
 
-	int i, j, countPlayer1 = 0, countPlayer2 = 0;
+	int i, j, countPoints = 0;
+
+	char me = iWhoTurn+'1';
+	char notMe = '2';
+	if(me == '2'){
+		notMe = '1';
+	}
+
+	#if DEBUG
+		printf("me: %c you %c\n", me, notMe);
+	#endif
 
 	// 4 in a row
 	for(i = 0; i < fieldHeight; i++){ // reihe
-
-		countPlayer1 = 0;
-		countPlayer2 = 0;
-
+		countPoints = 0;
 		for(j = 0; j < fieldWidth; j++){
-			if(fieldEntrys[j][i] == '1'){
-				countPlayer2 = 0;
-				countPlayer1 ++;
-				if(countPlayer1 == 4){
+			if(fieldEntrys[j][i] == me){
+				countPoints ++;
+				if(countPoints == 4){
 					return 1;
 				}
+			} else if(fieldEntrys[j][i] == ' ' || fieldEntrys[j][i] == notMe){
+				countPoints = 0;
 			}
-
-			if(fieldEntrys[j][i] == '2'){
-				countPlayer1 = 0;
-				countPlayer2 ++;
-				if(countPlayer2 == 4){
-					return 1;
-				}
-			}
-
-			if(fieldEntrys[j][i] == ' '){
-				countPlayer1 = 0;
-				countPlayer2 = 0;
-			}
-
-
 		}
 	}
 
-	countPlayer1 = 0;
-	countPlayer2 = 0;
 	// 4 in a column
 	for(j = 0; j < fieldWidth; j++){
-
-		countPlayer1 = 0;
-		countPlayer2 = 0;
-
+		countPoints = 0;
 		for(i = 0; i < fieldHeight; i++){
-			if(fieldEntrys[j][i] == '1'){
-				countPlayer2 = 0;
-				countPlayer1 ++;
-				if(countPlayer1 == 4){
+			if(fieldEntrys[j][i] == me){
+				countPoints ++;
+				if(countPoints == 4){
 					return 1;
 				}
+			}else if(fieldEntrys[j][i] == ' ' || fieldEntrys[j][i] == notMe){
+				countPoints = 0;
 			}
-
-			if(fieldEntrys[j][i] == '2'){
-				countPlayer1 = 0;
-				countPlayer2 ++;
-				if(countPlayer2 == 4){
-					return 1;
-				}
-			}
-
-			if(fieldEntrys[j][i] == ' '){
-				countPlayer1 = 0;
-				countPlayer2 = 0;
-			}
-
 		}
 	}
 
-	countPlayer1 = 0;
-	countPlayer2 = 0;
 	// 4 diagonal
 	for(i = 0; i < fieldHeight; i++){
 		for(j = 0; j < fieldWidth; j++){
 
 			if((i+3) < fieldHeight && (j+3) < fieldWidth){
-				if(fieldEntrys[j][i] == '1' && fieldEntrys[j+1][i+1] == '1'){
-					if(fieldEntrys[j+2][i+2] == '1' && fieldEntrys[j+3][i+3] == '1'){
+				if(fieldEntrys[j][i] == me && fieldEntrys[j+1][i+1] == me){
+					if(fieldEntrys[j+2][i+2] == me && fieldEntrys[j+3][i+3] == me){
 						return 1;
 					}
 				}
 			}
 
 			if((i-3) > 0 && (j+3) < fieldWidth){
-				if(fieldEntrys[j][i] == '1' && fieldEntrys[j+1][i-1] == '1'){
-					if(fieldEntrys[j+2][i-2] == '1' && fieldEntrys[j+3][i-3] == '1'){
-						return 1;
-					}
-				}
-			}
-		
-			if((i+3) < fieldHeight && (j+3) < fieldWidth){
-				if(fieldEntrys[j][i] == '2' && fieldEntrys[j+1][i+1] == '2'){
-					if(fieldEntrys[j+2][i+2] == '2' && fieldEntrys[j+3][i+3] == '2'){
-						return 1;	
-					}
-				}
-			}
-			
-			if((i-3) > 0 && (j+3) < fieldWidth){
-				if(fieldEntrys[j][i] == '2' && fieldEntrys[j+1][i-1] == '2'){
-					if(fieldEntrys[j+2][i-2] == '2' && fieldEntrys[j+3][i-3] == '2'){
+				if(fieldEntrys[j][i] == me && fieldEntrys[j+1][i-1] == me){
+					if(fieldEntrys[j+2][i-2] == me && fieldEntrys[j+3][i-3] == me){
 						return 1;
 					}
 				}
@@ -765,8 +713,6 @@ int evaluateFour(int fieldWidth, int fieldHeight, char fieldEntrys[fieldWidth][f
 	}
 
 	return 0;
-
-
 }
 
 
@@ -835,29 +781,25 @@ void saveGame(int fieldWidth, int fieldHeight, char fieldEntrys[fieldWidth][fiel
 				rowCounter ++;
 				columnCounter = 0;
 
-/*
-				// ERROR HANDLING
-				if (ferror(pFile) || feof(pFile) != 0){
-	      			printf ("Error, sorry, cannot save the file");
+
+				if (ferror(pFile)){
+	      			perror ("Error Message");
 	      			clearerr (pFile);
 	      			break;
 				}
-*/
-
 			}
 			fflush(pFile);
 		    fclose (pFile);
 		}
 }
 
+int main(int argc, char *argv[]){
 
-
-int main(int argc, char *argv[])
-{
-
-	// TODO: input checken ############################################
+	srand(time(NULL));
 
 	char player[2][100];
+	player[0][0] = '\0';
+	player[1][0] = '\0';
 
 	// able to change these values
 	int fieldWidth = 6; // Columns
@@ -876,14 +818,11 @@ int main(int argc, char *argv[])
 		fieldWidth = 4;
 	}
 
-	brainfuck_algorithm(fieldWidth);
-
 	char fileName[MAX_FILENAME_LENGTH];
 	char fieldEntrys [fieldWidth][fieldHeight];
 
 	int iColumn, iRow, iWhoTurn = 0;
 	char choice, save = 'N';
-
 	char choosen_algorithm = 'c'; // in case of computer is playing, otherwise ignored
 
 
@@ -903,10 +842,20 @@ int main(int argc, char *argv[])
 				fieldEntrys [iColumn][iRow] = 32; // 32
 			}
 		}
-
 	}
 	
 	// routine player vs player
+
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 13);
+	printf("It's time to play \"4 in a row!\"\n");
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 15);
+
+	if(strlen(player[0]) < 1){
+		strncpy(player[0], "Player 1", 9);
+	}
+	if(strlen(player[1]) < 1){
+		strncpy(player[1], "Player 2", 9);
+	}
 
 	while(1){
 
@@ -929,11 +878,11 @@ int main(int argc, char *argv[])
 		fillingArray(fieldWidth, fieldHeight, fieldEntrys, choice, iWhoTurn+49);
 
 		// if game is won 
-		if(evaluateFour(fieldWidth, fieldHeight, fieldEntrys) == 1){
+		if(evaluateFour(fieldWidth, fieldHeight, fieldEntrys, iWhoTurn) == 1){
 			fieldPrinter(fieldWidth, fieldHeight, fieldEntrys);
-			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+11);
+			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 11);
 			printf("Player %d: %s has won!\n", iWhoTurn+1, player[iWhoTurn]);
-			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+15);
+			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 15);
 			exit(EXIT_SUCCESS);
 		}
 
