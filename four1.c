@@ -1,3 +1,23 @@
+/*-----------------------------------------------------------------*/
+/* Author: Christina Bornberg BEL 1                                */
+/*                                                                 */
+/* Created: 2017-01-06                                             */
+/* Finished: 2017-01-10											   */
+/*                                                                 */
+/* About: The game '4 in a row' should be developed				   */
+/* 																   */
+/*																   */
+/* How to use: (GERMAN)											   */
+/* Command line example: a.exe -m pvc -l loadgame.txt -a -b		   */
+/* -m ... mode: pvp, pvc, cvc (p = player, vs, c = computer)	   */
+/* -l ... load: any .txt, .c, ... file, which follows the command  */
+/* from openGame												   */
+/* -a ... algorithm: b (brainfuck), c (computer / chrisy)		   */
+/*																   */
+/* quit game with 'Z'											   */
+/* save it with 'Y' for yes and type in a filename 				   */
+/*-----------------------------------------------------------------*/
+
 // includes ------------------
 #include <stdio.h>
 #include <stdlib.h>
@@ -7,14 +27,23 @@
 #include <time.h>
 #include <windows.h>
 
-// prototypes ------------------
-void playerName();
-void computerName();
-void fieldPrinter(int fieldWidth, int fieldHeight, char fieldEntrys[fieldWidth][fieldHeight]);
-
 // defines ------------------
 #define DEBUG 1
 #define MAX_FILENAME_LENGTH 100
+
+// prototypes ------------------
+char brainfuck_algorithm(int fieldWidth); // random algorithm
+char chrisy_algorithm(int fwidth, int fheight, char fEntrys[fwidth][fheight], int myNumber); // my algorithm, ideas from negamax
+char checkCommandParam (int argc, char *argv[], char player[2][100], char fileName[MAX_FILENAME_LENGTH]); // command line parameters
+void openGame(char fileName[100], int fieldWidth, int fieldHeight, char fieldEntrys[fieldWidth][fieldHeight]); // open a game (fileinput)
+void fieldPrinter(int fieldWidth, int fieldHeight, char fieldEntrys[fieldWidth][fieldHeight]); // prints the faming field to command line
+void playerName(int playerindex, char player[100]); // player chooses name
+void computerName(int playerindex, char player[100]); // computer name is generated
+char playerChooses(char player[100], int fieldWidth, int iWhoTurn); // player chooses field
+char computerChooses(char choosen_algorithm, int fieldWidth, int fieldHeight, char fieldEntrys[fieldWidth][fieldHeight], int me); // computer chooses field (algorithms)
+void fillingArray(int fieldWidth, int fieldHeight, char fieldEntrys[fieldWidth][fieldHeight], char choice, int iWhoTurn); // filling array with choosen field
+int evaluateFour(int fieldWidth, int fieldHeight, char fieldEntrys[fieldWidth][fieldHeight]); // evaluates if someone has won
+void saveGame(int fieldWidth, int fieldHeight, char fieldEntrys[fieldWidth][fieldHeight]); // save game (fileoutput)
 
 // Algorithm, that chooses randomly any letter, without caring about the game
 char brainfuck_algorithm(int fieldWidth){
@@ -24,26 +53,26 @@ char brainfuck_algorithm(int fieldWidth){
 
 }
 
-// my algorithm, after which steps I would select my row
-// 1. give my chip into a column which exists and is not full
-// 2. if there is any other chip from me, do it near this one, the more stones in one line, the higher the chance
-// 3. look, that my reval doesn't get the chance to win
-// otherwise: randomly
-// ideas from Minimax - algorithm https://gist.github.com/MatthewSteel/3158579
+// my algorithm
+// every entry, where it is able to put a chip in, gets a value,
+// the measurement could be improved, but all in all it works like that
+// ideas from Minimax / Negamax - algorithm https://gist.github.com/MatthewSteel/3158579
 char chrisy_algorithm(int fwidth, int fheight, char fEntrys[fwidth][fheight], int myNumber){
 
-	char me = '2'; // usually player 2
+	char me = myNumber+'0'; // usually player 2 (pvc)
 	char notMe = '2';
 	if(me == '2'){
-		notMe = '1'; // usually player 1
+		notMe = '1'; // usually player 1 (pvc)
 	}
 	
-	char rivalNumber;
-	int evalArray[fwidth][fheight]; // evaluation
-	int j, i;
-	char choosenColumn = 'A';
+	int evalArray[fwidth][fheight]; // evaluation points
+	int j, i; // counter of columns and rows
 
-	printf("MY NUMBER: %c\n", myNumber);
+	// for finding highest
+	char tmp = brainfuck_algorithm(fwidth);
+	int highest = 0;
+
+	printf("MY NUMBER: %c\n", me);
 
 	// Initialising 
 	for(j = 0; j < fwidth; j++){
@@ -64,15 +93,25 @@ char chrisy_algorithm(int fwidth, int fheight, char fEntrys[fwidth][fheight], in
 
 				// my way - vertically
 				// there can't be chips above me
-				if(evalArray[j][i] != '0'){
+				if(evalArray[j][i] != 0){
 					if(fEntrys[j][i+1] == me){
 						if(i-3 > 0){
 							evalArray[j][i] += 100;
+						}else{
+							evalArray[j][i] -= 5; // not enough space
 						}
 						if(fEntrys[j][i+2] == me){
-							evalArray[j][i] += 100;
+							if(i-2 > 0){
+								evalArray[j][i] += 100;
+							}else{
+								evalArray[j][i] -= 5; // not enough space
+							}
 							if(fEntrys[j][i+3] == me){
-								evalArray[j][i] += 1000; // high prio
+								if(i-1 > 0){
+									evalArray[j][i] += 1000; // high prio
+								}else{
+									evalArray[j][i] -= 5; // not enough space
+								}
 							}
 						}
 					}
@@ -80,167 +119,221 @@ char chrisy_algorithm(int fwidth, int fheight, char fEntrys[fwidth][fheight], in
 
 				// destroy rivals way - vertically
 				// there can't be chips above me
-				if(evalArray[j][i] != '0'){
+				if(evalArray[j][i] != 0){
 					if(fEntrys[j][i+1] == notMe){
-						evalArray[j][i] += 50;
-						if(fEntrys[j][i+2] == notMe){
+						if(i-1 > 0){
 							evalArray[j][i] += 50;
+						}else{
+								evalArray[j][i] -= 5; // not enough space
+						}
+						if(fEntrys[j][i+2] == notMe){
+							if(i-1 > 0){
+								evalArray[j][i] += 50;
+							}else{
+								evalArray[j][i] -= 5; // not enough space
+							}
 							if(fEntrys[j][i+3] == notMe){
-								evalArray[j][i] += 500; // high prio
+								if(i-1 > 0){
+									evalArray[j][i] += 500; // high prio
+								}else{
+									evalArray[j][i] -= 5; // not enough space
+
+								}
 							}
 						}
 					}
 				}
 
-
-
 				// my way - horizontally
-				if(evalArray[j][i] != '0'){
+				if(evalArray[j][i] != 0){
+					// entrys to the right
 					if(fEntrys[j+1][i] == me){
 						evalArray[j][i] += 100;
 						if(fEntrys[j+2][i] == me){
 							evalArray[j][i] += 100;
 							if(fEntrys[j+3][i] == me){
 								evalArray[j][i] += 1000; // high prio
-							}else if(fEntrys[j+3][i] == '0'){
+							}else if(fEntrys[j+3][i] == ' '){
 								evalArray[j][i] += 75;
 							}
-						}else if(fEntrys[j+2][i] == '0'){
+						}else if(fEntrys[j+2][i] == ' '){
 							evalArray[j][i] += 75;
 						}
-					}else if(fEntrys[j+1][i] == '0'){
+					}else if(fEntrys[j+1][i] == ' '){
 						evalArray[j][i] += 75;	
 					}
-
+					// entrys to the left
 					if(fEntrys[j-1][i] == me){
 						evalArray[j][i] += 100;
 						if(fEntrys[j-2][i] == me){
 							evalArray[j][i] += 100;
 							if(fEntrys[j-3][i] == me){
 								evalArray[j][i] += 100;
-							}else if(fEntrys[j-3][i] == '0'){
+							}else if(fEntrys[j-3][i] == ' '){
 								evalArray[j][i] += 75;
 							}
-						}else if(fEntrys[j-2][i] == '0'){
+						}else if(fEntrys[j-2][i] == ' '){
 							evalArray[j][i] += 75;
 						}
-					}else if(fEntrys[j-2][i] == '0'){
+					}else if(fEntrys[j-2][i] == ' '){
 						evalArray[j][i] += 75;
 					}
 				}
 
 
 
-
-
-
-				// fieldEntrys [iColumn][iRow] = 32; // 32
-		}
-	}
-
-
-/*
-
-for(j = 0; j < fieldWidth; j++){
-			if(fieldEntrys[j][i] == '1'){
-				countPlayer2 = 0;
-				countPlayer1 ++;
-				if(countPlayer1 == 4){
-					return 1;
-				}
-			}
-
-			if(fieldEntrys[j][i] == '2'){
-				countPlayer1 = 0;
-				countPlayer2 ++;
-				if(countPlayer2 == 4){
-					return 1;
-				}
-			}
-
-			if(fieldEntrys[j][i] == ' '){
-				countPlayer1 = 0;
-				countPlayer2 = 0;
-			}
-
-
-		}
-	}
-
-	countPlayer1 = 0;
-	countPlayer2 = 0;
-	// 4 in a column
-	for(j = 0; j < fieldWidth; j++){
-
-		countPlayer1 = 0;
-		countPlayer2 = 0;
-
-		for(i = 0; i < fieldHeight; i++){
-			if(fieldEntrys[j][i] == '1'){
-				countPlayer2 = 0;
-				countPlayer1 ++;
-				if(countPlayer1 == 4){
-					return 1;
-				}
-			}
-
-			if(fieldEntrys[j][i] == '2'){
-				countPlayer1 = 0;
-				countPlayer2 ++;
-				if(countPlayer2 == 4){
-					return 1;
-				}
-			}
-
-			if(fieldEntrys[j][i] == ' '){
-				countPlayer1 = 0;
-				countPlayer2 = 0;
-			}
-
-		}
-	}
-
-	countPlayer1 = 0;
-	countPlayer2 = 0;
-	// 4 diagonal
-	for(i = 0; i < fieldHeight; i++){
-		for(j = 0; j < fieldWidth; j++){
-
-			if((i+3) < fieldHeight && (j+3) < fieldWidth){
-				if(fieldEntrys[j][i] == '1' && fieldEntrys[j+1][i+1] == '1'){
-					if(fieldEntrys[j+2][i+2] == '1' && fieldEntrys[j+3][i+3] == '1'){
-						return 1;
+				// destroy rivals way - horizontally
+				if(evalArray[j][i] != 0){
+					// entrys to the right
+					if(fEntrys[j+1][i] == notMe){
+						evalArray[j][i] += 100;
+						if(fEntrys[j+2][i] == notMe){
+							evalArray[j][i] += 100;
+							if(fEntrys[j+3][i] == notMe){
+								evalArray[j][i] += 5000; // high prio
+							}
+						}
+					}
+					// entrys to the left
+					if(fEntrys[j-1][i] == notMe){
+						evalArray[j][i] += 100;
+						if(fEntrys[j-2][i] == notMe){
+							evalArray[j][i] += 100;
+							if(fEntrys[j-3][i] == notMe){
+								evalArray[j][i] += 5000; // high prio
+							}
+						}
 					}
 				}
-			}
 
-			if((i-3) > 0 && (j+3) < fieldWidth){
-				if(fieldEntrys[j][i] == '1' && fieldEntrys[j+1][i-1] == '1'){
-					if(fieldEntrys[j+2][i-2] == '1' && fieldEntrys[j+3][i-3] == '1'){
-						return 1;
+
+				// my way - diagonally, could be more precise
+				if(evalArray[j][i] != 0){
+					// entrys diagonally down (0/0 - w/h)
+					//pos
+					if(fEntrys[j+1][i+1] == me ){
+						evalArray[j][i] += 100;
+						if(fEntrys[j+2][i+2] == me){
+							evalArray[j][i] += 100;
+							if(fEntrys[j+3][i+3] == me){
+								evalArray[j][i] += 1000; // high prio
+							}else if(fEntrys[j+3][i+3] == ' '){
+								evalArray[j][i] += 75;
+							}
+						}else if(fEntrys[j+2][i+2] == ' '){
+							evalArray[j][i] += 75;
+						}
+					}else if(fEntrys[j+1][i+1] == ' '){
+						evalArray[j][i] += 75;	
+					}
+					// neg
+					if(fEntrys[j-1][i-1] == me){
+						evalArray[j][i] += 100;
+						if(fEntrys[j-2][i-2] == me){
+							evalArray[j][i] += 100;
+							if(fEntrys[j-3][i-3] == me){
+								evalArray[j][i] += 1000; // high prio
+							}else if(fEntrys[j-3][i-3] == ' '){
+								evalArray[j][i] += 75;
+							}
+						}else if(fEntrys[j-2][i-2] == ' '){
+							evalArray[j][i] += 75;
+						}
+					}else if(fEntrys[j-1][i-1] == ' '){
+						evalArray[j][i] += 75;	
+					}
+					// entrys diagonally up (0/h - w/0)
+					// w pos
+					if(fEntrys[j+1][i-1] == me){
+						evalArray[j][i] += 100;
+						if(fEntrys[j+2][i-2] == me){
+							evalArray[j][i] += 100;
+							if(fEntrys[j+3][i-3] == me){
+								evalArray[j][i] += 100;
+							}else if(fEntrys[j+3][i-3] == ' '){
+								evalArray[j][i] += 75;
+							}
+						}else if(fEntrys[j+2][i-2] == ' '){
+							evalArray[j][i] += 75;
+						}
+					}else if(fEntrys[j+1][i-1] == ' '){
+						evalArray[j][i] += 75;
+					}
+					// h pos
+					if(fEntrys[j-1][i+1] == me){
+						evalArray[j][i] += 100;
+						if(fEntrys[j-2][i+2] == me){
+							evalArray[j][i] += 100;
+							if(fEntrys[j-3][i+3] == me){
+								evalArray[j][i] += 100;
+							}else if(fEntrys[j-3][i+3] == ' '){
+								evalArray[j][i] += 75;
+							}
+						}else if(fEntrys[j-2][i+2] == ' '){
+							evalArray[j][i] += 75;
+						}
+					}else if(fEntrys[j-1][i+1] == ' '){
+						evalArray[j][i] += 75;
 					}
 				}
+
+
+				// destroying evals way - diagonally, could be more precise
+				if(evalArray[j][i] != 0){
+					// entrys diagonally down (0/0 - w/h)
+					//pos
+					if(fEntrys[j+1][i+1] == notMe ){
+						evalArray[j][i] += 75;
+						if(fEntrys[j+2][i+2] == notMe){
+							evalArray[j][i] += 75;
+							if(fEntrys[j+3][i+3] == notMe){
+								evalArray[j][i] += 750; // high prio
+							}
+						}
+					}
+					// neg
+					if(fEntrys[j-1][i-1] == notMe){
+						evalArray[j][i] += 75;
+						if(fEntrys[j-2][i-2] == notMe){
+							evalArray[j][i] += 75;
+							if(fEntrys[j-3][i-3] == notMe){
+								evalArray[j][i] += 750; // high prio
+							}
+						}
+					}
+					// entrys diagonally up (0/h - w/0)
+					// w pos
+					if(fEntrys[j+1][i-1] == notMe){
+						evalArray[j][i] += 75;
+						if(fEntrys[j+2][i-2] == notMe){
+							evalArray[j][i] += 75;
+							if(fEntrys[j+3][i-3] == notMe){
+								evalArray[j][i] += 750; // high prio
+							}
+						}
+					}
+					// h pos
+					if(fEntrys[j-1][i+1] == notMe){
+						evalArray[j][i] += 75;
+						if(fEntrys[j-2][i+2] == notMe){
+							evalArray[j][i] += 75;
+							if(fEntrys[j-3][i+3] == notMe){
+								evalArray[j][i] += 750; // high prio
+							}
+						}
+					}
+				}
+
 			}
-
-*/
-
-
-
-
-
-
-
-
-
-
+		}
 
 	// jedes durchgehen, mit nächstem vergleichen, wenn höher, ist dieses das höchste
 
 	printf("evaluation printer\n");
 
 
-	char tmp = brainfuck_algorithm(fwidth);
-	int highest = 0;
+	// find the highest evaluation
+	// if there are "two highest", first one is taken
 	for(j = 0; j < fwidth; j++){
 		printf("absatz\n");
 		for(i = 0; i < fheight; i++){
@@ -250,7 +343,9 @@ for(j = 0; j < fieldWidth; j++){
 				highest = evalArray[j][i];
 				tmp = j + 65;
 			}
+			
 		}
+
 	}
 
 	return tmp;
@@ -412,7 +507,7 @@ void fieldPrinter(int fieldWidth, int fieldHeight, char fieldEntrys[fieldWidth][
 	}
 	printf("\n");
 
-	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+13);
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 13);
 
 	// printing arrows
 	for(i = 0; i < fieldWidth; i++){
@@ -420,7 +515,7 @@ void fieldPrinter(int fieldWidth, int fieldHeight, char fieldEntrys[fieldWidth][
 	}
 	printf("\n");
 
-	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+15);
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 15);
 
 
 	// printing entrance
@@ -436,13 +531,15 @@ void fieldPrinter(int fieldWidth, int fieldHeight, char fieldEntrys[fieldWidth][
 		printf("%c ", 124);
 		for(i = 0; i < fieldWidth; i++){
 			if(fieldEntrys[i][iRow] == '1'){
-				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+10);
-				printf("%c ", fieldEntrys[i][iRow]);
-				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+15);
+				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 10*16);
+				printf("%c", fieldEntrys[i][iRow]);
+				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , +15);
+				printf(" ");
 			}else if(fieldEntrys[i][iRow] == '2'){
-				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+14);
-				printf("%c ", fieldEntrys[i][iRow]);
-				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+15);
+				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 14*16);
+				printf("%c", fieldEntrys[i][iRow]);
+				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 15);
+				printf(" ");
 			}else{
 				printf("%c ", fieldEntrys[i][iRow]);
 			}
@@ -473,10 +570,23 @@ void computerName(int playerindex, char player[100]){
 }
 
 // player is able to choose the letter, where he wants to put his chip in
-char playerChooses(char player[100], int fieldWidth){
+char playerChooses(char player[100], int fieldWidth, int iWhoTurn){
 
 	char choosenColumn = '0';
-	printf("Your turn, %s> ", player);
+	printf("Your turn, ");
+
+	if(iWhoTurn == 1){
+			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 10);
+			printf("%s", player);
+			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 15);
+			printf("> ");
+	}else if(iWhoTurn == 2){	
+			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 14);
+			printf("%s", player);
+			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 15);
+			printf("> ");
+	}
+
 	choosenColumn = toupper(getc(stdin));
 	fflush(stdin);
 
@@ -535,9 +645,9 @@ void fillingArray(int fieldWidth, int fieldHeight, char fieldEntrys[fieldWidth][
 	}
 	if(leftColumns == 0){
 		fieldPrinter(fieldWidth, fieldHeight, fieldEntrys);
-		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+12);
+		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 12);
 		printf("You both lost the game!\n");
-		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+15);
+		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 15);
 		exit(EXIT_SUCCESS);
 	}
 
@@ -808,7 +918,7 @@ int main(int argc, char *argv[])
 			printf("%s' turn> %c\n", player[iWhoTurn], choice);
 		}else{
 			// choosen letter
-			choice = playerChooses(player[iWhoTurn], fieldWidth); // 0 = player 1, 1 = player 2	
+			choice = playerChooses(player[iWhoTurn], fieldWidth, iWhoTurn+1); // 0 = player 1, 1 = player 2	
 			// end the game
 			if(choice == 'Z'){
 				break;
