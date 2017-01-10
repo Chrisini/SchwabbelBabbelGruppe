@@ -28,7 +28,7 @@
 #include <windows.h>
 
 // defines ------------------
-#define DEBUG 0
+#define DEBUG 1
 #define MAX_FILENAME_LENGTH 100
 
 // prototypes ------------------
@@ -47,7 +47,7 @@ void saveGame(int fieldWidth, int fieldHeight, char fieldEntrys[fieldWidth][fiel
 
 // Algorithm, that chooses randomly any letter, without caring about the game
 char brainfuck_algorithm(int fieldWidth){
-	return (rand()%fieldWidth) + 65; // 0 - width; A-1
+	return (char)(rand()%fieldWidth) + 65; // 0 - width; A-1
 }
 
 // my algorithm
@@ -56,7 +56,7 @@ char brainfuck_algorithm(int fieldWidth){
 // ideas from Minimax / Negamax - algorithm https://gist.github.com/MatthewSteel/3158579
 char chrisy_algorithm(int fwidth, int fheight, char fEntrys[fwidth][fheight], int myNumber){
 
-	char me = myNumber+'0'; // usually player 2 (pvc)
+	char me = (char) myNumber+'0'; // usually player 2 (pvc)
 	char notMe = '2';
 	if(me == '2'){
 		notMe = '1'; // usually player 1 (pvc)
@@ -372,21 +372,20 @@ char checkCommandParam (int argc, char *argv[], char player[2][100], char fileNa
 				#if DEBUG
 					printf("optarg %s\n", optarg);
 				#endif
-				if(optarg[0] == 'b'){ // optarg[1] != '\n'
+				if((optarg[0] == 'b') && (optarg[1] == '\0')){ // optarg[1] != '\n'
 					choosen_algorithm = 'b';
-				}else if(optarg[0] != 'c'){
+				}else if((optarg[0] == 'c') && (optarg[1] == '\0')){
+					choosen_algorithm = 'c';
+				}else{
 					printf("This algorithm doesn't exist, default: Brainfuck-Algorithm\n");
 				}
 
 				break;
 			case 'm':
 				#if DEBUG
-					printf ("Gamemode: %s.\n", optarg);
+					printf ("Gamemode: %s\n", optarg);
 				#endif
 					
-					// to lower
-					// mehr überprüfung
-
 					if(strncmp("pvp", optarg, 4) == 0){
 						printf("selected: Player vs Player\n");
 						printf("End game with \'Z\'\n");	
@@ -485,6 +484,7 @@ void openGame(char fileName[100], int fieldWidth, int fieldHeight, char fieldEnt
 	}
 	if (ferror(openFile)){
 		perror("Error Message");
+		clearerr (openFile);
 		exit(EXIT_FAILURE);
 	}
 
@@ -550,8 +550,9 @@ void fieldPrinter(int fieldWidth, int fieldHeight, char fieldEntrys[fieldWidth][
 
 // Name of Player
 void playerName(int playerindex, char player[100]){
+	fseek(stdin,0,SEEK_END);
 	printf("Name of Player %d: ", playerindex+1);
-	fscanf (stdin, "%s", player);
+	fscanf (stdin, "%99s", player);
 	fflush(stdin);
 }
 
@@ -575,6 +576,7 @@ char playerChooses(char player[100], int fieldWidth, int iWhoTurn){
 			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 14);
 	}
 
+	fseek(stdin,0,SEEK_END);
 	printf("%s", player);
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 15);
 	printf("> ");
@@ -720,7 +722,12 @@ int evaluateFour(int fieldWidth, int fieldHeight, char fieldEntrys[fieldWidth][f
 void saveGame(int fieldWidth, int fieldHeight, char fieldEntrys[fieldWidth][fieldHeight]){
 
 	char savingFileName[MAX_FILENAME_LENGTH];
+	FILE *pFile;
+	char c;
+	int rowCounter = 0;
+	int columnCounter = 0;
 
+	fseek(stdin,0,SEEK_END);
 	printf("filename > ");
 		int tmpY = 0;
 
@@ -743,13 +750,6 @@ void saveGame(int fieldWidth, int fieldHeight, char fieldEntrys[fieldWidth][fiel
 		}
 		
 		fflush(stdin);
-
-
-		// wirte to file
-		FILE *pFile;
-		char c;
-		int rowCounter = 0;
-		int columnCounter = 0;
 
 		pFile = fopen (savingFileName, "w");
 
@@ -782,10 +782,10 @@ void saveGame(int fieldWidth, int fieldHeight, char fieldEntrys[fieldWidth][fiel
 				columnCounter = 0;
 
 
-				if (ferror(pFile)){
+				if (ferror(pFile) || feof(pFile)){
 	      			perror ("Error Message");
 	      			clearerr (pFile);
-	      			break;
+	      			exit(EXIT_FAILURE);
 				}
 			}
 			fflush(pFile);
@@ -896,6 +896,7 @@ int main(int argc, char *argv[]){
 	}
 	
 	// save the game
+	fseek(stdin,0,SEEK_END);
 	printf("do you want to save the game? Y> ");
 	save = toupper(getc(stdin));	
 	fflush(stdin);
