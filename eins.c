@@ -72,6 +72,7 @@ int main (void){
 			}else{
 			  for (i=0; i<MAXMYMEM; i++) {
 				  printf("buffer: %d", buf[i]);
+				  intbuffer [i] = buf[i];
 			  }
 			  puts("\n");
 			  shmdt(buf);
@@ -89,10 +90,11 @@ int main (void){
 		
 		printf("I am here");
 		
-		tmp = calc_min(intbuffer[1]);
+		tmp = calc_min(intbuffer[0]);
 		printf("a: %d", tmp);
 		
-		// std_printer(count_transmission,calc_min(buf[0]),calc_max(buf[MAXMYMEM-1]),calc_med(buf[63], buf[64]), calc_mean(buf));
+		std_printer(count_transmission,calc_min(intbuffer[0]),calc_max(intbuffer[MAXMYMEM-1]),
+		            calc_med(intbuffer[63], intbuffer[64]), calc_mean(intbuffer));
 		
 		// release access to Sa
 		// Programm a initializes new set of 
