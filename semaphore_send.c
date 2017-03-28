@@ -106,29 +106,3 @@ puts ("End Send");
 
   return 0;
 }
-
-
-
-
-
-void main2(void){
-
-	while(1){
-
-
-
-
-
-
-		// Access to Sa
-
-		// Initialize shared memory segment
-		// 128 random int values
-		// from -20 to + 40
-
-		// Request acess to Sb
-		// B starts to calculate
-
-	}
-
-}
