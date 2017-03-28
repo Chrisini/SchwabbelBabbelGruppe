@@ -82,7 +82,7 @@ int main (void)
 			perror ("semget");
 			exit (EXIT_FAILURE);
 		}
-	}else{
+	}//else{
 		// if sempahore was created new initalize it
 		sema.val = 0; // open
 		semb.val = 1; // close
@@ -90,7 +90,7 @@ int main (void)
 		semctl (semid, 1, SETVAL, semb); // nummer
 
 		puts ("semaphores created");
-	}
+	//}
 
 	// shared memory create
 	shmid = shmget (key, MAXMYMEM, 0666);
