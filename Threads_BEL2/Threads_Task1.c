@@ -8,15 +8,8 @@
 #include <string.h>
 #include <pthread.h>
 
-#define fileNameLength 30
-#define matriceLength 50
-#define THREAD_NUMBER 5
-
-struct col_row{
-	int i_row;
-	int i_col;
-};
-
+#define matriceLength 5
+#define THREAD_NUMBER 2
 
 struct timeval t1, t2, t3, t4;
 
@@ -28,13 +21,19 @@ int matriceResult[matriceLength][matriceLength];
 
 
 // CREATE RANDOM NUMBERS
-void read_file(int matrice[matriceLength][matriceLength]){
+void read_file(){
 	// one time a, one time b
 
 	int i, j;
 	for(i = 0; i < matriceLength; i ++){
 		for(j = 0; j < matriceLength; j ++){
-			matrice[i][j] = rand()%5+1;
+			matriceA[i][j] = rand()%5+1;
+		}
+	}
+
+	for(i = 0; i < matriceLength; i ++){
+		for(j = 0; j < matriceLength; j ++){
+			matriceB[i][j] = rand()%5+1;
 		}
 	}
 }
@@ -55,18 +54,21 @@ void multiply_matrices(void){
 
 // MULTIPLY BY THREADS
 void *multiply_by_threads(void *param) {
-   struct col_row *data = param; // the structure that holds our data
-   int n, sum = 0; //the counter and sum
+
+	int s = (int) param;
+	int from = (s * matriceLength)/THREAD_NUMBER;
+	int to = ((s+1) * matriceLength)/THREAD_NUMBER;
+   	int n,m,o;
 
    //Row multiplied by column
-   for(n = 0; n< matriceLength; n++){
-      sum += matriceA[data->i_row][n] * matriceB[n][data->i_col];
+   for(n = from; n < to; n++){
+	for(m = 0; m < matriceLength; m++){
+		matriceResult[n][m] = 0;
+		for(o = 0; o < matriceLength; o++){
+			matriceResult[n][m] += matriceA[n][o] * matriceB[o][n];
+		}
+	}
    }
-   //assign the sum to its coordinate
-   matriceResult[data->i_row][data->i_col] = sum;
-
-   //Exit the thread
-   pthread_exit(0);
 }
 
 // PRINT MATRICES
@@ -89,58 +91,53 @@ int main(){
 	srand(time(NULL));
 
 	double diff = 0.0;
-
 	int i,j,k = 0;
 
-	read_file(matriceA);
-	printf("\n");
-	read_file(matriceB);
-	printf("\n");
+	printf("begin to create random numbers\n");
+	read_file();
+	read_file();
+	printf("random numbers created\n");
+
+	pthread_t* group_thread;
+	group_thread = (pthread_t*) malloc(THREAD_NUMBER*sizeof(pthread_t));
+
 
 	// BEGIN THREAD
-
 	gettimeofday(&t1, NULL);
 
-	printf("heree");
+	for(i = 0; i < matriceLength; i++){
+		if(pthread_create (&group_thread[i], NULL, multiply_by_threads, (void*)i) != 0){
+			perror("Can't create thread");
+      		free(group_thread);
+      		exit(-1);
+	   }
+	}
 
-   for(i = 0; i < matriceLength; i++) {
-      for(j = 0; j < matriceLength; j++) {
-         //Assign a row and column for each thread
-         struct col_row *data = (struct col_row *) malloc(sizeof(struct col_row));
-         data->i_col = i;
-         data->i_row = j;
-         /* Now create the thread passing it data as a parameter */
-         pthread_t tid;       //Thread ID
-         pthread_attr_t attr; //Set of thread attributes
-         //Get the default attributes
-         pthread_attr_init(&attr);
-         //Create the thread
-         pthread_create(&tid,&attr,multiply_by_threads,data);
-         //Make sure the parent waits for all thread to complete
-         pthread_join(tid, NULL);
-         k++;
-      }
-   }
-
+	for (i = 1; i < THREAD_NUMBER; i++){
+ 		pthread_join (group_thread[i], NULL);
+	}
 
 
 	gettimeofday(&t2, NULL);
   	diff = (t2.tv_sec+t2.tv_usec*0.000001)-(t1.tv_sec+t1.tv_usec*0.000001);
+  	printf("thread differenz: %f\n", diff);
 
-	printf("thread differenz: %f\n", diff);
+	// free(group_thread);
 
+
+	matricePrinter(matriceResult);
 
 	// END THREAD
 
-	// MULTIPLY NORMAL CALL
 
+	// MULTIPLY NORMAL CALL
 	gettimeofday(&t3, NULL);
 	multiply_matrices();
   	gettimeofday(&t4, NULL);
   	diff = (t4.tv_sec+t4.tv_usec*0.000001)-(t3.tv_sec+t3.tv_usec*0.000001);
 	printf("differenz ohne threads: %f\n", diff);
 
-	// matricePrinter(matriceResult);
+	matricePrinter(matriceResult);
 
 	printf("\n");
 	printf("Good Bye!\n");
