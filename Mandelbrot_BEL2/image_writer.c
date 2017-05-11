@@ -18,13 +18,19 @@
 #include "general_header.h"
 
 
-void imge_printer(){
-	char *openfileName = "mandelmap_";
+void image_printer(){
+	char openfileName[30];
 	char ppm_input[100];
-	int width = 1920;
-	int height = 1080;
-	int maxcolor = 255;
-	unsigned int* big_mem_p3;
+	int* big_mem_p3;
+	big_mem_p3 = (int*) malloc(P3WIDTH*P3HEIGHT*3*sizeof(int));
+	if (big_mem_p3==NULL){
+		printf("Malloc - NULL");
+	}else{
+		printf("Malloc was successful");
+
+	}
+
+
 	// PIXEL **pRGB;
 
 	 #if DEBUG
@@ -32,18 +38,13 @@ void imge_printer(){
 	 #endif
 
 	FILE * writeFile;
+	int file_counter = 1;
+
 	int i;
-	int filecounter = 1;
 
-	openfileName ++;
-	if(openfileName > 57){
-		filecounter = 0;
-		openfileName++;
-
-	}
-	openfileName = 48 + filecounter;
-
-
+	sprintf(openfileName,"mandelmap_%d.ppm",file_counter);
+	file_counter ++;
+	printf("Filename created: %s", openfileName);
 
 	// open the file for writing
 	writeFile = fopen(openfileName, "w");
@@ -54,23 +55,24 @@ void imge_printer(){
 	}
 
 	fprintf(writeFile,"P3\n");
-	fprintf(writeFile,"%u %u\n", width, height);
-	fprintf(writeFile,"maxcolor\n");
+	fprintf(writeFile,"%u %u\n", P3WIDTH, P3HEIGHT);
+	fprintf(writeFile,"%u\n", P3MAXCOLOUR);
 
-	// every pixel one time
-	for (i = 0; i < width*height; i+=3){
-		fprintf(writeFile, "%u %u %u\n", (*big_mem_p3+i), (*big_mem_p3+i+1), (*big_mem_p3+i+2));
+	printf("I'm here");
 
-	#if DEBUG
-		printf("R: [%u]=%u\t", i, (*big_mem_p3+i));
-		printf("G: [%u]=%u\t", i, (*big_mem_p3+i+1));
-		printf("B: [%u]=%u\n", i, (*big_mem_p3+i+2));
-	#endif
+	for (i = 0; i < P3WIDTH*P3HEIGHT*3; i+=3){
+		big_mem_p3[i] = 205;
+		big_mem_p3[i+1] = 20;
+		big_mem_p3[i+2] = 150;
+
+		fprintf(writeFile, "%u %u %u\n", (big_mem_p3[i]), (big_mem_p3[i+1]), (big_mem_p3[i+2]));
+
 	}
 
 
 	fflush(writeFile);
 	fclose(writeFile);
+
 }
 
 int main (void)
@@ -85,6 +87,8 @@ int main (void)
 	int i;
 	key_t key;
 	int ret = 0;
+
+	image_printer();
 
 	// semaphores
 	int semid;

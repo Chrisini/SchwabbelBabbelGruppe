@@ -12,8 +12,36 @@ The Pixel Generator program shall create the shared memory when it is launched. 
 #include "pixel_generator.h"
 #include "general_header.h"
 
-int main(int argc, char **argv)
-{
+void create_mandel_map(int *big_mem_pix){
+	// http://jonisalonen.com/2013/lets-draw-the-mandelbrot-set/
+
+	int row, col, iteration = 0;
+	double x = 0, y = 0;
+
+
+	for (row = 0; row < P3HEIGHT; row++) {
+	    for (col = 0; col < P3WIDTH; col++) {
+		double c_re = (col - P3WIDTH/2.0)*4.0/P3WIDTH;
+		double c_im = (row - P3HEIGHT/2.0)*2.0/P3HEIGHT; // iwas mit /2??
+
+		while ((x*x+y*y <= 4) && (iteration < MANDELMAXITERATION)){
+
+		    double x_new = x*x - y*y + c_re;
+		    y = 2*x*y + c_im;
+		    x = x_new;
+		    iteration++;
+		}
+		if (iteration < MANDELMAXITERATION){
+			putpixel(col, row, white);
+		}else{
+			putpixel(col, row, black);
+		}
+	    }
+	}
+
+}
+
+void communication(int *big_mem_pix){
 
 	// variables for shared memory
 	int shmid; // shmid = shared memory id
@@ -27,8 +55,6 @@ int main(int argc, char **argv)
 	struct sembuf sa, sb;
 	union semun sema;
 	union semun semb;
-
-	unsigned int* big_mem_pix;
 
 	// key
 	key = ftok ("/etc/hostname", 'b');
@@ -101,6 +127,20 @@ int main(int argc, char **argv)
   }else{
     perror("shmget");
   }
+
+}
+
+int main(int argc, char **argv)
+{
+
+	int* big_mem_pix;
+	big_mem_pix = (int*) malloc(P3WIDTH*P3HEIGHT*3*sizeof(int));
+
+	create_mandel_map(big_mem_pix);
+	communication(big_mem_pix);
+
+
+
 
   return 0;
 }
