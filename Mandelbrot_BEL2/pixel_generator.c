@@ -12,12 +12,56 @@ The Pixel Generator program shall create the shared memory when it is launched. 
 #include "pixel_generator.h"
 #include "general_header.h"
 
+struct rgb_pix{
+	int r;
+	int g;
+	int b;
+};
+
+typedef struct rgb_pix PIXEL;
+
+void color_chooser(int col, int row,int i, PIXEL *pRGB){
+
+
+	(*pRGB+i)->r = 5;
+	(*pRGB+i)->g = 10;
+	(*pRGB+i)->b) = 255;
+
+
+
+
+	if (n < MAX_ITERATIONS && n > 0) {
+    int i = n % 16;
+    QColor mapping[16];
+    mapping[0].setRgb(66, 30, 15);
+    mapping[1].setRgb(25, 7, 26);
+    mapping[2].setRgb(9, 1, 47);
+    mapping[3].setRgb(4, 4, 73);
+    mapping[4].setRgb(0, 7, 100);
+    mapping[5].setRgb(12, 44, 138);
+    mapping[6].setRgb(24, 82, 177);
+    mapping[7].setRgb(57, 125, 209);
+    mapping[8].setRgb(134, 181, 229);
+    mapping[9].setRgb(211, 236, 248);
+    mapping[10].setRgb(241, 233, 191);
+    mapping[11].setRgb(248, 201, 95);
+    mapping[12].setRgb(255, 170, 0);
+    mapping[13].setRgb(204, 128, 0);
+    mapping[14].setRgb(153, 87, 0);
+    mapping[15].setRgb(106, 52, 3);
+    return mapping[i];
+}
+else return Qt::black;
+
+}
+
 void create_mandel_map(int *big_mem_pix){
 	// http://jonisalonen.com/2013/lets-draw-the-mandelbrot-set/
 
+	PIXEL *pRGB = (PIXEL *)malloc(3*sizeof(PIXEL));
 	int row, col, iteration = 0;
 	double x = 0, y = 0;
-
+	int color_i  = 0;
 
 	for (row = 0; row < P3HEIGHT; row++) {
 	    for (col = 0; col < P3WIDTH; col++) {
@@ -32,9 +76,15 @@ void create_mandel_map(int *big_mem_pix){
 		    iteration++;
 		}
 		if (iteration < MANDELMAXITERATION){
-			putpixel(col, row, white);
+			big_mem_pix[color_i] = color_chooser(col, row, iteration, pRGB);
+			color_i++;
+			big_mem_pix[color_i] = color_chooser(col, row, iteration, pRGB);
+			color_i++;
+			big_mem_pix[color_i] = color_chooser(col, row, iteration, pRGB);
+			color_i++;
+
 		}else{
-			putpixel(col, row, black);
+			big_mem_pix[i]
 		}
 	    }
 	}
