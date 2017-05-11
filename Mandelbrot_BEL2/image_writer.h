@@ -1,12 +1,6 @@
-#ifndef IMAGE_WRITER
-#define IMAGE_WRITER
+#ifndef IMAGE_WRITER_H
+#define IMAGE_WRITER_H
 
-#include <sys/ipc.h>
-#include <sys/shm.h>
-#include <stdio.h>
-#include <sys/sem.h>
-#include <stdlib.h>
-#define MAXMYMEM 128
 
 union semun {
 	int val;

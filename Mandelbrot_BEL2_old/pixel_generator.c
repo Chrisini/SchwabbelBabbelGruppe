@@ -10,25 +10,24 @@ The Pixel Generator and the Image Writer shall communicate via shared memory. Th
 The Pixel Generator program shall create the shared memory when it is launched. When the Image Writer program is started, it shall first check if the shared memory segment exists and exit with an error message if it is not yet created.
 */
 #include "pixel_generator.h"
-#include "general_header.h"
+
+
 
 int main(int argc, char **argv)
 {
 
-	// variables for shared memory
-	int shmid; // shmid = shared memory id
-	int *buf;
-	int i;
-	key_t key;
-	srand(time(NULL));
+  // variables for shared memory
+  int shmid; // shmid = shared memory id
+  int *buf;
+  int i;
+  key_t key;
+  srand(time(NULL));
 
-	// variables for semaphores
-	int semid;
-	struct sembuf sa, sb;
-	union semun sema;
-	union semun semb;
-
-	unsigned int* big_mem_pix;
+  // variables for semaphores
+  int semid;
+  struct sembuf sa, sb;
+  union semun sema;
+  union semun semb;
 
 	// key
 	key = ftok ("/etc/hostname", 'b');
@@ -42,20 +41,18 @@ int main(int argc, char **argv)
 			perror ("semget");
 			exit (EXIT_FAILURE);
 		}
-	}
+	}// else{
+		// if sempahore was created new, initalize it
 		sema.val = 1; // open
 		semb.val = 0; // close
 		semctl (semid, 0, SETVAL, sema); // nummer 0
 		semctl (semid, 1, SETVAL, semb); // nummer 1
 		puts ("semaphores created");
-
+	// }
 
   // shmget = create
   shmid = shmget(key, MAXMYMEM, IPC_CREAT | 0666);
-	if((shmid == -1)||(errno == ENOENT)){
-		printf("segment is not yet created");
-	}
-	if (shmid >= 0) {
+  if (shmid >= 0) {
     buf = shmat(shmid, 0, 0);
     if (buf == NULL) {
       perror("shmat");
@@ -80,7 +77,7 @@ int main(int argc, char **argv)
 		  printf(" %d ",buf[i]);
 		}
 
-		puts ("it is send");
+		puts ("Numbers are created and send");
 
 		// Request acess to Sb
 		// B starts to calculate ... in other file
@@ -96,7 +93,7 @@ int main(int argc, char **argv)
 
       // shmdt = detach !!! oft FEHLER: Core dumped
       shmdt(buf);
-	puts ("Here the buffer would be detached");
+	puts ("Here the buffer is detached");
     }
   }else{
     perror("shmget");
@@ -104,4 +101,3 @@ int main(int argc, char **argv)
 
   return 0;
 }
-

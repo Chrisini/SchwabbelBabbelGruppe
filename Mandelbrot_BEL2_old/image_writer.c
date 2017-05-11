@@ -14,63 +14,36 @@
 // ???????
 // ipcrm -s nummer (shimid)
 
-#include "image_writer.h"
-#include "general_header.h"
 
 
-void imge_printer(){
-	char *openfileName = "mandelmap_";
-	char ppm_input[100];
-	int width = 1920;
-	int height = 1080;
-	int maxcolor = 255;
-	unsigned int* big_mem_p3;
-	// PIXEL **pRGB;
-
-	 #if DEBUG
-	 	printf("working til write\n");
-	 #endif
-
-	FILE * writeFile;
-	int i;
-	int filecounter = 1;
-
-	openfileName ++;
-	if(openfileName > 57){
-		filecounter = 0;
-		openfileName++;
-
+void std_printer (int list, int min, int max, int med, int mean)
+{
+	printf ("%d | Min: %d | Max: %d | Median: %d | Mean: %d\n", list, min, max, med, mean);
+}
+int calc_min (int smallest)
+{
+	return smallest;
+}
+int calc_max (int biggest)
+{
+	return biggest;
+}
+int calc_med (int a, int b)
+{
+	//calculating mean of mem[63] and mem[64] after sorting.
+	return (a + b) / 2;
+}
+int calc_mean (int buf[MAXMYMEM])
+{
+	int counter = 0, i = 0;
+	for (i = 0; i < MAXMYMEM; i++) {
+		counter += buf[i];
 	}
-	openfileName = 48 + filecounter;
-
-
-
-	// open the file for writing
-	writeFile = fopen(openfileName, "w");
-	if (writeFile == NULL)
-	{
-		perror("Error Message");
-		exit(EXIT_FAILURE);
-	}
-
-	fprintf(writeFile,"P3\n");
-	fprintf(writeFile,"%u %u\n", width, height);
-	fprintf(writeFile,"maxcolor\n");
-
-	// every pixel one time
-	for (i = 0; i < width*height; i+=3){
-		fprintf(writeFile, "%u %u %u\n", (*big_mem_p3+i), (*big_mem_p3+i+1), (*big_mem_p3+i+2));
-
-	#if DEBUG
-		printf("R: [%u]=%u\t", i, (*big_mem_p3+i));
-		printf("G: [%u]=%u\t", i, (*big_mem_p3+i+1));
-		printf("B: [%u]=%u\n", i, (*big_mem_p3+i+2));
-	#endif
-	}
-
-
-	fflush(writeFile);
-	fclose(writeFile);
+	return counter / MAXMYMEM;
+}
+int compare (const void * a, const void * b)
+{
+	return (* (int*) a - * (int*) b);
 }
 
 int main (void)
@@ -84,7 +57,6 @@ int main (void)
 	int intbuffer[MAXMYMEM];
 	int i;
 	key_t key;
-	int ret = 0;
 
 	// semaphores
 	int semid;
@@ -151,6 +123,11 @@ int main (void)
 				puts ("outside critical section");
 
 
+				// Sort 128 int values using qsort (done)
+				qsort (intbuffer, MAXMYMEM, sizeof (int), compare);
+				// Calculate Min, Max, Med, Mean (done)
+				std_printer (count_transmission, calc_min (intbuffer[0]), calc_max (intbuffer[MAXMYMEM - 1]),
+					     calc_med (intbuffer[63], intbuffer[64]), calc_mean (intbuffer));
 
 				// release access to Sa
 				// Programm a initializes new set of
