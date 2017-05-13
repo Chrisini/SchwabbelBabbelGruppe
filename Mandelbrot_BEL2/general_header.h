@@ -10,10 +10,12 @@
 #include <time.h>
 #include <errno.h>
 #include <string.h>
+#include <ctype.h>
+
 
 #define MAXMYMEM 128
-#define P3WIDTH 1920
-#define P3HEIGHT 1080
+#define P3WIDTH 192//1920
+#define P3HEIGHT 108//1080
 #define P3MAXCOLOUR 255
 #define MANDELMAXITERATION 100
 

@@ -20,45 +20,115 @@ struct rgb_pix{
 
 typedef struct rgb_pix PIXEL;
 
-void color_chooser(int col, int row,int i, PIXEL *pRGB){
+void color_chooser(int col, int row, int i, PIXEL **pRGB){
 
+	*pRGB = (PIXEL *)malloc(3*sizeof(PIXEL));
 
-	(*pRGB+i)->r = 5;
-	(*pRGB+i)->g = 10;
-	(*pRGB+i)->b) = 255;
+	switch (i){
+		case 0: // brown pod - brown
+			(*pRGB)->r = 66;
+			(*pRGB)->g = 30;
+			(*pRGB)->b = 15;
+			break;
+		case 1: // mardi gras - purple
+			(*pRGB)->r = 15;
+			(*pRGB)->g = 7;
+			(*pRGB)->b = 26;
+			break;
+		case 2: // green
+			(*pRGB)->r = 9;
+			(*pRGB)->g = 1;
+			(*pRGB)->b = 47;
+			break;
+		case 3: // blue
+			(*pRGB)->r = 4;
+			(*pRGB)->g = 4;
+			(*pRGB)->b = 73;
+			break;
+		case 4: // blue - a bit lighter
+			(*pRGB)->r = 0;
+			(*pRGB)->g = 7;
+			(*pRGB)->b = 100;
+			break;
+		case 5: // blue - a bit lighter
+			(*pRGB)->r = 12;
+			(*pRGB)->g = 44;
+			(*pRGB)->b = 138;
+			break;
+		case 6: // blue - a bit lighter
+			(*pRGB)->r = 24;
+			(*pRGB)->g = 82;
+			(*pRGB)->b = 177;
+			break;
+		case 7: // light blue
+			(*pRGB)->r = 57;
+			(*pRGB)->g = 125;
+			(*pRGB)->b = 209;
+			break;
+		case 8: // light blue - lighter
+			(*pRGB)->r = 134;
+			(*pRGB)->g = 181;
+			(*pRGB)->b = 229;
+			break;
+		case 9: // light blue - nearly white
+			(*pRGB)->r = 211;
+			(*pRGB)->g = 236;
+			(*pRGB)->b = 248;
+			break;
+		case 10: // light yellow
+			(*pRGB)->r = 241;
+			(*pRGB)->g = 233;
+			(*pRGB)->b = 191;
+			break;
+		case 11: // yellow
+			(*pRGB)->r = 248;
+			(*pRGB)->g = 201;
+			(*pRGB)->b = 95;
+			break;
+		case 12: // yellow -darker
+			(*pRGB)->r = 255;
+			(*pRGB)->g = 170;
+			(*pRGB)->b = 0;
+			break;
+		case 13: // brown
+			(*pRGB)->r = 204;
+			(*pRGB)->g = 128;
+			(*pRGB)->b = 0;
+			break;
+		case 14: // dark brown
+			(*pRGB)->r = 153;
+			(*pRGB)->g = 87;
+			(*pRGB)->b = 0;
+			break;
+		case 15: // darker dark brown
+			(*pRGB)->r = 106;
+			(*pRGB)->g = 52;
+			(*pRGB)->b = 3;
+			break;
+		default: // schwarz
+			(*pRGB)->r = 0;
+			(*pRGB)->g = 0;
+			(*pRGB)->b = 0;
+			break;
+	} // case end
 
-
-
+/*
 
 	if (n < MAX_ITERATIONS && n > 0) {
     int i = n % 16;
     QColor mapping[16];
-    mapping[0].setRgb(66, 30, 15);
-    mapping[1].setRgb(25, 7, 26);
-    mapping[2].setRgb(9, 1, 47);
-    mapping[3].setRgb(4, 4, 73);
-    mapping[4].setRgb(0, 7, 100);
-    mapping[5].setRgb(12, 44, 138);
-    mapping[6].setRgb(24, 82, 177);
-    mapping[7].setRgb(57, 125, 209);
-    mapping[8].setRgb(134, 181, 229);
-    mapping[9].setRgb(211, 236, 248);
-    mapping[10].setRgb(241, 233, 191);
-    mapping[11].setRgb(248, 201, 95);
-    mapping[12].setRgb(255, 170, 0);
-    mapping[13].setRgb(204, 128, 0);
-    mapping[14].setRgb(153, 87, 0);
-    mapping[15].setRgb(106, 52, 3);
+
     return mapping[i];
 }
-else return Qt::black;
 
-}
+*/
+
+} // function end
 
 void create_mandel_map(int *big_mem_pix){
 	// http://jonisalonen.com/2013/lets-draw-the-mandelbrot-set/
 
-	PIXEL *pRGB = (PIXEL *)malloc(3*sizeof(PIXEL));
+	PIXEL *pRGB;
 	int row, col, iteration = 0;
 	double x = 0, y = 0;
 	int color_i  = 0;
@@ -66,7 +136,7 @@ void create_mandel_map(int *big_mem_pix){
 	for (row = 0; row < P3HEIGHT; row++) {
 	    for (col = 0; col < P3WIDTH; col++) {
 		double c_re = (col - P3WIDTH/2.0)*4.0/P3WIDTH;
-		double c_im = (row - P3HEIGHT/2.0)*2.0/P3HEIGHT; // iwas mit /2??
+		double c_im = (row - P3HEIGHT/2.0)*2.0/P3HEIGHT;
 
 		while ((x*x+y*y <= 4) && (iteration < MANDELMAXITERATION)){
 
@@ -75,16 +145,31 @@ void create_mandel_map(int *big_mem_pix){
 		    x = x_new;
 		    iteration++;
 		}
-		if (iteration < MANDELMAXITERATION){
-			big_mem_pix[color_i] = color_chooser(col, row, iteration, pRGB);
-			color_i++;
-			big_mem_pix[color_i] = color_chooser(col, row, iteration, pRGB);
-			color_i++;
-			big_mem_pix[color_i] = color_chooser(col, row, iteration, pRGB);
-			color_i++;
 
+		int c = 0;
+
+		if (iteration < MANDELMAXITERATION){
+			color_chooser(col, row, c, &pRGB);
+			big_mem_pix[color_i] = pRGB->r;
+			printf("%d", big_mem_pix[color_i]);
+			color_i++;
+			big_mem_pix[color_i] = pRGB->g;
+			printf("%d", big_mem_pix[color_i]);
+			color_i++;
+			big_mem_pix[color_i] = pRGB->b;
+			printf("%d", big_mem_pix[color_i]);
+			color_i++;
+			free(pRGB);
+			printf("   ");
+			c++;
 		}else{
-			big_mem_pix[i]
+			big_mem_pix[color_i] = 0;
+			color_i++;
+			big_mem_pix[color_i] = 0;
+			color_i++;
+			big_mem_pix[color_i] = 0;
+			color_i++;
+			printf("black\n");
 		}
 	    }
 	}
