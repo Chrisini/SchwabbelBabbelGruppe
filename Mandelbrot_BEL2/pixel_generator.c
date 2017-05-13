@@ -22,6 +22,8 @@ typedef struct rgb_pix PIXEL;
 
 void color_chooser(int col, int row, int i, PIXEL **pRGB){
 
+	// printf("i: %d\n", i);
+
 	*pRGB = (PIXEL *)malloc(3*sizeof(PIXEL));
 
 	switch (i){
@@ -132,6 +134,7 @@ void create_mandel_map(int *big_mem_pix){
 	int row, col, iteration = 0;
 	double x = 0, y = 0;
 	int color_i  = 0;
+	int c = 0;
 
 	for (row = 0; row < P3HEIGHT; row++) {
 	    for (col = 0; col < P3WIDTH; col++) {
@@ -146,7 +149,7 @@ void create_mandel_map(int *big_mem_pix){
 		    iteration++;
 		}
 
-		int c = 0;
+
 
 		if (iteration < MANDELMAXITERATION){
 			color_chooser(col, row, c, &pRGB);
@@ -237,7 +240,7 @@ void communication(int *big_mem_pix){
 		for (i=0; i<MAXMYMEM; i++) {
 		  // 128 random int values
 		  // from -20 to + 40
-		  buf[i] = rand()%61-20;
+		  buf[i] = big_mem_pix[i];
 		  printf(" %d ",buf[i]);
 		}
 
@@ -253,10 +256,11 @@ void communication(int *big_mem_pix){
 		}
 
 		puts ("outside critical section");
+		printf("wait");
 	}
 
-      // shmdt = detach !!! oft FEHLER: Core dumped
-      shmdt(buf);
+     // shmdt = detach !!! oft FEHLER: Core dumped
+      	shmdt(buf);
 	puts ("Here the buffer would be detached");
     }
   }else{

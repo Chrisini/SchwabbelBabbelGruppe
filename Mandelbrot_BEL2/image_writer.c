@@ -18,16 +18,13 @@
 #include "general_header.h"
 
 
-void image_printer(){
+void image_printer(int* big_mem_p3){
 	char openfileName[30];
 	char ppm_input[100];
-	int* big_mem_p3;
-	big_mem_p3 = (int*) malloc(P3WIDTH*P3HEIGHT*3*sizeof(int));
 	if (big_mem_p3==NULL){
 		printf("Malloc - NULL");
 	}else{
 		printf("Malloc was successful");
-
 	}
 
 
@@ -88,13 +85,18 @@ int main (void)
 	key_t key;
 	int ret = 0;
 
-	image_printer();
+	int* big_mem_p3;
+	big_mem_p3 = (int*) malloc(P3WIDTH*P3HEIGHT*3*sizeof(int));
+
+
 
 	// semaphores
 	int semid;
 	struct sembuf sa, sb;
 	union semun sema;
 	union semun semb;
+
+	int i_color = 0;
 
 	// key
 	key = ftok ("/etc/hostname", 'b');
@@ -138,7 +140,8 @@ int main (void)
 
 				for (i = 0; i < MAXMYMEM; i++) {
 					printf (" %d ", buf[i]);
-					intbuffer [i] = buf[i];
+					big_mem_p3 [i_color] = buf[i];
+					i_color ++;
 				}
 				puts ("\n");
 
@@ -153,7 +156,7 @@ int main (void)
 				}
 
 				puts ("outside critical section");
-
+				printf("wait");
 
 
 				// release access to Sa
@@ -171,6 +174,9 @@ int main (void)
 
 	}
 	shmdt (buf);
+
+	image_printer(big_mem_p3);
+
 	// shared memory detach CAREFUL: Core Dumped Errors
 
 	return 0;
