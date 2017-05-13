@@ -22,17 +22,10 @@ void image_printer(int* big_mem_p3){
 	char openfileName[30];
 	char ppm_input[100];
 	if (big_mem_p3==NULL){
-		printf("Malloc - NULL");
+		printf("Malloc - NULL\n");
 	}else{
-		printf("Malloc was successful");
+		printf("Malloc was successful\n");
 	}
-
-
-	// PIXEL **pRGB;
-
-	 #if DEBUG
-	 	printf("working til write\n");
-	 #endif
 
 	FILE * writeFile;
 	int file_counter = 1;
@@ -41,7 +34,7 @@ void image_printer(int* big_mem_p3){
 
 	sprintf(openfileName,"mandelmap_%d.ppm",file_counter);
 	file_counter ++;
-	printf("Filename created: %s", openfileName);
+	printf("Filename created: %s\n", openfileName);
 
 	// open the file for writing
 	writeFile = fopen(openfileName, "w");
@@ -55,15 +48,9 @@ void image_printer(int* big_mem_p3){
 	fprintf(writeFile,"%u %u\n", P3WIDTH, P3HEIGHT);
 	fprintf(writeFile,"%u\n", P3MAXCOLOUR);
 
-	printf("I'm here");
-
-	for (i = 0; i < P3WIDTH*P3HEIGHT*3; i+=3){
-		big_mem_p3[i] = 205;
-		big_mem_p3[i+1] = 20;
-		big_mem_p3[i+2] = 150;
-
+	// P3WIDTH*P3HEIGHT*3
+	for (i = 0; i < MAXBIGMEM; i+=3){
 		fprintf(writeFile, "%u %u %u\n", (big_mem_p3[i]), (big_mem_p3[i+1]), (big_mem_p3[i+2]));
-
 	}
 
 
@@ -139,13 +126,18 @@ int main (void)
 				puts ("critical section");
 
 				for (i = 0; i < MAXMYMEM; i++) {
-					printf (" %d ", buf[i]);
+
 					big_mem_p3 [i_color] = buf[i];
+					printf (" %d ", big_mem_p3[i_color]);
 					i_color ++;
+				}
+				if( i < MAXMYMEM){
+					printf("Break");
+					break;
 				}
 				puts ("\n");
 
-				puts ("Read all the numbers");
+				puts ("Read all the colors");
 
 				// post operation
 				sa.sem_num = 0; // nummer von oben
@@ -155,8 +147,14 @@ int main (void)
 					perror ("semop");
 				}
 
+
 				puts ("outside critical section");
-				printf("wait");
+
+
+
+				printf("wait...");
+				//printf("press enter");
+				//getchar();
 
 
 				// release access to Sa
@@ -165,6 +163,7 @@ int main (void)
 
 				count_transmission ++;
 				printf ("End of get");
+
 			}
 		/*}else{
 			perror("shmget");

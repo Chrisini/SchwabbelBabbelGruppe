@@ -150,7 +150,6 @@ void create_mandel_map(int *big_mem_pix){
 		}
 
 
-
 		if (iteration < MANDELMAXITERATION){
 			color_chooser(col, row, c, &pRGB);
 			big_mem_pix[color_i] = pRGB->r;
@@ -185,6 +184,7 @@ void communication(int *big_mem_pix){
 	int shmid; // shmid = shared memory id
 	int *buf;
 	int i;
+	int i_col = 0;
 	key_t key;
 	srand(time(NULL));
 
@@ -240,8 +240,12 @@ void communication(int *big_mem_pix){
 		for (i=0; i<MAXMYMEM; i++) {
 		  // 128 random int values
 		  // from -20 to + 40
-		  buf[i] = big_mem_pix[i];
+		  buf[i] = big_mem_pix[i_col];
+			i_col++;
 		  printf(" %d ",buf[i]);
+		}
+		if(i_col > MAXBIGMEM){
+			break;
 		}
 
 		puts ("it is send");
@@ -257,6 +261,7 @@ void communication(int *big_mem_pix){
 
 		puts ("outside critical section");
 		printf("wait");
+		//getchar();
 	}
 
      // shmdt = detach !!! oft FEHLER: Core dumped
@@ -277,8 +282,6 @@ int main(int argc, char **argv)
 
 	create_mandel_map(big_mem_pix);
 	communication(big_mem_pix);
-
-
 
 
   return 0;
