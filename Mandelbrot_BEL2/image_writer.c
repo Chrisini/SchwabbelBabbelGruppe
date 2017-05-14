@@ -53,10 +53,8 @@ void image_printer(int* big_mem_p3){
 		fprintf(writeFile, "%u %u %u\n", (big_mem_p3[i]), (big_mem_p3[i+1]), (big_mem_p3[i+2]));
 	}
 
-
 	fflush(writeFile);
 	fclose(writeFile);
-
 }
 
 int main (void)
@@ -75,8 +73,6 @@ int main (void)
 	int* big_mem_p3;
 	big_mem_p3 = (int*) malloc(P3WIDTH*P3HEIGHT*3*sizeof(int));
 
-
-
 	// semaphores
 	int semid;
 	struct sembuf sa, sb;
@@ -88,28 +84,26 @@ int main (void)
 	// key
 	key = ftok ("/etc/hostname", 'b');
 	// check whether semaphore exists - if not create it
-	semid = semget (key, 2, IPC_CREAT | IPC_EXCL | 0666); // 2 = anzahl
+	semid = semget (key, 2, IPC_CREAT | IPC_EXCL | 0666);
 	if (semid == -1) {
 		// if semaphore exists get the semaphore id
-		semid = semget (key, 2, 0 | 0666); // 2 = anzahl
+		semid = semget (key, 2, 0 | 0666);
 		if (semid == -1) {
 			perror ("semget");
 			exit (EXIT_FAILURE);
 		}
-	}//else{
-		// if sempahore was created new initalize it
-		sema.val = 0; // open
-		semb.val = 1; // close
-		semctl (semid, 0, SETVAL, sema); // nummer
-		semctl (semid, 1, SETVAL, semb); // nummer
+	}
+		sema.val = 1; // open
+		semb.val = 0; // close
+		semctl (semid, 0, SETVAL, sema); // sema: number 0
+		semctl (semid, 1, SETVAL, semb); // semb: number 1
 
 		puts ("semaphores created");
-	//}
 
-	// shared memory create
+	// Allocates shared memory segment: key, size, flags
 	shmid = shmget (key, MAXMYMEM, 0666);
 	if (shmid >= 0) {
-		// shared memory attach
+		// shared memory attach: id, addr, flags
 		buf = shmat (shmid, 0, 0);
 		if (buf == NULL) {
 			perror ("shmat");
@@ -127,14 +121,15 @@ int main (void)
 
 				for (i = 0; i < MAXMYMEM; i++) {
 
+					if(sizeof(buf[i]) < 1){
+						printf("Break");
+						break;
+					}
 					big_mem_p3 [i_color] = buf[i];
 					printf (" %d ", big_mem_p3[i_color]);
 					i_color ++;
 				}
-				if( i < MAXMYMEM){
-					printf("Break");
-					break;
-				}
+
 				puts ("\n");
 
 				puts ("Read all the colors");
@@ -147,32 +142,23 @@ int main (void)
 					perror ("semop");
 				}
 
-
-				puts ("outside critical section");
-
-
-
-				printf("wait...");
-				//printf("press enter");
-				//getchar();
+				if(i_color > MAXBIGMEM){
+					shmdt (buf);
+					break;
+				}
 
 
-				// release access to Sa
-				// Programm a initializes new set of
-				// 128 int values
+				puts ("outside critical section\n");
+
+				printf("wait...\n");
+
 
 				count_transmission ++;
-				printf ("End of get");
+				printf ("End of get\n");
 
 			}
-		/*}else{
-			perror("shmget");
-		}*/
-
 		}
-
 	}
-	shmdt (buf);
 
 	image_printer(big_mem_p3);
 

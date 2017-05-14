@@ -20,7 +20,7 @@ struct rgb_pix{
 
 typedef struct rgb_pix PIXEL;
 
-void color_chooser(int col, int row, int i, PIXEL **pRGB){
+void color_chooser(int i, PIXEL **pRGB){
 
 	// printf("i: %d\n", i);
 
@@ -114,68 +114,75 @@ void color_chooser(int col, int row, int i, PIXEL **pRGB){
 			break;
 	} // case end
 
-/*
-
-	if (n < MAX_ITERATIONS && n > 0) {
-    int i = n % 16;
-    QColor mapping[16];
-
-    return mapping[i];
-}
-
-*/
-
 } // function end
+
+
 
 void create_mandel_map(int *big_mem_pix){
 	// http://jonisalonen.com/2013/lets-draw-the-mandelbrot-set/
 
+	double x, xx, y, cx, cy;
+	int iteration, hx, hy;
+	int itermax = 100;
+	double magnify = 1.0;
+	int hxres = 500; // horizontal
+	int hyres = 500; // vertical
 	PIXEL *pRGB;
-	int row, col, iteration = 0;
-	double x = 0, y = 0;
 	int color_i  = 0;
-	int c = 0;
+	int col = 0;
 
-	for (row = 0; row < P3HEIGHT; row++) {
-	    for (col = 0; col < P3WIDTH; col++) {
-		double c_re = (col - P3WIDTH/2.0)*4.0/P3WIDTH;
-		double c_im = (row - P3HEIGHT/2.0)*2.0/P3HEIGHT;
-
-		while ((x*x+y*y <= 4) && (iteration < MANDELMAXITERATION)){
-
-		    double x_new = x*x - y*y + c_re;
-		    y = 2*x*y + c_im;
-		    x = x_new;
-		    iteration++;
+	for (hy =1; hy <= hyres; hy++) {
+	    for (hx = 1; hx <= hxres; hx++) {
+		cx = (((float)hx) / ((float)hxres)-0.5)/magnify*3.0-0.7;
+		cy = (((float)hy) / ((float)hyres)-0.5)/magnify*3.0;
+		x = 0.0;
+		y = 0.0;
+		for (iteration = 1; iteration < itermax; iteration++){
+			// printf(" %d ", iteration);
+			xx = x*x-y*y+cx;
+			y = 2.0*x*y+cy;
+			x = xx;
+			if((x*x+y*y)>100.0){
+				// printf(" hello: %d ", iteration);
+				iteration = 999999;
+			}
 		}
 
+		//printf(" i:%d m:%d ", iteration, itermax);
+		if (iteration > 999){
+			int i = iteration % 16;
+			printf("i:%d,%d ", iteration, i);
 
-		if (iteration < MANDELMAXITERATION){
-			color_chooser(col, row, c, &pRGB);
+			//printf("a");
+			color_chooser(col, &pRGB);
+			if(col >= 15){
+				col = 0;
+			}else{
+				col ++;
+			}
+
 			big_mem_pix[color_i] = pRGB->r;
-			printf("%d", big_mem_pix[color_i]);
+			//printf("%d", big_mem_pix[color_i]);
 			color_i++;
 			big_mem_pix[color_i] = pRGB->g;
-			printf("%d", big_mem_pix[color_i]);
+			//printf("%d", big_mem_pix[color_i]);
 			color_i++;
 			big_mem_pix[color_i] = pRGB->b;
-			printf("%d", big_mem_pix[color_i]);
+			//printf("%d", big_mem_pix[color_i]);
 			color_i++;
 			free(pRGB);
-			printf("   ");
-			c++;
 		}else{
+			//printf("b");
 			big_mem_pix[color_i] = 0;
 			color_i++;
 			big_mem_pix[color_i] = 0;
 			color_i++;
 			big_mem_pix[color_i] = 0;
 			color_i++;
-			printf("black\n");
+			// printf("b");
 		}
 	    }
 	}
-
 }
 
 void communication(int *big_mem_pix){
@@ -186,7 +193,6 @@ void communication(int *big_mem_pix){
 	int i;
 	int i_col = 0;
 	key_t key;
-	srand(time(NULL));
 
 	// variables for semaphores
 	int semid;
@@ -196,34 +202,40 @@ void communication(int *big_mem_pix){
 
 	// key
 	key = ftok ("/etc/hostname", 'b');
-	// check whether semaphore exists - if not create it
-	semid = semget (key, 2, IPC_CREAT | IPC_EXCL | 0666); // 2 = anzahl
+
+	// create semaphores
+	semid = semget (key, 2, IPC_CREAT | IPC_EXCL | 0666);
 	if (semid == -1) {
 		// if semaphore exists get the semaphore id
-		semid = semget (key, 2, 0 | 0666); // 2 = anzahl
+		semid = semget (key, 2, 0 | 0666);
 		puts ("semaphores existed");
 		if (semid == -1) {
 			perror ("semget");
 			exit (EXIT_FAILURE);
 		}
 	}
-		sema.val = 1; // open
-		semb.val = 0; // close
-		semctl (semid, 0, SETVAL, sema); // nummer 0
-		semctl (semid, 1, SETVAL, semb); // nummer 1
-		puts ("semaphores created");
 
+	// Semaphores open/close
+	sema.val = 1; // open
+	semb.val = 0; // close
+	semctl (semid, 0, SETVAL, sema);
+	semctl (semid, 1, SETVAL, semb);
 
-  // shmget = create
-  shmid = shmget(key, MAXMYMEM, IPC_CREAT | 0666);
+	puts ("semaphores created");
+
+	// create shared memory
+	shmid = shmget(key, MAXMYMEM, IPC_CREAT | 0666);
 	if((shmid == -1)||(errno == ENOENT)){
 		printf("segment is not yet created");
 	}
+
+	//attach
 	if (shmid >= 0) {
-    buf = shmat(shmid, 0, 0);
-    if (buf == NULL) {
-      perror("shmat");
-    }else{
+    		buf = shmat(shmid, 0, 0);
+    		if (buf == NULL) {
+      			perror("shmat");
+    		}else{
+
 	while(1){
 		// Access to Sa
 		sa.sem_num = 0; // nummer 0 von oben
@@ -241,37 +253,39 @@ void communication(int *big_mem_pix){
 		  // 128 random int values
 		  // from -20 to + 40
 		  buf[i] = big_mem_pix[i_col];
-			i_col++;
+		  i_col++;
 		  printf(" %d ",buf[i]);
 		}
 		if(i_col > MAXBIGMEM){
 			break;
 		}
 
-		puts ("it is send");
 
 		// Request acess to Sb
-		// B starts to calculate ... in other file
-		sb.sem_num = 1; // nummer von oben
+		sb.sem_num = 1;
 		sb.sem_flg = SEM_UNDO;
-		sb.sem_op = 1; // will sb öffnen
+		sb.sem_op = 1; // Open SB
 		if (semop (semid, &sb, 1) == -1) {
 			perror ("semop");
 		}
 
 		puts ("outside critical section");
 		printf("wait");
-		//getchar();
-	}
 
-     // shmdt = detach !!! oft FEHLER: Core dumped
-      	shmdt(buf);
-	puts ("Here the buffer would be detached");
+	}
+	shmdt(buf);
     }
   }else{
     perror("shmget");
   }
 
+}
+
+void clean_up(int* big_mem_pix){
+
+	printf("Clean");
+	free(big_mem_pix);
+	exit(EXIT_SUCCESS);
 }
 
 int main(int argc, char **argv)
@@ -282,7 +296,7 @@ int main(int argc, char **argv)
 
 	create_mandel_map(big_mem_pix);
 	communication(big_mem_pix);
-
+	//clean_up(big_mem_pix);
 
   return 0;
 }
