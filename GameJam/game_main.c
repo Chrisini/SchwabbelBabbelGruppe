@@ -1,36 +1,7 @@
 #include "header/game_main.h"
 
 
-void callback_music(GSimpleAction *action, GVariant *parameter, gpointer data)
-{
-	g_print("Music");
-}
-
-void callback_quit(GSimpleAction *action, GVariant *parameter, gpointer data)
-{
-	GtkWidget *dialog;
-	GtkWidget *grid;
-	GtkWidget *label;
-	GtkWidget *content_area;
-	widgets *all = (widgets *) data;
-
-	dialog = gtk_message_dialog_new_with_buttons ("Quit",
-					GTK_WINDOW (a->window),
-					GTK_DIALOG_MODAL,
-					_ ("_NO"),
-					GTK_RESPONSE_CANCEL,
-					_ ("YES"),
-					GTK_RESPONSE_OK,
-					 GTK_DIALOG_DESTROY_WITH_PARENT,
-					 GTK_MESSAGE_INFO,
-					 GTK_BUTTON_CLOSE,
-					 "Do you want to quit?");
-	g_signal_connect(dialog, "response",
-			 G_CALLBACK (gtk_widget_destroy), NULL);
-	gtk_widget_show(dialog);
-
-}
-
+/*
 void but_life(GtkWidget *widget, gpointer data)
 {}
 
@@ -51,10 +22,15 @@ void but_ult(GtkWidget *widget, gpointer data)
 
 void but_base(GtkWidget *widget, gpointer data)
 {}
-
+*/
 const GActionEntry app_entries[] = {
+	{ "newgame", callback_newgame, NULL, NULL, NULL, {0,0,0} },
+	{ "level", callback_level, NULL, NULL, NULL, {0,0,0} },
+	{ "highscore", callback_highscore, NULL, NULL, NULL, {0,0,0} },
+	{ "quit", callback_quit, NULL, NULL, NULL, {0,0,0} },
 	{ "music", callback_music, NULL, NULL, NULL, {0,0,0} },
-	{ "quit", callback_quit, NULL, NULL, NULL, {0,0,0} }
+	{ "about", callback_about, NULL, NULL, NULL, {0,0,0} },
+	{ "help", callback_help, NULL, NULL, NULL, {0,0,0} }
 
 };
 
@@ -65,7 +41,7 @@ static void create_menu (GtkApplication *app, GtkWidget *box, gpointer user_data
 	GtkWidget *menubar;
 	GMenu *menu, *menu_game, *menu_settings, *menu_help, *menu_quit;
 
-	char c_music = 'm';
+	char c_music[2] = {"m"};
 
 	// keyboard accelerators
 	const gchar *accels_music[2] = {c_music, NULL};
@@ -80,17 +56,13 @@ static void create_menu (GtkApplication *app, GtkWidget *box, gpointer user_data
 	menu = g_menu_new();
 
 	// create game *****
-	// restart
-	// lvl
-	// high score
-	// quit
 	menu_game = g_menu_new();
 	g_menu_append (menu_game, "New Game", "app.newgame"); // restart
-	g_menu_append (menu_game, "Change lvl", "app.changelvl");
-	g_menu_append (menu_game, "High Score", "app.highscore");
+	g_menu_append (menu_game, "Change lvl", "app.level"); // level
+	g_menu_append (menu_game, "High Score", "app.highscore"); // highscore
 
 	menu_quit = g_menu_new();
-	g_menu_append (menu_quit, "Quit", "app.quit");
+	g_menu_append (menu_quit, "Quit", "app.quit"); // quit
 	g_menu_append_section(menu_game, NULL, G_MENU_MODEL (menu_quit));
 
 	g_menu_insert_submenu (menu, 0, "Game", G_MENU_MODEL (menu_game));
@@ -123,13 +95,18 @@ static void create_menu (GtkApplication *app, GtkWidget *box, gpointer user_data
 
 
 }
-
+/*
 static void create_sidebar (GtkApplication *app, GtkWidget *box, gpointer user_data)
 {
 
 	widgets *a = (widgets *) user_data;
 
 	GtkWidget *button;
+	GtkWidget *grid;
+
+	// layout containers *****
+	grid = gtk_grid_new ();
+	gtk_container_add (GTK_CONTAINER (a->window), grid);
 
 
 	char c_life = 'l';
@@ -189,8 +166,13 @@ static void create_prgress (GtkApplication *app, GtkApplication *box, gpointer u
 {
 	widgets *a = (widgets *) user_data;
 	GtkWidget *progb_attack;
+	GtkWidget *grid;
 
 	int progb_timer;
+
+	// layout containers *****
+	grid = gtk_grid_new ();
+	gtk_container_add (GTK_CONTAINER (a->window), grid);
 
 	// attack - Schaden
 	progb_attack = gtk_progress_bar_new();
@@ -205,12 +187,13 @@ static void create_prgress (GtkApplication *app, GtkApplication *box, gpointer u
 	progb_energy = // Energie
 	progb_dead = // Time until live again
 	*/
-}
+//} */
 
 static void activate (GtkApplication *app, gpointer user_data)
 {
 	widgets *a = (widgets *) user_data;
 
+	GtkWidget *grid;
 	GtkWidget *box;
 
 	// create window and set title *****
@@ -218,20 +201,23 @@ static void activate (GtkApplication *app, gpointer user_data)
 	gtk_window_set_application (GTK_WINDOW (a->window), GTK_APPLICATION (app));
 	gtk_window_set_position (GTK_WINDOW (a->window), GTK_WIN_POS_CENTER);
 	gtk_window_set_title (GTK_WINDOW (a->window), "Game Jam");
-	gtk_window_set_default_size (GTK_WINDOW (a->window), 400, 400);
+	gtk_window_set_default_size (GTK_WINDOW (a->window), 800, 500); // width, height
 
 
 	// layout containers *****
-	// grid = gtk_grid_new ();
+	box = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
+	gtk_container_add( GTK_CONTAINER (a->window), box);
+	//grid = gtk_grid_new ();
 	//gtk_container_add (GTK_CONTAINER (a->window), grid);
 
 	// menu *****
-
+	create_menu(app, GTK_WIDGET (box), (gpointer) a);
 
 	// ability *****
-
+	//create_sidebar(app, GTK_WIDGET (grid), (gpointer) a);
 
 	// regeneration - progress bar *****
+//	create_prgress(app, GTK_WIDGET (grid), (gpointer) a);
 
 	// show all widgets
 	gtk_widget_show_all (a->window);
