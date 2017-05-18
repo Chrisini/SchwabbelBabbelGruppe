@@ -1,4 +1,4 @@
-SOURCES = game_main.c callback.c
+SOURCES = game_main.c callback.c buttons.c
 # RESOURCE
 
 TARGET = main

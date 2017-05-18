@@ -16,7 +16,7 @@ void callback_highscore(GSimpleAction *action, GVariant *parameter, gpointer dat
 	g_print("Music");
 }
 
-void callback_quit(GSimpleAction *action, GVariant *parameter, gpointer data)
+void callback_exit(GSimpleAction *action, GVariant *parameter, gpointer data)
 {
 	/*GtkWidget *dialog;
 	GtkWidget *grid;

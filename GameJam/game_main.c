@@ -1,33 +1,12 @@
 #include "header/game_main.h"
 
 
-/*
-void but_life(GtkWidget *widget, gpointer data)
-{}
 
-void but_twice(GtkWidget *widget, gpointer data)
-{}
-
-void but_ability1(GtkWidget *widget, gpointer data)
-{}
-
-void but_ability2(GtkWidget *widget, gpointer data)
-{}
-
-void but_ability3(GtkWidget *widget, gpointer data)
-{}
-
-void but_ult(GtkWidget *widget, gpointer data)
-{}
-
-void but_base(GtkWidget *widget, gpointer data)
-{}
-*/
 const GActionEntry app_entries[] = {
 	{ "newgame", callback_newgame, NULL, NULL, NULL, {0,0,0} },
 	{ "level", callback_level, NULL, NULL, NULL, {0,0,0} },
 	{ "highscore", callback_highscore, NULL, NULL, NULL, {0,0,0} },
-	{ "quit", callback_quit, NULL, NULL, NULL, {0,0,0} },
+	{ "exit", callback_exit, NULL, NULL, NULL, {0,0,0} },
 	{ "music", callback_music, NULL, NULL, NULL, {0,0,0} },
 	{ "about", callback_about, NULL, NULL, NULL, {0,0,0} },
 	{ "help", callback_help, NULL, NULL, NULL, {0,0,0} }
@@ -39,14 +18,14 @@ static void create_menu (GtkApplication *app, GtkWidget *box, gpointer user_data
 	widgets *a = (widgets *) user_data;
 
 	GtkWidget *menubar;
-	GMenu *menu, *menu_game, *menu_settings, *menu_help, *menu_quit;
+	GMenu *menu, *menu_game, *menu_settings, *menu_help, *menu_exit;
 
 	char c_music[2] = {"m"};
 
 	// keyboard accelerators
 	const gchar *accels_music[2] = {c_music, NULL};
 	const gchar *accels_help[2] = {"F1", NULL};
-	const gchar *accels_quit[2] = {"q", NULL};
+	const gchar *accels_exit[2] = {"x", NULL};
 
 	// map entries and actions *****
 	g_action_map_add_action_entries (G_ACTION_MAP (app), app_entries,
@@ -61,12 +40,12 @@ static void create_menu (GtkApplication *app, GtkWidget *box, gpointer user_data
 	g_menu_append (menu_game, "Change lvl", "app.level"); // level
 	g_menu_append (menu_game, "High Score", "app.highscore"); // highscore
 
-	menu_quit = g_menu_new();
-	g_menu_append (menu_quit, "Quit", "app.quit"); // quit
-	g_menu_append_section(menu_game, NULL, G_MENU_MODEL (menu_quit));
+	menu_exit = g_menu_new();
+	g_menu_append (menu_exit, "Exit", "app.exit"); // quit
+	g_menu_append_section(menu_game, NULL, G_MENU_MODEL (menu_exit));
 
 	g_menu_insert_submenu (menu, 0, "Game", G_MENU_MODEL (menu_game));
-	g_object_unref (menu_quit);
+	g_object_unref (menu_exit);
 
 
 	// create settings *****
@@ -91,11 +70,10 @@ static void create_menu (GtkApplication *app, GtkWidget *box, gpointer user_data
 	// connect keyboard accelerators *****
 	gtk_application_set_accels_for_action (GTK_APPLICATION (app), "app.music", accels_music);
 	gtk_application_set_accels_for_action (GTK_APPLICATION (app), "app.help", accels_help);
-	gtk_application_set_accels_for_action (GTK_APPLICATION (app), "app.quit", accels_quit);
-
+	gtk_application_set_accels_for_action (GTK_APPLICATION (app), "app.exit", accels_exit);
 
 }
-/*
+
 static void create_sidebar (GtkApplication *app, GtkWidget *box, gpointer user_data)
 {
 
@@ -108,23 +86,23 @@ static void create_sidebar (GtkApplication *app, GtkWidget *box, gpointer user_d
 	grid = gtk_grid_new ();
 	gtk_container_add (GTK_CONTAINER (a->window), grid);
 
-
-	char c_life = 'l';
-	char c_twice = '2';
-	char c_ability1 = 'q';
-	char c_ability2 = 'w';
-	char c_ability3 = 'e';
-	char c_ult = 'r';
-	char c_base = 'b';
+	char c_life[2] = {"l"};
+	char c_twice[2] = {"2"};
+	char c_ability1[2] = {"q"};
+	char c_ability2[2] = {"w"};
+	char c_ability3[2] = {"e"};
+	char c_ult[2] = {"r"};
+	char c_base[2] = {"b"};
 
 	// keyboard accelerators
-	const gchar *accels_life[2] = {c_life, NULL};
-	const gchar *accels_twice[2] = {c_twice, NULL};
-	const gchar *accels_ability1[2] = {c_ability1, NULL};
-	const gchar *accels_ability2[2] = {c_ability2, NULL};
-	const gchar *accels_ability3[2] = {c_ability3, NULL};
-	const gchar *accels_ult[2] = {c_ult, NULL};
-	const gchar *accels_base[2] = {c_base, NULL};
+				const gchar *accels_life[2] = {c_life, NULL};
+				const gchar *accels_twice[2] = {c_twice, NULL};
+				const gchar *accels_ability1[2] = {c_ability1, NULL};
+				const gchar *accels_ability2[2] = {c_ability2, NULL};
+				const gchar *accels_ability3[2] = {c_ability3, NULL};
+				const gchar *accels_ult[2] = {c_ult, NULL};
+				const gchar *accels_base[2] = {c_base, NULL};
+
 
 	// map entries and actions *****
 	g_action_map_add_action_entries (G_ACTION_MAP (app), app_entries,
@@ -134,34 +112,50 @@ static void create_sidebar (GtkApplication *app, GtkWidget *box, gpointer user_d
 	// Life - Lebenspunkte aufladen
 	button = gtk_button_new_with_label ("Life");
 	g_signal_connect (button, "clicked", G_CALLBACK (but_life), NULL);
-	gtk_grid_attach (GTK_GRID (grid), button, 1, 0, 1, 1);
+	gtk_grid_attach (GTK_GRID (grid), button, 0, 1, 1, 1);
 	// Two turns for Mr X
 	button = gtk_button_new_with_label ("x2");
 	g_signal_connect (button, "clicked", G_CALLBACK (but_twice), NULL);
-	gtk_grid_attach (GTK_GRID (grid), button, 2, 0, 1, 1);
+	gtk_grid_attach (GTK_GRID (grid), button, 0, 2, 1, 1);
 	// Ability - Q - Point / Click Ability
 	button = gtk_button_new_with_label ("ability 1");
 	g_signal_connect (button, "clicked", G_CALLBACK (but_ability1), NULL);
-	gtk_grid_attach (GTK_GRID (grid), button, 3, 0, 1, 1);
+	gtk_grid_attach (GTK_GRID (grid), button, 0, 3, 1, 1);
 	// Ability - W - Area / Flaechenschaden
 	button = gtk_button_new_with_label ("ability 2");
 	g_signal_connect (button, "clicked", G_CALLBACK (but_ability2), NULL);
-	gtk_grid_attach (GTK_GRID (grid), button, 4, 0, 1, 1);
+	gtk_grid_attach (GTK_GRID (grid), button, 0, 4, 1, 1);
 	// Ability - E - passive damage
 	button = gtk_button_new_with_label ("ability 3");
 	g_signal_connect (button, "clicked", G_CALLBACK (but_ability3), NULL);
-	gtk_grid_attach (GTK_GRID (grid), button, 5, 0, 1, 1);
+	gtk_grid_attach (GTK_GRID (grid), button, 0, 5, 1, 1);
 	// Ability  - R - ulti
 	button = gtk_button_new_with_label ("ult");
 	g_signal_connect (button, "clicked", G_CALLBACK (but_ult), NULL);
-	gtk_grid_attach (GTK_GRID (grid), button, 6, 0, 1, 1);
+	gtk_grid_attach (GTK_GRID (grid), button, 0, 6, 1, 1);
 	// Base - B
 	button = gtk_button_new_with_label ("base");
 	g_signal_connect (button, "clicked", G_CALLBACK (but_base), NULL);
-	gtk_grid_attach (GTK_GRID (grid), button, 7, 0, 1, 1);
+	gtk_grid_attach (GTK_GRID (grid), button, 0, 7, 1, 1);
+
+		// connect keyboard accelerators *****
+	gtk_application_set_accels_for_action (GTK_APPLICATION (app), "app.life", accels_life);
+	gtk_application_set_accels_for_action (GTK_APPLICATION (app), "app.twice", accels_twice);
+	gtk_application_set_accels_for_action (GTK_APPLICATION (app), "app.ability1", accels_ability1);
+	gtk_application_set_accels_for_action (GTK_APPLICATION (app), "app.ability2", accels_ability2);
+	gtk_application_set_accels_for_action (GTK_APPLICATION (app), "app.ability3", accels_ability3);
+	gtk_application_set_accels_for_action (GTK_APPLICATION (app), "app.ult", accels_ult);
+	gtk_application_set_accels_for_action (GTK_APPLICATION (app), "app.base", accels_base);
+//	gtk_application_set_accels_for_action (GTK_APPLICATION (app), "app.help", accels_help);
+//	gtk_application_set_accels_for_action (GTK_APPLICATION (app), "app.exit", accels_exit);
+//	gtk_application_set_accels_for_action (GTK_APPLICATION (app), "app.music", accels_music);
+//	gtk_application_set_accels_for_action (GTK_APPLICATION (app), "app.help", accels_help);
+//	gtk_application_set_accels_for_action (GTK_APPLICATION (app), "app.exit", accels_exit);
+
+	gtk_box_pack_end(GTK_BOX(box), grid, FALSE, FALSE,0);
 
 }
-
+/*
 static void create_prgress (GtkApplication *app, GtkApplication *box, gpointer user_data)
 {
 	widgets *a = (widgets *) user_data;
@@ -193,8 +187,8 @@ static void activate (GtkApplication *app, gpointer user_data)
 {
 	widgets *a = (widgets *) user_data;
 
-	GtkWidget *grid;
-	GtkWidget *box;
+	GtkWidget *box; // layout
+	GtkWidget *grid; // sub-layout
 
 	// create window and set title *****
 	a->window = gtk_application_window_new (app);
@@ -214,7 +208,7 @@ static void activate (GtkApplication *app, gpointer user_data)
 	create_menu(app, GTK_WIDGET (box), (gpointer) a);
 
 	// ability *****
-	//create_sidebar(app, GTK_WIDGET (grid), (gpointer) a);
+	create_sidebar(app, GTK_WIDGET (box), (gpointer) a);
 
 	// regeneration - progress bar *****
 //	create_prgress(app, GTK_WIDGET (grid), (gpointer) a);
