@@ -10,6 +10,10 @@ typedef struct {
 
 // PROTOTYPES
 
+void create_progress (GtkApplication *app, GtkWidget *box, gpointer user_data);
+void create_menu (GtkApplication *app, GtkWidget *box, gpointer user_data);
+void create_sidebar (GtkApplication *app, GtkWidget *box,  GtkWidget *stacksidebar, gpointer user_data);
+
 void callback_newgame(GSimpleAction *action, GVariant *parameter, gpointer data);
 void callback_level(GSimpleAction *action, GVariant *parameter, gpointer data);
 void callback_highscore(GSimpleAction *action, GVariant *parameter, gpointer data);
@@ -27,15 +31,6 @@ void but_ult(GtkWidget *widget, gpointer data);
 void but_base(GtkWidget *widget, gpointer data);
 
 
-const GActionEntry app_entries[] = {
-	{ "newgame", callback_newgame, NULL, NULL, NULL, {0,0,0} },
-	{ "level", callback_level, NULL, NULL, NULL, {0,0,0} },
-	{ "highscore", callback_highscore, NULL, NULL, NULL, {0,0,0} },
-	{ "exit", callback_exit, NULL, NULL, NULL, {0,0,0} },
-	{ "music", callback_music, NULL, NULL, NULL, {0,0,0} },
-	{ "about", callback_about, NULL, NULL, NULL, {0,0,0} },
-	{ "help", callback_help, NULL, NULL, NULL, {0,0,0} }
 
-};
 
 #endif
