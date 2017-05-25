@@ -1,5 +1,5 @@
 #include "header/game_main.h"
-#include <glib/gi18n.h>
+
 
 const GActionEntry app_entries[] = {
 	{ "newgame", callback_newgame, NULL, NULL, NULL, {0,0,0} },
@@ -72,19 +72,17 @@ void create_menu (GtkApplication *app, GtkWidget *box, gpointer user_data)
 
 }
 
-void create_sidebar (GtkApplication *app, GtkWidget *box, GtkWidget *stacksidebar, gpointer user_data)
+void create_sidebar (GtkApplication *app, GtkWidget *box, gpointer user_data)
 {
 
 	widgets *a = (widgets *) user_data;
 
 	GtkWidget *button;
-	//GtkWidget *stack;
-	// GtkWidget *grid;
+
+	GtkWidget *grid;
 
 	// layout containers *****
-	stacksidebar = gtk_stack_sidebar_new();
-	stack = gtk_stack_new ();
-	// grid = gtk_grid_new();
+	grid = gtk_grid_new();
 	// gtk_container_add (GTK_CONTAINER (a->window), grid);
 
 	char c_life[2] = {"l"};
@@ -94,7 +92,6 @@ void create_sidebar (GtkApplication *app, GtkWidget *box, GtkWidget *stacksideba
 	char c_ability3[2] = {"e"};
 	char c_ult[2] = {"r"};
 	char c_base[2] = {"b"};
-
 
 	// keyboard accelerators
 	const gchar *accels_life[2] = {c_life, NULL};
@@ -113,34 +110,31 @@ void create_sidebar (GtkApplication *app, GtkWidget *box, GtkWidget *stacksideba
 	// Life - Lebenspunkte aufladen
 	button = gtk_button_new_with_label ("Life");
 	g_signal_connect (button, "clicked", G_CALLBACK (but_life), NULL);
-	gtk_stack_add_named(GTK_STACK(stack), button, "button_life");
-	// gtk_stack_set_visible_child(GTK_STACK(stack), button);
-	//gtk_grid_attach (GTK_GRID (grid), button, 0, 1, 1, 1);
+	gtk_grid_attach (GTK_GRID (grid), button, 0, 1, 1, 1);
 	// Two turns for Mr X
 	button = gtk_button_new_with_label ("x2");
 	g_signal_connect (button, "clicked", G_CALLBACK (but_twice), NULL);
-	gtk_stack_add_named(GTK_STACK(stack), button, "button_twice");
-	//gtk_grid_attach (GTK_GRID (grid), button, 0, 2, 1, 1);
+	gtk_grid_attach (GTK_GRID (grid), button, 0, 2, 1, 1);
 	// Ability - Q - Point / Click Ability
 	button = gtk_button_new_with_label ("ability 1");
 	g_signal_connect (button, "clicked", G_CALLBACK (but_ability1), NULL);
-	//gtk_grid_attach (GTK_GRID (grid), button, 0, 3, 1, 1);
+	gtk_grid_attach (GTK_GRID (grid), button, 0, 3, 1, 1);
 	// Ability - W - Area / Flaechenschaden
 	button = gtk_button_new_with_label ("ability 2");
 	g_signal_connect (button, "clicked", G_CALLBACK (but_ability2), NULL);
-	//gtk_grid_attach (GTK_GRID (grid), button, 0, 4, 1, 1);
+	gtk_grid_attach (GTK_GRID (grid), button, 0, 4, 1, 1);
 	// Ability - E - passive damage
 	button = gtk_button_new_with_label ("ability 3");
 	g_signal_connect (button, "clicked", G_CALLBACK (but_ability3), NULL);
-	//gtk_grid_attach (GTK_GRID (grid), button, 0, 5, 1, 1);
+	gtk_grid_attach (GTK_GRID (grid), button, 0, 5, 1, 1);
 	// Ability  - R - ulti
 	button = gtk_button_new_with_label ("ult");
 	g_signal_connect (button, "clicked", G_CALLBACK (but_ult), NULL);
-	//gtk_grid_attach (GTK_GRID (grid), button, 0, 6, 1, 1);
+	gtk_grid_attach (GTK_GRID (grid), button, 0, 6, 1, 1);
 	// Base - B
 	button = gtk_button_new_with_label ("base");
 	g_signal_connect (button, "clicked", G_CALLBACK (but_base), NULL);
-	//gtk_grid_attach (GTK_GRID (grid), button, 0, 7, 1, 1);
+	gtk_grid_attach (GTK_GRID (grid), button, 0, 7, 1, 1);
 
 	// connect keyboard accelerators *****
 	gtk_application_set_accels_for_action (GTK_APPLICATION (app), "app.life", accels_life);
@@ -151,12 +145,7 @@ void create_sidebar (GtkApplication *app, GtkWidget *box, GtkWidget *stacksideba
 	gtk_application_set_accels_for_action (GTK_APPLICATION (app), "app.ult", accels_ult);
 	gtk_application_set_accels_for_action (GTK_APPLICATION (app), "app.base", accels_base);
 
-	gtk_stack_set_transition_type (GTK_STACK (stack), GTK_STACK_TRANSITION_TYPE_SLIDE_UP_DOWN);
-	//gtk_box_pack_start(GTK_BOX(box), stacksidebar, FALSE, FALSE,0);
-	//gtk_box_pack_end(GTK_BOX(box), grid, FALSE, FALSE,0);
-	gtk_widget_show_all(a->window);
-	gtk_box_pack_start(GTK_BOX(box), stack);
-	gtk_stack_sidebar_set_stack(GTK_STACK_SIDEBAR (stacksidebar), GTK_STACK(stack)); // sidebar, stack
+	gtk_box_pack_end(GTK_BOX(box), grid, FALSE, FALSE,0);
 
 }
 
@@ -164,12 +153,12 @@ void create_info(GtkApplication *app, GtkWidget *box, gpointer user_data)
 {
 
 	GtkWidget *info_label;
-
+	// GtkWidget *gtk_assistant_new (void);
 
 	GtkWidget *grid;
 	grid = gtk_grid_new ();
 
-	gtk_seperator_new(GTK_ORIENTATION_HORIZONTAL);
+	//gtk_seperator_new(GTK_ORIENTATION_HORIZONTAL);
 
 	info_label = gtk_label_new ("What to do: Count til 100, if you are ready, begin again");
 	gtk_widget_set_name(info_label, "info_label");
@@ -249,8 +238,6 @@ static void activate (GtkApplication *app, gpointer user_data)
 	// GtkWidget *last_box;
 	// GtkWidget *grid; // sub-layout
 
-	GtkWidget *stacksidebar;
-	GtkWidget *stack;
 
 	// create window and set title *****
 	a->window = gtk_application_window_new (app);
@@ -265,21 +252,6 @@ static void activate (GtkApplication *app, gpointer user_data)
 	gtk_container_add( GTK_CONTAINER (a->window), main_box);
 	sub_box = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
 
-	GtkWidget *sidebar1, stack1, widget1;
-
-	sidebar1 = gtk_stack_sidebar_new();
-	gtk_box_pack_start (GTK_BOX(main_box), sidebar1);
-	stack1 = gtk_stack_new();
-	gtk_stack_set_transition_type(GTK_STACK(stack1), GTK_STACK_TRANSITION_TYPE_SLIDE_UP_DOWN);
-	gtk_stack_sidebar_set_stack(GTK_STACK_SEIDEBAR(sidebar1), GTK_STACK(stack1));
-
-	widget1 = gtk_seperator_new(GTK_ORIENTATION_VERTICAL);
-	gtk_box_pack_start(GTK_BOX(box), stack1);
-
-	gtk_stack_add_named(GTK_STACK (stack1), widget1, "c");
-	gtk_container_child_set(GTK_CONTAINER(stack1), widget1, "title 1", "c", NULL);
-
-
 	//grid = gtk_grid_new ();
 	//gtk_container_add (GTK_CONTAINER (a->window), grid);
 
@@ -290,10 +262,8 @@ static void activate (GtkApplication *app, gpointer user_data)
 	gtk_box_pack_start(GTK_BOX(main_box), sub_box, FALSE, FALSE, 0);
 
 	// ability - (sidebar) *****
-	stacksidebar = gtk_stack_sidebar_new();
-	stack = gtk_new_stack();
-	//create_sidebar(app, GTK_WIDGET(sub_box), GTK_WIDGET (stacksidebar), (gpointer) a);
-	//gtk_box_pack_start(GTK_BOX(sub_box), stacksidebar, FALSE, FALSE, 0);
+	create_sidebar(app, GTK_WIDGET(sub_box), (gpointer) a);
+
 
 
 	// info - field

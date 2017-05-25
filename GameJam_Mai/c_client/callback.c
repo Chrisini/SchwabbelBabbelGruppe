@@ -48,6 +48,8 @@ void callback_music(GSimpleAction *action, GVariant *parameter, gpointer data)
 
 void callback_about(GSimpleAction *action, GVariant *parameter, gpointer data)
 {
+	GtkWidget *about
+	about = gtk_about_dialog_new (void);
 	g_print("Music");
 }
 
