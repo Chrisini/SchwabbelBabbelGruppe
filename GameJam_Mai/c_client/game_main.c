@@ -1,4 +1,5 @@
 #include "header/game_main.h"
+#include <glib/gi18n.h>
 
 const GActionEntry app_entries[] = {
 	{ "newgame", callback_newgame, NULL, NULL, NULL, {0,0,0} },
@@ -77,12 +78,13 @@ void create_sidebar (GtkApplication *app, GtkWidget *box, GtkWidget *stacksideba
 	widgets *a = (widgets *) user_data;
 
 	GtkWidget *button;
-	GtkWidget *stack;
-	GtkWidget *grid;
+	//GtkWidget *stack;
+	// GtkWidget *grid;
 
 	// layout containers *****
+	stacksidebar = gtk_stack_sidebar_new();
 	stack = gtk_stack_new ();
-	grid = gtk_grid_new();
+	// grid = gtk_grid_new();
 	// gtk_container_add (GTK_CONTAINER (a->window), grid);
 
 	char c_life[2] = {"l"};
@@ -92,6 +94,7 @@ void create_sidebar (GtkApplication *app, GtkWidget *box, GtkWidget *stacksideba
 	char c_ability3[2] = {"e"};
 	char c_ult[2] = {"r"};
 	char c_base[2] = {"b"};
+
 
 	// keyboard accelerators
 	const gchar *accels_life[2] = {c_life, NULL};
@@ -111,33 +114,33 @@ void create_sidebar (GtkApplication *app, GtkWidget *box, GtkWidget *stacksideba
 	button = gtk_button_new_with_label ("Life");
 	g_signal_connect (button, "clicked", G_CALLBACK (but_life), NULL);
 	gtk_stack_add_named(GTK_STACK(stack), button, "button_life");
-	gtk_widget_show(button);
-	gtk_stack_set_visible_child(GTK_STACK(stack), button);
+	// gtk_stack_set_visible_child(GTK_STACK(stack), button);
 	//gtk_grid_attach (GTK_GRID (grid), button, 0, 1, 1, 1);
 	// Two turns for Mr X
 	button = gtk_button_new_with_label ("x2");
 	g_signal_connect (button, "clicked", G_CALLBACK (but_twice), NULL);
-	gtk_grid_attach (GTK_GRID (grid), button, 0, 2, 1, 1);
+	gtk_stack_add_named(GTK_STACK(stack), button, "button_twice");
+	//gtk_grid_attach (GTK_GRID (grid), button, 0, 2, 1, 1);
 	// Ability - Q - Point / Click Ability
 	button = gtk_button_new_with_label ("ability 1");
 	g_signal_connect (button, "clicked", G_CALLBACK (but_ability1), NULL);
-	gtk_grid_attach (GTK_GRID (grid), button, 0, 3, 1, 1);
+	//gtk_grid_attach (GTK_GRID (grid), button, 0, 3, 1, 1);
 	// Ability - W - Area / Flaechenschaden
 	button = gtk_button_new_with_label ("ability 2");
 	g_signal_connect (button, "clicked", G_CALLBACK (but_ability2), NULL);
-	gtk_grid_attach (GTK_GRID (grid), button, 0, 4, 1, 1);
+	//gtk_grid_attach (GTK_GRID (grid), button, 0, 4, 1, 1);
 	// Ability - E - passive damage
 	button = gtk_button_new_with_label ("ability 3");
 	g_signal_connect (button, "clicked", G_CALLBACK (but_ability3), NULL);
-	gtk_grid_attach (GTK_GRID (grid), button, 0, 5, 1, 1);
+	//gtk_grid_attach (GTK_GRID (grid), button, 0, 5, 1, 1);
 	// Ability  - R - ulti
 	button = gtk_button_new_with_label ("ult");
 	g_signal_connect (button, "clicked", G_CALLBACK (but_ult), NULL);
-	gtk_grid_attach (GTK_GRID (grid), button, 0, 6, 1, 1);
+	//gtk_grid_attach (GTK_GRID (grid), button, 0, 6, 1, 1);
 	// Base - B
 	button = gtk_button_new_with_label ("base");
 	g_signal_connect (button, "clicked", G_CALLBACK (but_base), NULL);
-	gtk_grid_attach (GTK_GRID (grid), button, 0, 7, 1, 1);
+	//gtk_grid_attach (GTK_GRID (grid), button, 0, 7, 1, 1);
 
 	// connect keyboard accelerators *****
 	gtk_application_set_accels_for_action (GTK_APPLICATION (app), "app.life", accels_life);
@@ -149,51 +152,105 @@ void create_sidebar (GtkApplication *app, GtkWidget *box, GtkWidget *stacksideba
 	gtk_application_set_accels_for_action (GTK_APPLICATION (app), "app.base", accels_base);
 
 	gtk_stack_set_transition_type (GTK_STACK (stack), GTK_STACK_TRANSITION_TYPE_SLIDE_UP_DOWN);
-	gtk_box_pack_start(GTK_BOX(box), stacksidebar, FALSE, FALSE,0);
-	gtk_box_pack_end(GTK_BOX(box), grid, FALSE, FALSE,0);
+	//gtk_box_pack_start(GTK_BOX(box), stacksidebar, FALSE, FALSE,0);
+	//gtk_box_pack_end(GTK_BOX(box), grid, FALSE, FALSE,0);
 	gtk_widget_show_all(a->window);
-	//gtk_stack_sidebar_set_stack(stacksidebar, stack);
+	gtk_box_pack_start(GTK_BOX(box), stack);
+	gtk_stack_sidebar_set_stack(GTK_STACK_SIDEBAR (stacksidebar), GTK_STACK(stack)); // sidebar, stack
+
+}
+
+void create_info(GtkApplication *app, GtkWidget *box, gpointer user_data)
+{
+
+	GtkWidget *info_label;
+
+
+	GtkWidget *grid;
+	grid = gtk_grid_new ();
+
+	gtk_seperator_new(GTK_ORIENTATION_HORIZONTAL);
+
+	info_label = gtk_label_new ("What to do: Count til 100, if you are ready, begin again");
+	gtk_widget_set_name(info_label, "info_label");
+	gtk_grid_attach (GTK_GRID (grid), info_label, 1,1,1,1);
+
+	gtk_box_pack_end(GTK_BOX(box), grid, FALSE, FALSE,0);
 
 }
 
 void create_progress (GtkApplication *app, GtkWidget *box, gpointer user_data)
 {
 	//widgets *a = (widgets *) user_data;
-	GtkWidget *progb_attack;
+	GtkWidget *progb_attack, *progb_protection, *progb_life, *progb_energy;
 	GtkWidget *grid;
 
 	// layout containers *****
 	grid = gtk_grid_new ();
 	//gtk_container_add (GTK_CONTAINER (a->window), grid);
 
-	// attack - Schaden
+	// attack - Schade
 	progb_attack = gtk_progress_bar_new();
-	gtk_grid_attach (GTK_GRID (grid), progb_attack, 1, 10, 3, 1);
+	gtk_grid_attach (GTK_GRID (grid), progb_attack, 1, 1, 1, 1);
 	gtk_progress_bar_set_show_text (GTK_PROGRESS_BAR (progb_attack), TRUE);
 	gtk_progress_bar_set_text (GTK_PROGRESS_BAR (progb_attack), NULL);
-	gdouble val;
-	val = gtk_progress_bar_get_fraction (GTK_PROGRESS_BAR (progb_attack)) + 0.1;
-	gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (progb_attack), val);
-	/*progb_protection = // Ruestung
-	progb_life = // Leben
-	progb_energy = // Energie
-	progb_dead = // Time until live again
-	*/
+	gdouble val_attack;
+	val_attack = gtk_progress_bar_get_fraction (GTK_PROGRESS_BAR (progb_attack)) + 0.1;
+	gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (progb_attack), val_attack);
+	// protection - Ruestung
+	progb_protection = gtk_progress_bar_new();
+	gtk_grid_attach (GTK_GRID (grid), progb_protection, 2, 1, 1, 1);
+	gtk_progress_bar_set_show_text (GTK_PROGRESS_BAR (progb_protection), TRUE);
+	gtk_progress_bar_set_text (GTK_PROGRESS_BAR (progb_protection), NULL);
+	gdouble val_protect;
+	val_protect = gtk_progress_bar_get_fraction (GTK_PROGRESS_BAR (progb_protection)) + 0.1;
+	gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (progb_protection), val_protect);
+
+	// life / dead - Leben / Tod
+	progb_life = gtk_progress_bar_new();
+	gtk_grid_attach (GTK_GRID (grid), progb_life, 3, 1, 1, 1);
+	gtk_progress_bar_set_show_text (GTK_PROGRESS_BAR (progb_life), TRUE);
+	gtk_progress_bar_set_text (GTK_PROGRESS_BAR (progb_life), NULL);
+	gdouble val_life;
+	val_life = gtk_progress_bar_get_fraction (GTK_PROGRESS_BAR (progb_life)) + 0.3;
+	gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (progb_life), val_life);
+
+	// energy - Energie, Mana
+	progb_energy = gtk_progress_bar_new();
+	gtk_grid_attach (GTK_GRID (grid), progb_energy, 4, 1, 1, 1);
+	gtk_progress_bar_set_show_text (GTK_PROGRESS_BAR (progb_energy), TRUE);
+	gtk_progress_bar_set_text (GTK_PROGRESS_BAR (progb_energy), NULL);
+	gdouble val_energy;
+	val_energy = gtk_progress_bar_get_fraction (GTK_PROGRESS_BAR (progb_energy)) + 0.3;
+	gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (progb_energy), val_energy);
+
 
 	gtk_box_pack_end(GTK_BOX(box), grid, FALSE, FALSE,0);
 
 }
 
+
+void apply_css(GtkWidget *widget, GtkStyleProvider *css_style)
+{
+	gtk_style_context_add_provider (gtk_widget_get_style_context (widget),
+					css_style, G_MAXUINT);
+	if(GTK_IS_CONTAINER (widget)){
+		gtk_container_forall (GTK_CONTAINER (widget), (GtkCallback) apply_css, css_style);
+	}
+
+}
 static void activate (GtkApplication *app, gpointer user_data)
 {
 	widgets *a = (widgets *) user_data;
+	GtkStyleProvider *css_style;
 
 	GtkWidget *main_box; // layout
 	GtkWidget *sub_box;
-	GtkWidget *last_box;
+	// GtkWidget *last_box;
 	// GtkWidget *grid; // sub-layout
 
 	GtkWidget *stacksidebar;
+	GtkWidget *stack;
 
 	// create window and set title *****
 	a->window = gtk_application_window_new (app);
@@ -204,26 +261,51 @@ static void activate (GtkApplication *app, gpointer user_data)
 
 
 	// layout containers *****
-	main_box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
+	main_box = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
 	gtk_container_add( GTK_CONTAINER (a->window), main_box);
-	//sub_box = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
-	//gtk_box_pack_start(GTK_BOX(main_box), sub_box, FALSE, FALSE, 0);
+	sub_box = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
+
+	GtkWidget *sidebar1, stack1, widget1;
+
+	sidebar1 = gtk_stack_sidebar_new();
+	gtk_box_pack_start (GTK_BOX(main_box), sidebar1);
+	stack1 = gtk_stack_new();
+	gtk_stack_set_transition_type(GTK_STACK(stack1), GTK_STACK_TRANSITION_TYPE_SLIDE_UP_DOWN);
+	gtk_stack_sidebar_set_stack(GTK_STACK_SEIDEBAR(sidebar1), GTK_STACK(stack1));
+
+	widget1 = gtk_seperator_new(GTK_ORIENTATION_VERTICAL);
+	gtk_box_pack_start(GTK_BOX(box), stack1);
+
+	gtk_stack_add_named(GTK_STACK (stack1), widget1, "c");
+	gtk_container_child_set(GTK_CONTAINER(stack1), widget1, "title 1", "c", NULL);
+
 
 	//grid = gtk_grid_new ();
 	//gtk_container_add (GTK_CONTAINER (a->window), grid);
 
-	// sidebar *****
-	stacksidebar = gtk_stack_sidebar_new();
-	gtk_box_pack_start(GTK_BOX(main_box), stacksidebar, FALSE, FALSE, 0);
 
 	// menu *****
 	create_menu(app, GTK_WIDGET (main_box), (gpointer) a);
 
-	// ability *****
-	create_sidebar(app, GTK_WIDGET (main_box), GTK_WIDGET (stacksidebar), (gpointer) a);
+	gtk_box_pack_start(GTK_BOX(main_box), sub_box, FALSE, FALSE, 0);
+
+	// ability - (sidebar) *****
+	stacksidebar = gtk_stack_sidebar_new();
+	stack = gtk_new_stack();
+	//create_sidebar(app, GTK_WIDGET(sub_box), GTK_WIDGET (stacksidebar), (gpointer) a);
+	//gtk_box_pack_start(GTK_BOX(sub_box), stacksidebar, FALSE, FALSE, 0);
+
+
+	// info - field
+	create_info(app, GTK_WIDGET (main_box), (gpointer) a);
 
 	// regeneration - progress bar *****
 	create_progress(app, GTK_WIDGET (main_box), (gpointer) a);
+
+	// css
+	css_style = GTK_STYLE_PROVIDER (gtk_css_provider_new ());
+	gtk_css_provider_load_from_resource (GTK_CSS_PROVIDER(css_style), "/game_res/css/style.css");
+	apply_css (a->window, css_style);
 
 	// show all widgets
 	gtk_widget_show_all (a->window);

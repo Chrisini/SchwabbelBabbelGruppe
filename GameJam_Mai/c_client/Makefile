@@ -1,5 +1,5 @@
 SOURCES = game_main.c callback.c buttons.c
-# RESOURCE
+RESOURCE = game_res
 
 TARGET = main
 
@@ -8,9 +8,13 @@ CXXFLAGS = `pkg-config --cflags --libs gtk+-3.0` -Wall -g
 CXXFLAGS += -I.
 LDFLAGS = -lm
 
-$(TARGET): $(SOURCES)
-	$(CXX) $(SOURCES) $(LDFLAGS) $(CXXFLAGS) -o $(TARGET)
+$(TARGET): $(SOURCES) $(RESOURCE).c
+	$(CXX) $(SOURCES) $(RESOURCE).c $(LDFLAGS) $(CXXFLAGS) -o $(TARGET)
+
+$(RESOURCE).c: $(RESOURCE).gresource.xml
+	glib-compile-resources --sourcedir=. $(RESOURCE).gresource.xml --generate-source
 
 .PHONY: clean
 clean:
 	@rm -rf $(OBJECT) $(TARGET) core *~
+	@rm -rf $(RESOURCE).c

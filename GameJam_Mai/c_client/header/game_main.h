@@ -12,7 +12,8 @@ typedef struct {
 
 void create_progress (GtkApplication *app, GtkWidget *box, gpointer user_data);
 void create_menu (GtkApplication *app, GtkWidget *box, gpointer user_data);
-void create_sidebar (GtkApplication *app, GtkWidget *box,  GtkWidget *stacksidebar, gpointer user_data);
+void create_sidebar (GtkApplication *app, GtkWidget *box, GtkWidget *stacksidebar, gpointer user_data);
+void create_info(GtkApplication *app, GtkWidget *box, gpointer user_data);
 
 void callback_newgame(GSimpleAction *action, GVariant *parameter, gpointer data);
 void callback_level(GSimpleAction *action, GVariant *parameter, gpointer data);
