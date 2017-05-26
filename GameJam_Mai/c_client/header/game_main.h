@@ -10,16 +10,18 @@ typedef struct {
 	GtkWidget *window;
 } widgets;
 
-typedef struct {
-	GtkWidget *button;
+struct {
+	GtkWidget *name;
 	int invisible; // 1 = invisible, 0 = visible
-	GtkWidget *nex_1 = NULL;
-	GtkWidget *nex_2 = NULL;
-	GtkWidget *nex_3 = NULL;
-	GtkWidget *nex_4 = NULL;
-	GtkWidget *nex_5 = NULL;
-	GtkWidget *nex_6 = NULL;
-} buttons;
+	GtkWidget *nex_1;
+	GtkWidget *nex_2;
+	GtkWidget *nex_3;
+	GtkWidget *nex_4;
+	GtkWidget *nex_5;
+	GtkWidget *nex_6;
+} but_field;
+
+typedef struct but_field BUTTONS;
 
 typedef struct{
 	char ability_name[30];
@@ -36,14 +38,12 @@ typedef struct {
 	abilities ability2;
 	abilities ability3;
 	abilities ult;
-
 }player;
 
 typedef struct {
 	GtkWidget *button;
 	int col;
 	int enabled; // enabled = 1, disabled = 0
-
 }playground;
 
 // PROTOTYPES

@@ -1,4 +1,4 @@
-
+// samantha fuchs begin
 void get_json(filename){
 	JsonParser *parser
 	GError *error;
@@ -39,3 +39,4 @@ void get_json(filename){
 	
 	g_object_unref (parser);
 }
+// Samantha Fuchs end 

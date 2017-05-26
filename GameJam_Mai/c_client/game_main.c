@@ -1,6 +1,5 @@
 #include "header/game_main.h"
 
-
 const GActionEntry app_entries[] = {
 	{ "newgame", callback_newgame, NULL, NULL, NULL, {0,0,0} },
 	{ "level", callback_level, NULL, NULL, NULL, {0,0,0} },
