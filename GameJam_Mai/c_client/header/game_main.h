@@ -2,6 +2,7 @@
 #define GAME_MAIN_H
 
 #include <gtk/gtk.h>
+#include <stdlib.h>
 
 #define MAX_STEP_NUMBER 2
 
@@ -10,7 +11,7 @@ typedef struct {
 	GtkWidget *window;
 } widgets;
 
-struct {
+struct but_field{
 	GtkWidget *name;
 	int invisible; // 1 = invisible, 0 = visible
 	GtkWidget *nex_1;
@@ -19,7 +20,7 @@ struct {
 	GtkWidget *nex_4;
 	GtkWidget *nex_5;
 	GtkWidget *nex_6;
-} but_field;
+};
 
 typedef struct but_field BUTTONS;
 
