@@ -3,6 +3,8 @@
 
 #include <gtk/gtk.h>
 
+#define MAX_STEP_NUMBER 2
+
 typedef struct {
 	GtkApplication *app;
 	GtkWidget *window;
@@ -11,6 +13,12 @@ typedef struct {
 typedef struct {
 	GtkWidget *button;
 	int invisible; // 1 = invisible, 0 = visible
+	GtkWidget *nex_1 = NULL;
+	GtkWidget *nex_2 = NULL;
+	GtkWidget *nex_3 = NULL;
+	GtkWidget *nex_4 = NULL;
+	GtkWidget *nex_5 = NULL;
+	GtkWidget *nex_6 = NULL;
 } buttons;
 
 typedef struct{
@@ -39,6 +47,8 @@ typedef struct {
 }playground;
 
 // PROTOTYPES
+
+void activate (GtkApplication *app, gpointer user_data);
 
 void create_progress (GtkApplication *app, GtkWidget *box, gpointer user_data);
 void create_menu (GtkApplication *app, GtkWidget *box, gpointer user_data);
