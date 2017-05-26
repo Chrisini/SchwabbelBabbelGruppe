@@ -228,6 +228,153 @@ void apply_css(GtkWidget *widget, GtkStyleProvider *css_style)
 	}
 
 }
+
+void create_playground (GtkApplication *app, GtkWidget *box, gpointer user_data){
+
+	GtkWidget *grid;
+	GtkWidget *button;
+
+	// layout containers *****
+	grid = gtk_grid_new ();
+
+	button = gtk_button_new_with_label ("Demon");
+	g_signal_connect (button, "clicked", G_CALLBACK (step_to_but), NULL);
+	gtk_grid_attach (GTK_GRID (grid), button, 4, 0, 1, 1);
+
+	button = gtk_button_new_with_label ("Nexus");
+	g_signal_connect (button, "clicked", G_CALLBACK (step_to_but), NULL);
+	gtk_grid_attach (GTK_GRID (grid), button, 4, 1, 1, 1);
+
+	button = gtk_button_new_with_label ("Inhibitor");
+	g_signal_connect (button, "clicked", G_CALLBACK (step_to_but), NULL);
+	gtk_grid_attach (GTK_GRID (grid), button, 0, 2, 1, 1);
+
+	button = gtk_button_new_with_label ("Inhibitor");
+	g_signal_connect (button, "clicked", G_CALLBACK (step_to_but), NULL);
+	gtk_grid_attach (GTK_GRID (grid), button, 4, 2, 1, 1);
+
+	button = gtk_button_new_with_label ("Inhibitor");
+	g_signal_connect (button, "clicked", G_CALLBACK (step_to_but), NULL);
+	gtk_grid_attach (GTK_GRID (grid), button, 8, 2, 1, 1);
+
+	button = gtk_button_new_with_label ("Turm");
+	g_signal_connect (button, "clicked", G_CALLBACK (step_to_but), NULL);
+	gtk_grid_attach (GTK_GRID (grid), button, 0, 3, 1, 1);
+
+	button = gtk_button_new_with_label ("Turm");
+	g_signal_connect (button, "clicked", G_CALLBACK (step_to_but), NULL);
+	gtk_grid_attach (GTK_GRID (grid), button, 4, 3, 1, 1);
+
+	button = gtk_button_new_with_label ("Turm");
+	g_signal_connect (button, "clicked", G_CALLBACK (step_to_but), NULL);
+	gtk_grid_attach (GTK_GRID (grid), button, 8, 3, 1, 1);
+
+	GtkWidget *separator;
+	separator = gtk_separator_new (GTK_ORIENTATION_HORIZONTAL);
+	gtk_grid_attach (GTK_GRID (grid), separator, 0, 4, 8, 1);
+
+
+	// Field
+	button = gtk_button_new_with_label ("Feld");
+	g_signal_connect (button, "clicked", G_CALLBACK (step_to_but), NULL);
+	gtk_grid_attach (GTK_GRID (grid), button, 0, 5, 1, 1);
+
+	button = gtk_button_new_with_label ("Feld");
+	g_signal_connect (button, "clicked", G_CALLBACK (step_to_but), NULL);
+	gtk_grid_attach (GTK_GRID (grid), button, 2, 5, 1, 1);
+
+	button = gtk_button_new_with_label ("Feld");
+	g_signal_connect (button, "clicked", G_CALLBACK (step_to_but), NULL);
+	gtk_grid_attach (GTK_GRID (grid), button, 4, 5, 1, 1);
+
+	button = gtk_button_new_with_label ("Feld");
+	g_signal_connect (button, "clicked", G_CALLBACK (step_to_but), NULL);
+	gtk_grid_attach (GTK_GRID (grid), button, 6, 5, 1, 1);
+
+	button = gtk_button_new_with_label ("Feld");
+	g_signal_connect (button, "clicked", G_CALLBACK (step_to_but), NULL);
+	gtk_grid_attach (GTK_GRID (grid), button, 8, 5, 1, 1);
+
+	//Tower
+	button = gtk_button_new_with_label ("Turm");
+	g_signal_connect (button, "clicked", G_CALLBACK (step_to_but), NULL);
+	gtk_grid_attach (GTK_GRID (grid), button, 0, 6, 1, 1);
+
+	button = gtk_button_new_with_label ("Turm");
+	g_signal_connect (button, "clicked", G_CALLBACK (step_to_but), NULL);
+	gtk_grid_attach (GTK_GRID (grid), button, 4, 6, 1, 1);
+
+	button = gtk_button_new_with_label ("Turm");
+	g_signal_connect (button, "clicked", G_CALLBACK (step_to_but), NULL);
+	gtk_grid_attach (GTK_GRID (grid), button, 8, 6, 1, 1);
+
+	// Field
+	button = gtk_button_new_with_label ("Feld");
+	g_signal_connect (button, "clicked", G_CALLBACK (step_to_but), NULL);
+	gtk_grid_attach (GTK_GRID (grid), button, 0, 7, 1, 1);
+
+	button = gtk_button_new_with_label ("Feld");
+	g_signal_connect (button, "clicked", G_CALLBACK (step_to_but), NULL);
+	gtk_grid_attach (GTK_GRID (grid), button, 2, 7, 1, 1);
+
+	button = gtk_button_new_with_label ("Feld");
+	g_signal_connect (button, "clicked", G_CALLBACK (step_to_but), NULL);
+	gtk_grid_attach (GTK_GRID (grid), button, 4, 7, 1, 1);
+
+	button = gtk_button_new_with_label ("Feld");
+	g_signal_connect (button, "clicked", G_CALLBACK (step_to_but), NULL);
+	gtk_grid_attach (GTK_GRID (grid), button, 6, 7, 1, 1);
+
+	button = gtk_button_new_with_label ("Feld");
+	g_signal_connect (button, "clicked", G_CALLBACK (step_to_but), NULL);
+	gtk_grid_attach (GTK_GRID (grid), button, 8, 7, 1, 1);
+
+	// Field + Tower
+	button = gtk_button_new_with_label ("Turm");
+	g_signal_connect (button, "clicked", G_CALLBACK (step_to_but), NULL);
+	gtk_grid_attach (GTK_GRID (grid), button, 0, 8, 1, 1);
+
+	button = gtk_button_new_with_label ("Feld");
+	g_signal_connect (button, "clicked", G_CALLBACK (step_to_but), NULL);
+	gtk_grid_attach (GTK_GRID (grid), button, 1, 8, 1, 1);
+
+	button = gtk_button_new_with_label ("Feld");
+	g_signal_connect (button, "clicked", G_CALLBACK (step_to_but), NULL);
+	gtk_grid_attach (GTK_GRID (grid), button, 3, 8, 1, 1);
+
+	button = gtk_button_new_with_label ("Turm");
+	g_signal_connect (button, "clicked", G_CALLBACK (step_to_but), NULL);
+	gtk_grid_attach (GTK_GRID (grid), button, 4, 8, 1, 1);
+
+	button = gtk_button_new_with_label ("Feld");
+	g_signal_connect (button, "clicked", G_CALLBACK (step_to_but), NULL);
+	gtk_grid_attach (GTK_GRID (grid), button, 5, 8, 1, 1);
+
+	button = gtk_button_new_with_label ("Feld");
+	g_signal_connect (button, "clicked", G_CALLBACK (step_to_but), NULL);
+	gtk_grid_attach (GTK_GRID (grid), button, 7, 8, 1, 1);
+
+	button = gtk_button_new_with_label ("Turm");
+	g_signal_connect (button, "clicked", G_CALLBACK (step_to_but), NULL);
+	gtk_grid_attach (GTK_GRID (grid), button, 8, 8, 1, 1);
+
+	// BARRON, DRAKE
+	button = gtk_button_new_with_label ("Drake");
+	g_signal_connect (button, "clicked", G_CALLBACK (step_to_but), NULL);
+	gtk_grid_attach (GTK_GRID (grid), button, 7, 8, 1, 1);
+
+	button = gtk_button_new_with_label ("Barron");
+	g_signal_connect (button, "clicked", G_CALLBACK (step_to_but), NULL);
+	gtk_grid_attach (GTK_GRID (grid), button, 8, 8, 1, 1);
+
+
+
+	gtk_box_pack_start(GTK_BOX(box), grid, FALSE, FALSE, 0);
+
+
+
+}
+
 static void activate (GtkApplication *app, gpointer user_data)
 {
 	widgets *a = (widgets *) user_data;
@@ -250,7 +397,7 @@ static void activate (GtkApplication *app, gpointer user_data)
 	// layout containers *****
 	main_box = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
 	gtk_container_add( GTK_CONTAINER (a->window), main_box);
-	sub_box = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
+	sub_box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
 
 	//grid = gtk_grid_new ();
 	//gtk_container_add (GTK_CONTAINER (a->window), grid);
@@ -260,6 +407,14 @@ static void activate (GtkApplication *app, gpointer user_data)
 	create_menu(app, GTK_WIDGET (main_box), (gpointer) a);
 
 	gtk_box_pack_start(GTK_BOX(main_box), sub_box, FALSE, FALSE, 0);
+
+	// playground *****
+	create_playground(app, GTK_WIDGET(sub_box), (gpointer) a);
+
+	// seperstor
+	GtkWidget *separator;
+	separator = gtk_separator_new (GTK_ORIENTATION_VERTICAL);
+	gtk_box_pack_start(GTK_BOX(sub_box), separator, FALSE, FALSE, 0);
 
 	// ability - (sidebar) *****
 	create_sidebar(app, GTK_WIDGET(sub_box), (gpointer) a);

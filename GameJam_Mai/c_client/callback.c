@@ -48,13 +48,14 @@ void callback_music(GSimpleAction *action, GVariant *parameter, gpointer data)
 
 void callback_about(GSimpleAction *action, GVariant *parameter, gpointer data)
 {
-	GtkWidget *about_window;
+	/*GtkWidget *about_window;
 	about_window = gtk_window_new(GTK_WINDOW_POPUP);
 	GtkWidget *about;
 	about = gtk_about_dialog_new ();
 	gtk_about_dialog_set_program_name(GTK_ABOUT_DIALOG(about), "About Hidden Demons");
 	gtk_about_dialog_set_copyright(GTK_ABOUT_DIALOG(about), "Chrisy, Kathi, Sammy, Beety, John");
 	gtk_show_about_dialog(about_window, "program-name", "About Hidden Demons");
+	*/
 	g_print("Music");
 }
 

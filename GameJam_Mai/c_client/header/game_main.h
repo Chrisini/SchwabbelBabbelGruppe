@@ -31,12 +31,20 @@ typedef struct {
 
 }player;
 
+typedef struct {
+	GtkWidget *button;
+	int col;
+	int enabled; // enabled = 1, disabled = 0
+
+}playground;
+
 // PROTOTYPES
 
 void create_progress (GtkApplication *app, GtkWidget *box, gpointer user_data);
 void create_menu (GtkApplication *app, GtkWidget *box, gpointer user_data);
 void create_sidebar (GtkApplication *app, GtkWidget *box, gpointer user_data);
 void create_info(GtkApplication *app, GtkWidget *box, gpointer user_data);
+void create_playground (GtkApplication *app, GtkWidget *box, gpointer user_data);
 
 void callback_newgame(GSimpleAction *action, GVariant *parameter, gpointer data);
 void callback_level(GSimpleAction *action, GVariant *parameter, gpointer data);
@@ -54,7 +62,7 @@ void but_ability3(GtkWidget *widget, gpointer data);
 void but_ult(GtkWidget *widget, gpointer data);
 void but_base(GtkWidget *widget, gpointer data);
 
-
+void step_to_but(GSimpleAction *action, GVariant *parameter, gpointer data);
 
 
 #endif
