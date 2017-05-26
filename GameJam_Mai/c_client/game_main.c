@@ -108,13 +108,13 @@ void create_sidebar (GtkApplication *app, GtkWidget *box, gpointer user_data)
 					 G_N_ELEMENTS (app_entries), (gpointer) a);
 
 	// ability - buttons *****
-	// Life - Lebenspunkte aufladen
-	button = gtk_button_new_with_label ("Life");
-	g_signal_connect (button, "clicked", G_CALLBACK (but_life), NULL);
-	gtk_grid_attach (GTK_GRID (grid), button, 0, 0, 1, 1);
 	// Base - B
 	button = gtk_button_new_with_label ("base");
 	g_signal_connect (button, "clicked", G_CALLBACK (but_base), NULL);
+	gtk_grid_attach (GTK_GRID (grid), button, 0, 0, 1, 1);
+	// Life - Lebenspunkte aufladen
+	button = gtk_button_new_with_label ("Life");
+	g_signal_connect (button, "clicked", G_CALLBACK (but_life), NULL);
 	gtk_grid_attach (GTK_GRID (grid), button, 0, 1, 1, 1);
 	// Ability - Q - Point / Click Ability
 	button = gtk_button_new_with_label ("ability 1");
