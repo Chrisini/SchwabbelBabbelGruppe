@@ -1,0 +1,25 @@
+{"player": {
+	"0": {
+		"health": 100,
+		"position": 1
+	},
+	"1": {
+		"health": 100,
+		"position": 1
+	}
+},
+"baron": {
+    "leben": 100,
+	"position": 15
+},
+"tower": {
+	"0": {
+		"health": 100,
+		"position": 5
+	},
+	"1": {
+		"health": 100,
+		"position": 6
+	}
+}
+}
