@@ -11,6 +11,7 @@ const GActionEntry app_entries[] = {
 	{ "help", callback_help, NULL, NULL, NULL, {0,0,0} }
 };
 
+
 void create_menu (GtkApplication *app, GtkWidget *box, gpointer user_data)
 {
 	widgets *a = (widgets *) user_data;
@@ -110,31 +111,31 @@ void create_sidebar (GtkApplication *app, GtkWidget *box, gpointer user_data)
 	// Life - Lebenspunkte aufladen
 	button = gtk_button_new_with_label ("Life");
 	g_signal_connect (button, "clicked", G_CALLBACK (but_life), NULL);
-	gtk_grid_attach (GTK_GRID (grid), button, 0, 1, 1, 1);
-	// Two turns for Mr X
-	button = gtk_button_new_with_label ("x2");
-	g_signal_connect (button, "clicked", G_CALLBACK (but_twice), NULL);
-	gtk_grid_attach (GTK_GRID (grid), button, 0, 2, 1, 1);
-	// Ability - Q - Point / Click Ability
-	button = gtk_button_new_with_label ("ability 1");
-	g_signal_connect (button, "clicked", G_CALLBACK (but_ability1), NULL);
-	gtk_grid_attach (GTK_GRID (grid), button, 0, 3, 1, 1);
-	// Ability - W - Area / Flaechenschaden
-	button = gtk_button_new_with_label ("ability 2");
-	g_signal_connect (button, "clicked", G_CALLBACK (but_ability2), NULL);
-	gtk_grid_attach (GTK_GRID (grid), button, 0, 4, 1, 1);
-	// Ability - E - passive damage
-	button = gtk_button_new_with_label ("ability 3");
-	g_signal_connect (button, "clicked", G_CALLBACK (but_ability3), NULL);
-	gtk_grid_attach (GTK_GRID (grid), button, 0, 5, 1, 1);
-	// Ability  - R - ulti
-	button = gtk_button_new_with_label ("ult");
-	g_signal_connect (button, "clicked", G_CALLBACK (but_ult), NULL);
-	gtk_grid_attach (GTK_GRID (grid), button, 0, 6, 1, 1);
+	gtk_grid_attach (GTK_GRID (grid), button, 0, 0, 1, 1);
 	// Base - B
 	button = gtk_button_new_with_label ("base");
 	g_signal_connect (button, "clicked", G_CALLBACK (but_base), NULL);
-	gtk_grid_attach (GTK_GRID (grid), button, 0, 7, 1, 1);
+	gtk_grid_attach (GTK_GRID (grid), button, 0, 1, 1, 1);
+	// Ability - Q - Point / Click Ability
+	button = gtk_button_new_with_label ("ability 1");
+	g_signal_connect (button, "clicked", G_CALLBACK (but_ability1), NULL);
+	gtk_grid_attach (GTK_GRID (grid), button, 0, 2, 1, 1);
+	// Ability - W - Area / Flaechenschaden
+	button = gtk_button_new_with_label ("ability 2");
+	g_signal_connect (button, "clicked", G_CALLBACK (but_ability2), NULL);
+	gtk_grid_attach (GTK_GRID (grid), button, 0, 3, 1, 1);
+	// Ability - E - passive damage
+	button = gtk_button_new_with_label ("ability 3");
+	g_signal_connect (button, "clicked", G_CALLBACK (but_ability3), NULL);
+	gtk_grid_attach (GTK_GRID (grid), button, 0, 4, 1, 1);
+	// Ability  - R - ulti
+	button = gtk_button_new_with_label ("ult");
+	g_signal_connect (button, "clicked", G_CALLBACK (but_ult), NULL);
+	gtk_grid_attach (GTK_GRID (grid), button, 0, 5, 1, 1);
+	// Two turns for Mr X
+	button = gtk_button_new_with_label ("x2");
+	g_signal_connect (button, "clicked", G_CALLBACK (but_twice), NULL);
+	gtk_grid_attach (GTK_GRID (grid), button, 0, 6, 1, 1);
 
 	// connect keyboard accelerators *****
 	gtk_application_set_accels_for_action (GTK_APPLICATION (app), "app.life", accels_life);
@@ -146,7 +147,6 @@ void create_sidebar (GtkApplication *app, GtkWidget *box, gpointer user_data)
 	gtk_application_set_accels_for_action (GTK_APPLICATION (app), "app.base", accels_base);
 
 	gtk_box_pack_end(GTK_BOX(box), grid, FALSE, FALSE,0);
-
 }
 
 void create_info(GtkApplication *app, GtkWidget *box, gpointer user_data)

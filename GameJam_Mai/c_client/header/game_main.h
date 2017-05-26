@@ -8,6 +8,29 @@ typedef struct {
 	GtkWidget *window;
 } widgets;
 
+typedef struct {
+	GtkWidget *button;
+	int invisible; // 1 = invisible, 0 = visible
+} buttons;
+
+typedef struct{
+	char ability_name[30];
+	int ability_max;
+	int ability_fill;
+	int ability_regeneration;
+}abilities;
+
+typedef struct {
+	char player_name[30];
+	int player_id;
+	abilities life;
+	abilities ability1;
+	abilities ability2;
+	abilities ability3;
+	abilities ult;
+
+}player;
+
 // PROTOTYPES
 
 void create_progress (GtkApplication *app, GtkWidget *box, gpointer user_data);
