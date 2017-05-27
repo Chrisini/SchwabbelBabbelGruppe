@@ -10,12 +10,13 @@ const GActionEntry app_entries[] = {
 	{ "help", callback_help, NULL, NULL, NULL, {0,0,0} }
 };
 
-void create_menu (GtkApplication *app, GtkWidget *box, gpointer user_data)
+void create_menu (GtkApplication *app, gpointer data)
 {
-	widgets *a = (widgets *) user_data;
+	widgets *a = (widgets *) data;
 
 	GtkWidget *menubar;
 	GMenu *menu, *menu_game, *menu_settings, *menu_help, *menu_exit;
+
 
 	char c_music[2] = {"m"};
 
@@ -30,6 +31,7 @@ void create_menu (GtkApplication *app, GtkWidget *box, gpointer user_data)
 
 	// create the menu *****
 	menu = g_menu_new();
+
 
 	// create game *****
 	menu_game = g_menu_new();
@@ -64,7 +66,8 @@ void create_menu (GtkApplication *app, GtkWidget *box, gpointer user_data)
 
 	// add menus to menu bar *****
 	menubar = gtk_menu_bar_new_from_model (G_MENU_MODEL (menu));
-	gtk_box_pack_start (GTK_BOX (box), menubar, FALSE, FALSE, 0);
+	gtk_box_pack_start (GTK_BOX (a->main_box), menubar, FALSE, FALSE, 0);
+	gtk_widget_set_name(menubar, "menu");
 
 	// connect keyboard accelerators *****
 	gtk_application_set_accels_for_action (GTK_APPLICATION (app), "app.music", accels_music);
@@ -91,7 +94,7 @@ void callback_exit(GSimpleAction *action, GVariant *parameter, gpointer data)
 {
 	widgets *a = (widgets *) data;
 
-	g_print("Disconnected");
+	g_print("Disconnected\n");
 	g_application_quit(G_APPLICATION(a->app));
 	/*GtkWidget *dialog;
 	GtkWidget *grid;

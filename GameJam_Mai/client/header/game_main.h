@@ -9,6 +9,9 @@
 typedef struct {
 	GtkApplication *app;
 	GtkWidget *window;
+	GtkWidget *main_box;
+	GtkWidget *sub_box;
+	GtkWidget *grid;
 } widgets;
 
 struct but_field{
@@ -49,13 +52,16 @@ typedef struct {
 
 // PROTOTYPES
 
-void activate (GtkApplication *app, gpointer user_data);
+void activate (GtkApplication *app, gpointer data);
+void choose_game(GSimpleAction *action, GVariant *parameter, gpointer data);
+void in_game(GtkApplication *app, gpointer data);
 
-void create_progress (GtkApplication *app, GtkWidget *box, gpointer user_data);
-void create_menu (GtkApplication *app, GtkWidget *box, gpointer user_data);
-void create_sidebar (GtkApplication *app, GtkWidget *box, gpointer user_data);
-void create_info(GtkApplication *app, GtkWidget *box, gpointer user_data);
-void create_playground (GtkApplication *app, GtkWidget *box, gpointer user_data);
+
+void create_progress (GtkApplication *app, gpointer data);
+void create_menu (GtkApplication *app, gpointer data);
+void create_sidebar (GtkApplication *app, gpointer data);
+void create_info(GtkApplication *app, gpointer data);
+void create_playground (GtkApplication *app, gpointer data);
 
 void callback_newgame(GSimpleAction *action, GVariant *parameter, gpointer data);
 void callback_level(GSimpleAction *action, GVariant *parameter, gpointer data);

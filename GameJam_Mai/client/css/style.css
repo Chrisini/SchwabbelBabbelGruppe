@@ -12,4 +12,24 @@ button{
 	margin: 3px;
 }
 
+grid#background, box#background{
+	background-image: url('../img/background.png');
+	background-size: cover;
+}
 
+separator{
+	border: 1px solid #777777;
+}
+
+button.selectable{
+	border: 3px solid #66CD00;
+}
+
+#menu{
+	background-color: #EEEEEE;
+}
+
+button#playbutton{
+	top: center;
+	left: center;
+}

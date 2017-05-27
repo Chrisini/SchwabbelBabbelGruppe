@@ -2,5 +2,6 @@
 <gresources>
 	<gresource prefix="game_res">
 		<file>css/style.css</file>
+		<file>img/background.png</file>
 	</gresource>
 </gresources>

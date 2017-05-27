@@ -8,10 +8,10 @@ const GActionEntry app_entries_but[] = {
 	{ "base", but_base, NULL, NULL, NULL}
 };
 
-void create_sidebar (GtkApplication *app, GtkWidget *box, gpointer user_data)
+void create_sidebar (GtkApplication *app, gpointer data)
 {
 
-	widgets *a = (widgets *) user_data;
+	widgets *a = (widgets *) data;
 
 	GtkWidget *button;
 
@@ -81,7 +81,7 @@ void create_sidebar (GtkApplication *app, GtkWidget *box, gpointer user_data)
 	gtk_application_set_accels_for_action (GTK_APPLICATION (app), "app.ult", accels_ult);
 	gtk_application_set_accels_for_action (GTK_APPLICATION (app), "app.base", accels_base);
 
-	gtk_box_pack_end(GTK_BOX(box), grid, FALSE, FALSE,0);
+	gtk_box_pack_end(GTK_BOX(a->sub_box), grid, FALSE, FALSE,0);
 }
 
 

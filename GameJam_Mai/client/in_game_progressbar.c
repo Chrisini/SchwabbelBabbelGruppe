@@ -1,8 +1,8 @@
 #include "header/game_main.h"
 
-void create_progress (GtkApplication *app, GtkWidget *box, gpointer user_data)
+void create_progress (GtkApplication *app, gpointer data)
 {
-	//widgets *a = (widgets *) user_data;
+	widgets *a = (widgets *) data;
 	GtkWidget *progb_attack, *progb_protection, *progb_life, *progb_energy;
 	GtkWidget *grid;
 
@@ -46,6 +46,6 @@ void create_progress (GtkApplication *app, GtkWidget *box, gpointer user_data)
 	gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (progb_energy), val_energy);
 
 
-	gtk_box_pack_end(GTK_BOX(box), grid, FALSE, FALSE,0);
+	gtk_box_pack_end(GTK_BOX(a->main_box), grid, FALSE, FALSE,0);
 
 }

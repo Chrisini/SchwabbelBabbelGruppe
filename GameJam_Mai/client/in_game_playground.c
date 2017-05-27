@@ -17,9 +17,10 @@ void step_to_but(GSimpleAction *action, GVariant *parameter, gpointer data)
 	g_print("but");
 }
 
-void create_playground (GtkApplication *app, GtkWidget *box, gpointer user_data){
+void create_playground (GtkApplication *app, gpointer data){
 
 	BUTTONS *button;
+	widgets *a = (widgets *) data;
 
 	button = (BUTTONS *)malloc(62 * sizeof (BUTTONS));
 
@@ -28,6 +29,7 @@ void create_playground (GtkApplication *app, GtkWidget *box, gpointer user_data)
 
 	// layout containers *****
 	grid = gtk_grid_new ();
+	gtk_widget_set_name(grid, "playground");
 
 	int i[1];
 	i[0] = 0;
@@ -128,7 +130,7 @@ void create_playground (GtkApplication *app, GtkWidget *box, gpointer user_data)
 	create_button(i, button, "Team", "t_base1", 8, 18, grid);
 
 
-	gtk_box_pack_start(GTK_BOX(box), scroll, FALSE, FALSE, 0);
+	gtk_box_pack_start(GTK_BOX(a->sub_box), scroll, FALSE, FALSE, 0);
 	//gtk_box_pack_start(GTK_BOX(box), grid, FALSE, FALSE, 0);
 	//
 
