@@ -65,13 +65,13 @@ void callback_music(GSimpleAction *action, GVariant *parameter, gpointer data);
 void callback_about(GSimpleAction *action, GVariant *parameter, gpointer data);
 void callback_help(GSimpleAction *action, GVariant *parameter, gpointer data);
 
-void but_life(GtkWidget *widget, gpointer data);
-void but_twice(GtkWidget *widget, gpointer data);
-void but_ability1(GtkWidget *widget, gpointer data);
-void but_ability2(GtkWidget *widget, gpointer data);
-void but_ability3(GtkWidget *widget, gpointer data);
-void but_ult(GtkWidget *widget, gpointer data);
-void but_base(GtkWidget *widget, gpointer data);
+void but_life(GSimpleAction *action, GVariant *parameter, gpointer data);
+void but_twice(GSimpleAction *action, GVariant *parameter, gpointer data);
+//void but_ability1(GSimpleAction *action, GVariant *parameter, gpointer data);
+//void but_ability2(GSimpleAction *action, GVariant *parameter, gpointer data);
+void but_ability(GSimpleAction *action, GVariant *parameter, gpointer data);
+void but_ult(GSimpleAction *action, GVariant *parameter, gpointer data);
+void but_base(GSimpleAction *action, GVariant *parameter, gpointer data);
 
 void step_to_but(GSimpleAction *action, GVariant *parameter, gpointer data);
 

@@ -55,7 +55,7 @@ void create_playground (GtkApplication *app, GtkWidget *box, gpointer user_data)
 
 	GtkWidget *separator;
 	separator = gtk_separator_new (GTK_ORIENTATION_HORIZONTAL);
-	gtk_grid_attach (GTK_GRID (grid), separator, 0, 4, 8, 1);
+	gtk_grid_attach (GTK_GRID (grid), separator, 0, 4, 9, 1);
 
 	create_button(i, button, "Feld", "d_fe1", 0, 5, grid);
 	create_button(i, button, "Feld", "d_fe2", 2, 5, grid);
@@ -109,7 +109,7 @@ void create_playground (GtkApplication *app, GtkWidget *box, gpointer user_data)
 	create_button(i, button, "Feld", "d_fe1", 8, 13, grid);
 
 	separator = gtk_separator_new (GTK_ORIENTATION_HORIZONTAL);
-	gtk_grid_attach (GTK_GRID (grid), separator, 0, 14, 8, 1);
+	gtk_grid_attach (GTK_GRID (grid), separator, 0, 14, 9, 1);
 
 	create_button(i, button, "Turm", "t_tu3", 0, 15, grid);
 	create_button(i, button, "Turm", "t_tu2", 4, 15, grid);
