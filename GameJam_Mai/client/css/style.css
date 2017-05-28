@@ -12,7 +12,7 @@ button{
 	margin: 3px;
 }
 
-grid#background, box#background{
+#background{
 	background-image: url('../img/background.png');
 	background-size: cover;
 }
@@ -30,6 +30,7 @@ button.selectable{
 }
 
 button#playbutton{
-	top: center;
-	left: center;
+	border-radius: 15px;
+	font-family: "Larkspur (BRK)";
+	font-size: 32px;
 }

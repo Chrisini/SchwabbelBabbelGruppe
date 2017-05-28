@@ -1,39 +1,40 @@
 #include "header/game_main.h"
 
 
-void create_info(GtkApplication *app, gpointer data)
+void create_info(gpointer data)
 {
+
 	widgets *a = (widgets *) data;
-	GtkWidget *info_label;
+
 	// GtkWidget *gtk_assistant_new (void);
 
-	GtkWidget *grid;
-	grid = gtk_grid_new ();
+	a->info_grid = gtk_grid_new ();
 
-	//gtk_seperator_new(GTK_ORIENTATION_HORIZONTAL);
+	a->info_label = gtk_label_new ("Welcome to Hidden Demon, press the Button to choose your Champ");
+	gtk_widget_set_name(a->info_label, "info_label");
+	gtk_grid_attach (GTK_GRID (a->info_grid), a->info_label, 1,1,1,1);
 
-	info_label = gtk_label_new ("What to do: Count til 100, if you are ready, begin again");
-	gtk_widget_set_name(info_label, "info_label");
-	gtk_grid_attach (GTK_GRID (grid), info_label, 1,1,1,1);
+	gtk_box_pack_end(GTK_BOX(a->main_box), a->info_grid, FALSE, FALSE,0);
 
-	gtk_box_pack_end(GTK_BOX(a->main_box), grid, FALSE, FALSE,0);
+	gtk_widget_show_all(a->info_grid);
 }
 
 
 
 
-void apply_css(GtkWidget *widget, GtkStyleProvider *css_style)
+void apply_css(GtkWidget *widget, GtkStyleProvider *css_s)
 {
+
 	gtk_style_context_add_provider (gtk_widget_get_style_context (widget),
-					css_style, G_MAXUINT);
+					css_s, G_MAXUINT);
 	if(GTK_IS_CONTAINER (widget)){
-		gtk_container_forall (GTK_CONTAINER (widget), (GtkCallback) apply_css, css_style);
+		gtk_container_forall (GTK_CONTAINER (widget), (GtkCallback) apply_css, css_s);
 	}
 
 }
 
 // (1)
-void startscreen (GtkApplication *app, gpointer data)
+void startscreen (gpointer data)
 {
 	widgets *a = (widgets *) data;
 	GtkWidget *playbutton;
@@ -41,43 +42,47 @@ void startscreen (GtkApplication *app, gpointer data)
 	gtk_widget_set_name(a->main_box, "background");
 	GtkWidget *grid;
 
-	grid = gtk_grid_new();
+	gint get_height, get_width;
+
+	grid = gtk_fixed_new();
 
 	playbutton = gtk_button_new_with_label("Play Hidden Demon");
-	gtk_widget_set_size_request(playbutton, 100,100);
+	gtk_widget_set_size_request(playbutton, 300,80);
 	g_signal_connect(playbutton, "clicked", G_CALLBACK(choose_game), NULL);
 	context = gtk_widget_get_style_context(playbutton);
 	gtk_style_context_add_class(context, "selectable");
 	gtk_widget_set_name(playbutton, "playbutton");
-	gtk_grid_attach(GTK_GRID(grid), playbutton, 0,0,1,1);
-	gtk_box_pack_start(GTK_BOX(a->main_box), grid, FALSE, FALSE, 0);
+	gtk_window_get_size(GTK_WINDOW(a->window), &get_width, &get_height);
+	gtk_fixed_put(GTK_FIXED(grid), playbutton, (get_width/2)-300, (get_height/2)-0);
 
+	gtk_box_pack_start(GTK_BOX(a->main_box), grid, FALSE, FALSE, 0);
 
 }
 
 // (2)
-void choose_game(GSimpleAction *action, GVariant *parameter, gpointer data){
+void choose_game(gpointer data){
+
 	widgets *a = (widgets *) data;
-	in_game(a->app, (gpointer) a);
+	//in_game((gpointer) a);
 }
 
 // (3a)
-void wait_connect(GtkApplication *app, gpointer data){
+void wait_connect(gpointer data){
 
 }
 
 // (3b)
-void no_game(GtkApplication *app, gpointer data){
+void no_game(gpointer data){
 
 }
 
 // (4)
-void in_game (GtkApplication *app, gpointer data){
+void in_game (gpointer data){
 
 	widgets *a = (widgets *) data;
 
 	// playground *****
-	create_playground(app, (gpointer) a);
+	create_playground((gpointer) a);
 
 	// seperstor
 	GtkWidget *separator;
@@ -85,20 +90,19 @@ void in_game (GtkApplication *app, gpointer data){
 	gtk_box_pack_start(GTK_BOX(a->sub_box), separator, FALSE, FALSE, 0);
 
 	// ability - (sidebar) *****
-	create_sidebar(app, (gpointer) a);
-
-	// info - field
-	create_info(app, (gpointer) a);
+	create_sidebar((gpointer) a);
 
 	// regeneration - progress bar *****
-	create_progress(app, (gpointer) a);
+	create_progress((gpointer) a);
 
 }
 
 void activate (GtkApplication *app, gpointer data)
 {
 	widgets *a = (widgets *) data;
-	GtkStyleProvider *css_style;
+
+	a->css_style = GTK_STYLE_PROVIDER (gtk_css_provider_new ());
+	gtk_css_provider_load_from_resource (GTK_CSS_PROVIDER(a->css_style), "/game_res/css/style.css");
 
 	//GtkWidget *main_box; // layout
 	//GtkWidget *a->sub_box;
@@ -107,8 +111,8 @@ void activate (GtkApplication *app, gpointer data)
 
 
 	// create window and set title *****
-	a->window = gtk_application_window_new (app);
-	gtk_window_set_application (GTK_WINDOW (a->window), GTK_APPLICATION (app));
+	a->window = gtk_application_window_new (a->app);
+	gtk_window_set_application (GTK_WINDOW (a->window), GTK_APPLICATION (a->app));
 	gtk_window_set_position (GTK_WINDOW (a->window), GTK_WIN_POS_CENTER);
 	gtk_window_set_title (GTK_WINDOW (a->window), "Game Jam");
 	gtk_window_set_default_size (GTK_WINDOW (a->window), 800, 500); // width, height
@@ -124,25 +128,36 @@ void activate (GtkApplication *app, gpointer data)
 
 
 	// menu *****
-	create_menu(app, (gpointer) a);
+	create_menu((gpointer) a);
+	create_info((gpointer) a);
 
 	// subbos *****
 	gtk_box_pack_start(GTK_BOX((a->main_box)), a->sub_box, FALSE, FALSE, 0);
 
-	// startscreen *****
-	startscreen(app, (gpointer) a);
+	// (1) startscreen *****
+	startscreen((gpointer) a);
 
-	// wait scree calls "in game"
-	//in_game(app, (gpointer) a);
+	// (2)
+	choose_game((gpointer) a);
+
+	// (3a)
+	wait_connect((gpointer) a);
+
+	// (3b)
+	no_game((gpointer) a);
+
+	// (4)
+	in_game((gpointer) a);
 
 
 	// css
-	css_style = GTK_STYLE_PROVIDER (gtk_css_provider_new ());
-	gtk_css_provider_load_from_resource (GTK_CSS_PROVIDER(css_style), "/game_res/css/style.css");
-	apply_css (a->window, css_style);
+
+	apply_css (a->window, a->css_style);
 
 	// show all widgets
-	gtk_widget_show_all (a->window);
+	gtk_widget_show (a->window);
+	gtk_widget_show (a->main_box);
+	gtk_widget_show (a->sub_box);
 }
 
 int main (int argc, char **argv)

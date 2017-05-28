@@ -1,6 +1,6 @@
 #include "header/game_main.h"
 
-void create_progress (GtkApplication *app, gpointer data)
+void create_progress (gpointer data)
 {
 	widgets *a = (widgets *) data;
 	GtkWidget *progb_attack, *progb_protection, *progb_life, *progb_energy;

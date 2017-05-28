@@ -17,7 +17,7 @@ void step_to_but(GSimpleAction *action, GVariant *parameter, gpointer data)
 	g_print("but");
 }
 
-void create_playground (GtkApplication *app, gpointer data){
+void create_playground (gpointer data){
 
 	BUTTONS *button;
 	widgets *a = (widgets *) data;

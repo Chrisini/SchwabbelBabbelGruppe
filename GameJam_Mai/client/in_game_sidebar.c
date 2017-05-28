@@ -8,7 +8,7 @@ const GActionEntry app_entries_but[] = {
 	{ "base", but_base, NULL, NULL, NULL}
 };
 
-void create_sidebar (GtkApplication *app, gpointer data)
+void create_sidebar (gpointer data)
 {
 
 	widgets *a = (widgets *) data;
@@ -39,7 +39,7 @@ void create_sidebar (GtkApplication *app, gpointer data)
 	const gchar *accels_base[2] = {c_base, NULL};
 
 	// map entries and actions *****
-	g_action_map_add_action_entries (G_ACTION_MAP (app), app_entries_but,
+	g_action_map_add_action_entries (G_ACTION_MAP (a->app), app_entries_but,
 					 G_N_ELEMENTS (app_entries_but), (gpointer) a);
 
 	// ability - buttons *****
@@ -73,13 +73,13 @@ void create_sidebar (GtkApplication *app, gpointer data)
 	gtk_grid_attach (GTK_GRID (grid), button, 0, 6, 1, 1);
 
 	// connect keyboard accelerators *****
-	gtk_application_set_accels_for_action (GTK_APPLICATION (app), "app.life", accels_life);
-	gtk_application_set_accels_for_action (GTK_APPLICATION (app), "app.twice", accels_twice);
+	gtk_application_set_accels_for_action (GTK_APPLICATION (a->app), "app.life", accels_life);
+	gtk_application_set_accels_for_action (GTK_APPLICATION (a->app), "app.twice", accels_twice);
 	//gtk_application_set_accels_for_action (GTK_APPLICATION (app), "app.ability1", accels_ability1);
 	//gtk_application_set_accels_for_action (GTK_APPLICATION (app), "app.ability2", accels_ability2);
-	gtk_application_set_accels_for_action (GTK_APPLICATION (app), "app.ability", accels_ability);
-	gtk_application_set_accels_for_action (GTK_APPLICATION (app), "app.ult", accels_ult);
-	gtk_application_set_accels_for_action (GTK_APPLICATION (app), "app.base", accels_base);
+	gtk_application_set_accels_for_action (GTK_APPLICATION (a->app), "app.ability", accels_ability);
+	gtk_application_set_accels_for_action (GTK_APPLICATION (a->app), "app.ult", accels_ult);
+	gtk_application_set_accels_for_action (GTK_APPLICATION (a->app), "app.base", accels_base);
 
 	gtk_box_pack_end(GTK_BOX(a->sub_box), grid, FALSE, FALSE,0);
 }

@@ -12,6 +12,10 @@ typedef struct {
 	GtkWidget *main_box;
 	GtkWidget *sub_box;
 	GtkWidget *grid;
+	GtkStyleProvider *css_style;
+	// FUNCTION - WIDGETS
+	GtkWidget *info_grid;
+	GtkWidget *info_label;
 } widgets;
 
 struct but_field{
@@ -53,15 +57,16 @@ typedef struct {
 // PROTOTYPES
 
 void activate (GtkApplication *app, gpointer data);
-void choose_game(GSimpleAction *action, GVariant *parameter, gpointer data);
-void in_game(GtkApplication *app, gpointer data);
+void choose_game(gpointer data);
+void in_game(gpointer data);
+void apply_css(GtkWidget *widget, GtkStyleProvider *css_s);
 
 
-void create_progress (GtkApplication *app, gpointer data);
-void create_menu (GtkApplication *app, gpointer data);
-void create_sidebar (GtkApplication *app, gpointer data);
-void create_info(GtkApplication *app, gpointer data);
-void create_playground (GtkApplication *app, gpointer data);
+void create_progress (gpointer data);
+void create_menu (gpointer data);
+void create_sidebar (gpointer data);
+void create_info(gpointer data);
+void create_playground (gpointer data);
 
 void callback_newgame(GSimpleAction *action, GVariant *parameter, gpointer data);
 void callback_level(GSimpleAction *action, GVariant *parameter, gpointer data);

@@ -10,7 +10,7 @@ const GActionEntry app_entries[] = {
 	{ "help", callback_help, NULL, NULL, NULL, {0,0,0} }
 };
 
-void create_menu (GtkApplication *app, gpointer data)
+void create_menu (gpointer data)
 {
 	widgets *a = (widgets *) data;
 
@@ -26,7 +26,7 @@ void create_menu (GtkApplication *app, gpointer data)
 	const gchar *accels_exit[2] = {"x", NULL};
 
 	// map entries and actions *****
-	g_action_map_add_action_entries (G_ACTION_MAP (app), app_entries,
+	g_action_map_add_action_entries (G_ACTION_MAP (a->app), app_entries,
 					 G_N_ELEMENTS (app_entries), (gpointer) a);
 
 	// create the menu *****
@@ -70,9 +70,11 @@ void create_menu (GtkApplication *app, gpointer data)
 	gtk_widget_set_name(menubar, "menu");
 
 	// connect keyboard accelerators *****
-	gtk_application_set_accels_for_action (GTK_APPLICATION (app), "app.music", accels_music);
-	gtk_application_set_accels_for_action (GTK_APPLICATION (app), "app.help", accels_help);
-	gtk_application_set_accels_for_action (GTK_APPLICATION (app), "app.exit", accels_exit);
+	gtk_application_set_accels_for_action (GTK_APPLICATION (a->app), "a->app.music", accels_music);
+	gtk_application_set_accels_for_action (GTK_APPLICATION (a->app), "a->app.help", accels_help);
+	gtk_application_set_accels_for_action (GTK_APPLICATION (a->app), "a->app.exit", accels_exit);
+
+	gtk_widget_show_all(menubar);
 }
 
 void callback_newgame(GSimpleAction *action, GVariant *parameter, gpointer data)
@@ -156,6 +158,16 @@ void callback_about(GSimpleAction *action, GVariant *parameter, gpointer data)
 
 void callback_help(GSimpleAction *action, GVariant *parameter, gpointer data)
 {
-	g_print("Music");
+	widgets *a = (widgets *) data;
+	gboolean set_vis = TRUE;
+
+	if(gtk_widget_get_visible(a->info_grid))
+	{
+		set_vis = FALSE;
+	}
+
+	gtk_widget_set_visible(a->info_grid, set_vis);
+	gtk_widget_set_visible(a->info_label, set_vis);
+
 }
 
