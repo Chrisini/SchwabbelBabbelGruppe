@@ -69,6 +69,8 @@ void choose_game(gpointer data){
 
 	widgets *a = (widgets *) data;
 
+	create_champions((gpointer) a);
+
 	//a->visible = FALSE;
 	//g_signal_connect(a->start_button, "clicked", G_CALLBACK(in_visible_start_screen), NULL);
 

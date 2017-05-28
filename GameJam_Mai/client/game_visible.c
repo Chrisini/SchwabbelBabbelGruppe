@@ -5,15 +5,13 @@ void next_screen_2 (gpointer data)
 
 	widgets *a = (widgets *) data;
 
-
-
-	//gtk_widget_hide(GTK_WIDGET(a->start_layout));
-	//gtk_widget_hide(GTK_WIDGET(a->start_button));
-	//gtk_widget_set_visible(a->start_layout, FALSE);
+	// Screen 1
+	gtk_widget_set_visible(a->start_layout, FALSE);
 	gtk_widget_set_visible(a->start_button, FALSE);
 
-	gtk_widget_set_visible(a->info_grid, TRUE);
-	gtk_widget_set_visible(a->info_label, TRUE);
+	// Screen 2
+	gtk_widget_show_all(a->choose_grid);
+
 
 }
 

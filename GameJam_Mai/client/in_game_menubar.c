@@ -79,7 +79,8 @@ void create_menu (gpointer data)
 
 void callback_newgame(GSimpleAction *action, GVariant *parameter, gpointer data)
 {
-	g_print("Music");
+	widgets *a = (widgets *) data;
+	next_screen_2((gpointer) a);
 }
 
 void callback_level(GSimpleAction *action, GVariant *parameter, gpointer data)

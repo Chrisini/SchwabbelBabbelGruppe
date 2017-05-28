@@ -21,6 +21,8 @@ typedef struct {
 	// startscreen
 	GtkWidget *start_button;
 	GtkWidget *start_layout;
+	// choose
+	GtkWidget *choose_grid;
 } widgets;
 
 struct but_field{
@@ -37,21 +39,22 @@ struct but_field{
 typedef struct but_field BUTTONS;
 
 typedef struct{
-	char ability_name[30];
-	int ability_max;
-	int ability_fill;
-	int ability_regeneration;
+	gchar ability_name;
+	gint ability_max;
+	gint ability_fill;
+	gint ability_regeneration;
 }abilities;
 
 typedef struct {
-	char player_name[30];
-	int player_id;
+	gchar name;
+	gint id;
+	GtkWidget *image;
 	abilities life;
-	abilities ability1;
-	abilities ability2;
-	abilities ability3;
+	//abilities ability1;
+	//abilities ability2;
+	abilities ability;
 	abilities ult;
-}player;
+}champ;
 
 typedef struct {
 	GtkWidget *button;
@@ -68,6 +71,8 @@ void apply_css(GtkWidget *widget, GtkStyleProvider *css_s);
 
 
 void next_screen_2 (gpointer data);
+
+void create_champions(/*gpointer champ_data, */gpointer data);
 
 void create_progress (gpointer data);
 void create_menu (gpointer data);
