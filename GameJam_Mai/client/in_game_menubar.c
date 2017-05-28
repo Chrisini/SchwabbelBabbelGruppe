@@ -70,9 +70,9 @@ void create_menu (gpointer data)
 	gtk_widget_set_name(menubar, "menu");
 
 	// connect keyboard accelerators *****
-	gtk_application_set_accels_for_action (GTK_APPLICATION (a->app), "a->app.music", accels_music);
-	gtk_application_set_accels_for_action (GTK_APPLICATION (a->app), "a->app.help", accels_help);
-	gtk_application_set_accels_for_action (GTK_APPLICATION (a->app), "a->app.exit", accels_exit);
+	gtk_application_set_accels_for_action (GTK_APPLICATION (a->app), "app.music", accels_music);
+	gtk_application_set_accels_for_action (GTK_APPLICATION (a->app), "app.help", accels_help);
+	gtk_application_set_accels_for_action (GTK_APPLICATION (a->app), "app.exit", accels_exit);
 
 	gtk_widget_show_all(menubar);
 }

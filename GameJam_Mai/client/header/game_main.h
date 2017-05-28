@@ -12,10 +12,15 @@ typedef struct {
 	GtkWidget *main_box;
 	GtkWidget *sub_box;
 	GtkWidget *grid;
+	gboolean visible;
 	GtkStyleProvider *css_style;
 	// FUNCTION - WIDGETS
+	// info
 	GtkWidget *info_grid;
 	GtkWidget *info_label;
+	// startscreen
+	GtkWidget *start_button;
+	GtkWidget *start_layout;
 } widgets;
 
 struct but_field{
@@ -61,6 +66,8 @@ void choose_game(gpointer data);
 void in_game(gpointer data);
 void apply_css(GtkWidget *widget, GtkStyleProvider *css_s);
 
+
+void next_screen_2 (gpointer data);
 
 void create_progress (gpointer data);
 void create_menu (gpointer data);

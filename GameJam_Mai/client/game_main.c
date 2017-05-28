@@ -1,12 +1,15 @@
 #include "header/game_main.h"
 
+void change_info(gchar *info_text, gpointer data)
+{
+	widgets *a = (widgets *) data;
+	gtk_label_set_text(GTK_LABEL(a->info_label), info_text);
+}
 
 void create_info(gpointer data)
 {
 
 	widgets *a = (widgets *) data;
-
-	// GtkWidget *gtk_assistant_new (void);
 
 	a->info_grid = gtk_grid_new ();
 
@@ -18,7 +21,6 @@ void create_info(gpointer data)
 
 	gtk_widget_show_all(a->info_grid);
 }
-
 
 
 
@@ -34,28 +36,31 @@ void apply_css(GtkWidget *widget, GtkStyleProvider *css_s)
 }
 
 // (1)
-void startscreen (gpointer data)
+void start_screen (gpointer data)
 {
 	widgets *a = (widgets *) data;
-	GtkWidget *playbutton;
-	GtkStyleContext *context;
-	gtk_widget_set_name(a->main_box, "background");
-	GtkWidget *grid;
 
+	GtkStyleContext *context;
 	gint get_height, get_width;
 
-	grid = gtk_fixed_new();
+	gtk_widget_set_name(a->main_box, "background");
 
-	playbutton = gtk_button_new_with_label("Play Hidden Demon");
-	gtk_widget_set_size_request(playbutton, 300,80);
-	g_signal_connect(playbutton, "clicked", G_CALLBACK(choose_game), NULL);
-	context = gtk_widget_get_style_context(playbutton);
+	// Layout
+	a->start_layout = gtk_fixed_new();
+
+	// Button
+	a->start_button = gtk_button_new_with_label("Play Hidden Demon");
+	gtk_widget_set_size_request(a->start_button, 400,100);
+	g_signal_connect_swapped(a->start_button, "clicked", G_CALLBACK(next_screen_2), (gpointer) a);
+	context = gtk_widget_get_style_context(a->start_button);
 	gtk_style_context_add_class(context, "selectable");
-	gtk_widget_set_name(playbutton, "playbutton");
+	gtk_widget_set_name(a->start_button, "start_button");
 	gtk_window_get_size(GTK_WINDOW(a->window), &get_width, &get_height);
-	gtk_fixed_put(GTK_FIXED(grid), playbutton, (get_width/2)-300, (get_height/2)-0);
+	gtk_fixed_put(GTK_FIXED(a->start_layout), a->start_button, (get_width-400) / 2, (get_height/2)-100);
 
-	gtk_box_pack_start(GTK_BOX(a->main_box), grid, FALSE, FALSE, 0);
+	gtk_box_pack_start(GTK_BOX(a->main_box), a->start_layout, FALSE, FALSE, 0);
+
+	gtk_widget_show_all(a->start_layout);
 
 }
 
@@ -63,12 +68,17 @@ void startscreen (gpointer data)
 void choose_game(gpointer data){
 
 	widgets *a = (widgets *) data;
-	//in_game((gpointer) a);
+
+	//a->visible = FALSE;
+	//g_signal_connect(a->start_button, "clicked", G_CALLBACK(in_visible_start_screen), NULL);
+
+
 }
 
 // (3a)
 void wait_connect(gpointer data){
 
+	//in_game_visible();
 }
 
 // (3b)
@@ -94,6 +104,8 @@ void in_game (gpointer data){
 
 	// regeneration - progress bar *****
 	create_progress((gpointer) a);
+
+
 
 }
 
@@ -127,25 +139,22 @@ void activate (GtkApplication *app, gpointer data)
 	//gtk_container_add (GTK_CONTAINER (a->window), grid);
 
 
-	// menu *****
+	// menu and info are shown everywhere *****
 	create_menu((gpointer) a);
 	create_info((gpointer) a);
 
-	// subbos *****
+	// sub_box *****
 	gtk_box_pack_start(GTK_BOX((a->main_box)), a->sub_box, FALSE, FALSE, 0);
 
+	// SCREENS
 	// (1) startscreen *****
-	startscreen((gpointer) a);
-
+	start_screen((gpointer) a);
 	// (2)
 	choose_game((gpointer) a);
-
 	// (3a)
 	wait_connect((gpointer) a);
-
 	// (3b)
 	no_game((gpointer) a);
-
 	// (4)
 	in_game((gpointer) a);
 
