@@ -23,7 +23,7 @@ void create_playground (gpointer data){
 	BUTTONS *button;
 	widgets *a = (widgets *) data;
 
-	button = (BUTTONS *)malloc(62 * sizeof (BUTTONS));
+	button = (BUTTONS *)g_malloc(62 * sizeof (BUTTONS));
 
 	// layout containers *****
 	a->in_playground_layout = gtk_grid_new ();

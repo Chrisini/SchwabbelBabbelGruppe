@@ -18,6 +18,7 @@ typedef struct {
 	// info
 	GtkWidget *info_grid;
 	GtkWidget *info_label;
+	guint info_id;
 	// startscreen
 	GtkWidget *start_layout;
 	GtkWidget *start_button;
@@ -45,16 +46,16 @@ struct but_field{
 typedef struct but_field BUTTONS;
 
 typedef struct{
-	gchar ability_name;
+	gchar *ability_name;
 	gint ability_max;
-	gint ability_fill;
+	gdouble ability_fill;
 	gint ability_regeneration;
 }abilities;
 
 typedef struct {
-	gchar name;
+	gchar *name;
 	gint id;
-	GtkWidget *image;
+	gchar *image_path;
 	abilities life;
 	//abilities ability1;
 	//abilities ability2;
@@ -92,7 +93,7 @@ void next_screen_1_start (gpointer data); // visible
 // CHOOSE (2)
 void choose_game(gpointer data);
 void next_screen_2_choose (gpointer data); // visible
-void create_champions(/*gpointer champ_data, */gpointer data);
+void create_champions(gpointer champ_data, gpointer ability_data, gpointer data);
 
 // WAIT (3)
 

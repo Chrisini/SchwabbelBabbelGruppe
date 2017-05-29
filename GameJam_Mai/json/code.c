@@ -1,4 +1,8 @@
 // samantha fuchs begin
+
+#include <json-glib/json-glib.h>
+#include <gtk/gtk.h>
+
 void get_json(filename){
 	JsonParser *parser
 	GError *error;

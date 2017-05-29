@@ -4,15 +4,35 @@
 void but_demon(gpointer data)
 {}
 
-void create_champions(/*gpointer champ_data, */gpointer data){
+
+void generate_champions(gpointer champ_data, gpointer ability_data)
+{
+	champ *c = (champ *) champ_data;
+	abilities *ab = (abilities *) ability_data;
+
+	c[0].name = "Demon of wind";
+	c[0].id = 0;
+	c[0].image_path = "img/drake.png";
+	c[0].life.ability_name = "Life";
+	c[0].life.ability_max = 100;
+	c[0].life.ability_fill = 0.5; // de: Fuellstatus
+	c[0].life.ability_regeneration = 3; // how fast it regenerates
+
+}
+
+
+void create_champions(gpointer champ_data, gpointer ability_data, gpointer data){
 
 	widgets *a = (widgets *) data;
-	//champ *c = (champ *) champ_data; // todo: allocate champ
+	champ *c = (champ *) champ_data;
+	abilities *ab = (abilities *) ability_data;
 
 	GtkWidget *button;
 	GtkWidget *image;
 
-	image = gtk_image_new_from_file("img/drake.png");
+	generate_champions((gpointer) c, (gpointer) ab);
+
+	image = gtk_image_new_from_file(c[0].image_path);
 
 
 	a->choose_layout = gtk_grid_new();
