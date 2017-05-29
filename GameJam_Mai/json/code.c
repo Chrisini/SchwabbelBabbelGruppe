@@ -1,9 +1,10 @@
 // samantha fuchs begin
 
-#include <json-glib/json-glib.h>
+#include <glib.h>
+#include <glib-json/glib-json.h>
 #include <gtk/gtk.h>
 
-void get_json(filename){
+void get_json(char[20] filename){
 	JsonParser *parser
 	GError *error;
 	JsonNode *root;
@@ -44,3 +45,12 @@ void get_json(filename){
 	g_object_unref (parser);
 }
 // Samantha Fuchs end 
+
+
+int main (int argc, char **argv)
+{
+
+	void get_json("bsp.json"){
+
+	return status;
+}
