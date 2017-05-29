@@ -4,15 +4,14 @@ void create_progress (gpointer data)
 {
 	widgets *a = (widgets *) data;
 	GtkWidget *progb_attack, *progb_protection, *progb_life, *progb_energy;
-	GtkWidget *grid;
+
 
 	// layout containers *****
-	grid = gtk_grid_new ();
-	//gtk_container_add (GTK_CONTAINER (a->window), grid);
+	a->in_progressbar_layout = gtk_grid_new ();
 
 	// attack - Schade
 	progb_attack = gtk_progress_bar_new();
-	gtk_grid_attach (GTK_GRID (grid), progb_attack, 1, 1, 1, 1);
+	gtk_grid_attach (GTK_GRID (a->in_progressbar_layout), progb_attack, 1, 1, 1, 1);
 	gtk_progress_bar_set_show_text (GTK_PROGRESS_BAR (progb_attack), TRUE);
 	gtk_progress_bar_set_text (GTK_PROGRESS_BAR (progb_attack), NULL);
 	gdouble val_attack;
@@ -20,7 +19,7 @@ void create_progress (gpointer data)
 	gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (progb_attack), val_attack);
 	// protection - Ruestung
 	progb_protection = gtk_progress_bar_new();
-	gtk_grid_attach (GTK_GRID (grid), progb_protection, 2, 1, 1, 1);
+	gtk_grid_attach (GTK_GRID (a->in_progressbar_layout), progb_protection, 2, 1, 1, 1);
 	gtk_progress_bar_set_show_text (GTK_PROGRESS_BAR (progb_protection), TRUE);
 	gtk_progress_bar_set_text (GTK_PROGRESS_BAR (progb_protection), NULL);
 	gdouble val_protect;
@@ -29,7 +28,7 @@ void create_progress (gpointer data)
 
 	// life / dead - Leben / Tod
 	progb_life = gtk_progress_bar_new();
-	gtk_grid_attach (GTK_GRID (grid), progb_life, 3, 1, 1, 1);
+	gtk_grid_attach (GTK_GRID (a->in_progressbar_layout), progb_life, 3, 1, 1, 1);
 	gtk_progress_bar_set_show_text (GTK_PROGRESS_BAR (progb_life), TRUE);
 	gtk_progress_bar_set_text (GTK_PROGRESS_BAR (progb_life), NULL);
 	gdouble val_life;
@@ -38,7 +37,7 @@ void create_progress (gpointer data)
 
 	// energy - Energie, Mana
 	progb_energy = gtk_progress_bar_new();
-	gtk_grid_attach (GTK_GRID (grid), progb_energy, 4, 1, 1, 1);
+	gtk_grid_attach (GTK_GRID (a->in_progressbar_layout), progb_energy, 4, 1, 1, 1);
 	gtk_progress_bar_set_show_text (GTK_PROGRESS_BAR (progb_energy), TRUE);
 	gtk_progress_bar_set_text (GTK_PROGRESS_BAR (progb_energy), NULL);
 	gdouble val_energy;
@@ -46,6 +45,6 @@ void create_progress (gpointer data)
 	gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (progb_energy), val_energy);
 
 
-	gtk_box_pack_end(GTK_BOX(a->main_box), grid, FALSE, FALSE,0);
+	gtk_box_pack_end(GTK_BOX(a->main_box), a->in_progressbar_layout, FALSE, FALSE,0);
 
 }

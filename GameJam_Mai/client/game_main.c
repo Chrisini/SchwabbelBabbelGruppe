@@ -1,41 +1,15 @@
 #include "header/game_main.h"
 
-void change_info(gchar *info_text, gpointer data)
-{
-	widgets *a = (widgets *) data;
-	gtk_label_set_text(GTK_LABEL(a->info_label), info_text);
-}
-
-void create_info(gpointer data)
-{
-
-	widgets *a = (widgets *) data;
-
-	a->info_grid = gtk_grid_new ();
-
-	a->info_label = gtk_label_new ("Welcome to Hidden Demon, press the Button to choose your Champ");
-	gtk_widget_set_name(a->info_label, "info_label");
-	gtk_grid_attach (GTK_GRID (a->info_grid), a->info_label, 1,1,1,1);
-
-	gtk_box_pack_end(GTK_BOX(a->main_box), a->info_grid, FALSE, FALSE,0);
-
-	gtk_widget_show_all(a->info_grid);
-}
-
-
-
 void apply_css(GtkWidget *widget, GtkStyleProvider *css_s)
 {
-
 	gtk_style_context_add_provider (gtk_widget_get_style_context (widget),
 					css_s, G_MAXUINT);
 	if(GTK_IS_CONTAINER (widget)){
 		gtk_container_forall (GTK_CONTAINER (widget), (GtkCallback) apply_css, css_s);
 	}
-
 }
 
-// (1)
+// START (1)
 void start_screen (gpointer data)
 {
 	widgets *a = (widgets *) data;
@@ -51,7 +25,7 @@ void start_screen (gpointer data)
 	// Button
 	a->start_button = gtk_button_new_with_label("Play Hidden Demon");
 	gtk_widget_set_size_request(a->start_button, 400,100);
-	g_signal_connect_swapped(a->start_button, "clicked", G_CALLBACK(next_screen_2), (gpointer) a);
+	g_signal_connect_swapped(a->start_button, "clicked", G_CALLBACK(next_screen_2_choose), (gpointer) a);
 	context = gtk_widget_get_style_context(a->start_button);
 	gtk_style_context_add_class(context, "selectable");
 	gtk_widget_set_name(a->start_button, "start_button");
@@ -60,16 +34,18 @@ void start_screen (gpointer data)
 
 	gtk_box_pack_start(GTK_BOX(a->main_box), a->start_layout, FALSE, FALSE, 0);
 
-	gtk_widget_show_all(a->start_layout);
-
 }
 
-// (2)
+// CHOOSE (2)
 void choose_game(gpointer data){
 
 	widgets *a = (widgets *) data;
-
 	create_champions((gpointer) a);
+
+	a->choose_button = gtk_button_new_with_label("Ready");
+	g_signal_connect_swapped(a->choose_button, "clicked", G_CALLBACK(next_screen_4_in_game), (gpointer) a);
+
+	gtk_box_pack_end(GTK_BOX(a->main_box), a->choose_button, FALSE, FALSE, 0);
 
 	//a->visible = FALSE;
 	//g_signal_connect(a->start_button, "clicked", G_CALLBACK(in_visible_start_screen), NULL);
@@ -77,7 +53,7 @@ void choose_game(gpointer data){
 
 }
 
-// (3a)
+// WAIT (3)
 void wait_connect(gpointer data){
 
 	//in_game_visible();
@@ -88,7 +64,7 @@ void no_game(gpointer data){
 
 }
 
-// (4)
+// IN GAME (4)
 void in_game (gpointer data){
 
 	widgets *a = (widgets *) data;
@@ -104,11 +80,8 @@ void in_game (gpointer data){
 	// ability - (sidebar) *****
 	create_sidebar((gpointer) a);
 
-	// regeneration - progress bar *****
+	// regeneration - (progressbar) *****
 	create_progress((gpointer) a);
-
-
-
 }
 
 void activate (GtkApplication *app, gpointer data)
@@ -117,11 +90,6 @@ void activate (GtkApplication *app, gpointer data)
 
 	a->css_style = GTK_STYLE_PROVIDER (gtk_css_provider_new ());
 	gtk_css_provider_load_from_resource (GTK_CSS_PROVIDER(a->css_style), "/game_res/css/style.css");
-
-	//GtkWidget *main_box; // layout
-	//GtkWidget *a->sub_box;
-	// GtkWidget *last_box;
-	// GtkWidget *grid; // sub-layout
 
 
 	// create window and set title *****
@@ -137,9 +105,8 @@ void activate (GtkApplication *app, gpointer data)
 	gtk_container_add( GTK_CONTAINER (a->window), a->main_box);
 	a->sub_box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
 
-	//grid = gtk_grid_new ();
-	//gtk_container_add (GTK_CONTAINER (a->window), grid);
-
+	// Calling all GUI functions
+	// in game_visible.c the visibility is handled
 
 	// menu and info are shown everywhere *****
 	create_menu((gpointer) a);
@@ -150,10 +117,12 @@ void activate (GtkApplication *app, gpointer data)
 
 	// SCREENS
 	// (1) startscreen *****
+	// calls the first screen
 	start_screen((gpointer) a);
+	next_screen_1_start((gpointer) a);
 	// (2)
 	choose_game((gpointer) a);
-	// (3a)
+	// (3)
 	wait_connect((gpointer) a);
 	// (3b)
 	no_game((gpointer) a);
@@ -162,10 +131,9 @@ void activate (GtkApplication *app, gpointer data)
 
 
 	// css
-
 	apply_css (a->window, a->css_style);
 
-	// show all widgets
+	// show widgets: window, box-layout
 	gtk_widget_show (a->window);
 	gtk_widget_show (a->main_box);
 	gtk_widget_show (a->sub_box);

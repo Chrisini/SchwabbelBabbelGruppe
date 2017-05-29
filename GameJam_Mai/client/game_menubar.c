@@ -17,7 +17,6 @@ void create_menu (gpointer data)
 	GtkWidget *menubar;
 	GMenu *menu, *menu_game, *menu_settings, *menu_help, *menu_exit;
 
-
 	char c_music[2] = {"m"};
 
 	// keyboard accelerators
@@ -32,13 +31,13 @@ void create_menu (gpointer data)
 	// create the menu *****
 	menu = g_menu_new();
 
-
-	// create game *****
+	// create menu game *****
 	menu_game = g_menu_new();
 	g_menu_append (menu_game, "New Game", "app.newgame"); // restart
 	g_menu_append (menu_game, "Change lvl", "app.level"); // level
 	g_menu_append (menu_game, "High Score", "app.highscore"); // highscore
 
+	// create menu exit *****							  //
 	menu_exit = g_menu_new();
 	g_menu_append (menu_exit, "Exit", "app.exit"); // quit
 	g_menu_append_section(menu_game, NULL, G_MENU_MODEL (menu_exit));
@@ -49,15 +48,14 @@ void create_menu (gpointer data)
 	g_object_unref (menu_game);
 
 
-	// create settings *****
+	// create menu settings *****
 	menu_settings = g_menu_new();
 	g_menu_append (menu_settings, "Music", "app.music");
 	g_menu_append_submenu (menu, "Settings", G_MENU_MODEL (menu_settings));
 	g_object_unref (menu_settings);
 
 
-	// create help *****
-	// about
+	// create menu help *****
 	menu_help = g_menu_new();
 	g_menu_append(menu_help, "About", "app.about");
 	g_menu_append(menu_help, "Help", "app.help");
@@ -80,7 +78,7 @@ void create_menu (gpointer data)
 void callback_newgame(GSimpleAction *action, GVariant *parameter, gpointer data)
 {
 	widgets *a = (widgets *) data;
-	next_screen_2((gpointer) a);
+	next_screen_1_start((gpointer) a);
 }
 
 void callback_level(GSimpleAction *action, GVariant *parameter, gpointer data)
@@ -97,7 +95,7 @@ void callback_exit(GSimpleAction *action, GVariant *parameter, gpointer data)
 {
 	widgets *a = (widgets *) data;
 
-	g_print("Disconnected\n");
+	g_print("Good Bye\n");
 	g_application_quit(G_APPLICATION(a->app));
 	/*GtkWidget *dialog;
 	GtkWidget *grid;

@@ -15,13 +15,13 @@ void create_champions(/*gpointer champ_data, */gpointer data){
 	image = gtk_image_new_from_file("img/drake.png");
 
 
-	a->choose_grid = gtk_grid_new();
+	a->choose_layout = gtk_grid_new();
 
 	button = gtk_button_new (); //c->player_name
 	gtk_button_set_image(GTK_BUTTON(button), image);
 	g_signal_connect (button, "clicked", G_CALLBACK (but_demon), (gpointer) data);
-	gtk_grid_attach (GTK_GRID (a->choose_grid), button, 0, 0, 1, 1);
-	gtk_box_pack_start(GTK_BOX (a->main_box), a->choose_grid, FALSE, FALSE, 0);
+	gtk_grid_attach (GTK_GRID (a->choose_layout), button, 0, 0, 1, 1);
+	gtk_box_pack_start(GTK_BOX (a->main_box), a->choose_layout, FALSE, FALSE, 0);
 
 /*
 	typedef struct {

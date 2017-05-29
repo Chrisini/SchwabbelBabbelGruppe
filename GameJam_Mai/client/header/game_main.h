@@ -11,7 +11,7 @@ typedef struct {
 	GtkWidget *window;
 	GtkWidget *main_box;
 	GtkWidget *sub_box;
-	GtkWidget *grid;
+	//GtkWidget *grid;
 	gboolean visible;
 	GtkStyleProvider *css_style;
 	// FUNCTION - WIDGETS
@@ -19,10 +19,16 @@ typedef struct {
 	GtkWidget *info_grid;
 	GtkWidget *info_label;
 	// startscreen
-	GtkWidget *start_button;
 	GtkWidget *start_layout;
+	GtkWidget *start_button;
 	// choose
-	GtkWidget *choose_grid;
+	GtkWidget *choose_layout;
+	GtkWidget *choose_button;
+	// in game
+	GtkWidget *in_playground_layout;
+	GtkWidget *in_playground_scroll;
+	GtkWidget *in_progressbar_layout;
+	GtkWidget *in_sidebar_layout;
 } widgets;
 
 struct but_field{
@@ -64,22 +70,13 @@ typedef struct {
 
 // PROTOTYPES
 
+// GAME
 void activate (GtkApplication *app, gpointer data);
-void choose_game(gpointer data);
-void in_game(gpointer data);
 void apply_css(GtkWidget *widget, GtkStyleProvider *css_s);
-
-
-void next_screen_2 (gpointer data);
-
-void create_champions(/*gpointer champ_data, */gpointer data);
-
-void create_progress (gpointer data);
-void create_menu (gpointer data);
-void create_sidebar (gpointer data);
+// info
 void create_info(gpointer data);
-void create_playground (gpointer data);
-
+// menu
+void create_menu (gpointer data);
 void callback_newgame(GSimpleAction *action, GVariant *parameter, gpointer data);
 void callback_level(GSimpleAction *action, GVariant *parameter, gpointer data);
 void callback_highscore(GSimpleAction *action, GVariant *parameter, gpointer data);
@@ -88,6 +85,27 @@ void callback_music(GSimpleAction *action, GVariant *parameter, gpointer data);
 void callback_about(GSimpleAction *action, GVariant *parameter, gpointer data);
 void callback_help(GSimpleAction *action, GVariant *parameter, gpointer data);
 
+// START (1)
+void next_screen_1_start (gpointer data); // visible
+
+
+// CHOOSE (2)
+void choose_game(gpointer data);
+void next_screen_2_choose (gpointer data); // visible
+void create_champions(/*gpointer champ_data, */gpointer data);
+
+// WAIT (3)
+
+// IN GAME (4)
+void in_game(gpointer data);
+void next_screen_4_in_game (gpointer data);
+// progress
+void create_progress (gpointer data);
+// plaground
+void create_playground (gpointer data);
+void step_to_but(GSimpleAction *action, GVariant *parameter, gpointer data);
+// sidebar
+void create_sidebar (gpointer data);
 void but_life(GSimpleAction *action, GVariant *parameter, gpointer data);
 void but_twice(GSimpleAction *action, GVariant *parameter, gpointer data);
 //void but_ability1(GSimpleAction *action, GVariant *parameter, gpointer data);
@@ -96,7 +114,7 @@ void but_ability(GSimpleAction *action, GVariant *parameter, gpointer data);
 void but_ult(GSimpleAction *action, GVariant *parameter, gpointer data);
 void but_base(GSimpleAction *action, GVariant *parameter, gpointer data);
 
-void step_to_but(GSimpleAction *action, GVariant *parameter, gpointer data);
+
 
 
 #endif
