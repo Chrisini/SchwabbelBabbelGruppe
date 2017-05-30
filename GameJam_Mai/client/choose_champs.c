@@ -2,7 +2,11 @@
 
 
 void but_demon(gpointer data)
-{}
+{
+
+	gtk_widget_set_name(GTK_WIDGET(data), "selectable");
+
+}
 
 
 void generate_champions(gpointer champ_data, gpointer ability_data)
@@ -39,7 +43,8 @@ void create_champions(gpointer champ_data, gpointer ability_data, gpointer data)
 
 	button = gtk_button_new (); //c->player_name
 	gtk_button_set_image(GTK_BUTTON(button), image);
-	g_signal_connect (button, "clicked", G_CALLBACK (but_demon), (gpointer) data);
+	//gtk_toggle_button_set_mode(GTK_TOGGLE_BUTTON(button), TRUE);
+	g_signal_connect (button, "clicked", G_CALLBACK (but_demon), button);
 	gtk_grid_attach (GTK_GRID (a->choose_layout), button, 0, 0, 1, 1);
 	gtk_box_pack_start(GTK_BOX (a->main_box), a->choose_layout, FALSE, FALSE, 0);
 
