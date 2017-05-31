@@ -1,5 +1,10 @@
 #include "header/game_main.h"
 
+/*
+ * the infolablel (gtk statusbar) shows every player, wht he should do / is able to do
+ * next. It will get (in)visible, if F1 or "Help" in the menu is clicked
+ */
+
 void create_info (gpointer data)
 {
 

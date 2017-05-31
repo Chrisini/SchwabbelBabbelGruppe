@@ -48,7 +48,7 @@ void choose_game(gpointer data){
 	create_champions((gpointer) c, (gpointer) ab, (gpointer) a);
 
 	a->choose_button = gtk_button_new_with_label("Ready");
-	g_signal_connect_swapped(a->choose_button, "clicked", G_CALLBACK(next_screen_4_in_game), (gpointer) a);
+	g_signal_connect_swapped(a->choose_button, "clicked", G_CALLBACK(next_screen_3_wait), (gpointer) a);
 
 	gtk_box_pack_end(GTK_BOX(a->main_box), a->choose_button, FALSE, FALSE, 0);
 
@@ -61,7 +61,14 @@ void choose_game(gpointer data){
 // WAIT (3)
 void wait_connect(gpointer data){
 
-	//in_game_visible();
+	widgets *a = (widgets *) data;
+
+	a->wait_button = gtk_button_new_with_label("Connect");
+	g_signal_connect_swapped(a->wait_button, "clicked", G_CALLBACK(next_screen_4_in_game), (gpointer) a);
+
+	gtk_box_pack_end(GTK_BOX(a->main_box), a->wait_button, FALSE, FALSE, 0);
+
+
 }
 
 // (3b)
@@ -124,7 +131,6 @@ void activate (GtkApplication *app, gpointer data)
 	// (1) startscreen *****
 	// calls the first screen
 	start_screen((gpointer) a);
-	next_screen_1_start((gpointer) a);
 	// (2)
 	choose_game((gpointer) a);
 	// (3)
@@ -134,7 +140,6 @@ void activate (GtkApplication *app, gpointer data)
 	// (4)
 	in_game((gpointer) a);
 
-
 	// css
 	apply_css (a->window, a->css_style);
 
@@ -142,6 +147,9 @@ void activate (GtkApplication *app, gpointer data)
 	gtk_widget_show (a->window);
 	gtk_widget_show (a->main_box);
 	gtk_widget_show (a->sub_box);
+
+	// First Screen is available
+	next_screen_1_start((gpointer) a);
 }
 
 int main (int argc, char **argv)

@@ -25,6 +25,8 @@ typedef struct {
 	// choose
 	GtkWidget *choose_layout;
 	GtkWidget *choose_button;
+	// wait
+	GtkWidget *wait_button;
 	// in game
 	GtkWidget *in_playground_layout;
 	GtkWidget *in_playground_scroll;
@@ -71,7 +73,7 @@ typedef struct {
 
 // PROTOTYPES
 
-// GAME
+// GAME (0) *****
 void activate (GtkApplication *app, gpointer data);
 void apply_css(GtkWidget *widget, GtkStyleProvider *css_s);
 // info
@@ -86,20 +88,23 @@ void callback_music(GSimpleAction *action, GVariant *parameter, gpointer data);
 void callback_about(GSimpleAction *action, GVariant *parameter, gpointer data);
 void callback_help(GSimpleAction *action, GVariant *parameter, gpointer data);
 
-// START (1)
+// START (1) *****
 void next_screen_1_start (gpointer data); // visible
 
 
-// CHOOSE (2)
+// CHOOSE (2) *****
 void choose_game(gpointer data);
 void next_screen_2_choose (gpointer data); // visible
 void create_champions(gpointer champ_data, gpointer ability_data, gpointer data);
+void generate_champions(gint i[1], gpointer champ_data, gpointer ability_data);
 
-// WAIT (3)
+// WAIT (3) *****
+void wait_connect(gpointer data);
+void next_screen_3_wait (gpointer data); // visible
 
-// IN GAME (4)
+// IN GAME (4) *****
 void in_game(gpointer data);
-void next_screen_4_in_game (gpointer data);
+void next_screen_4_in_game (gpointer data); // visible
 // progress
 void create_progress (gpointer data);
 // plaground
