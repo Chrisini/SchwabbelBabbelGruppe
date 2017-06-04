@@ -44,8 +44,12 @@ struct but_field{
 	GtkWidget *nex_5;
 	GtkWidget *nex_6;
 };
-
 typedef struct but_field BUTTONS;
+
+struct separat{
+	GtkWidget *sep;
+};
+typedef struct separat SEPARATOR;
 
 typedef struct{
 	gchar *ability_name;
@@ -65,6 +69,8 @@ typedef struct {
 	abilities ability;
 	abilities ult;
 }champ;
+
+
 
 typedef struct {
 	GtkWidget *button;

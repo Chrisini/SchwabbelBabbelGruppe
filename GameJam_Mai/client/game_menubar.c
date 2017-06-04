@@ -37,7 +37,7 @@ void create_menu (gpointer data)
 	g_menu_append (menu_game, "Change lvl", "app.level"); // level
 	g_menu_append (menu_game, "High Score", "app.highscore"); // highscore
 
-	// create menu exit *****							  //
+	// create menu exit ****
 	menu_exit = g_menu_new();
 	g_menu_append (menu_exit, "Exit", "app.exit"); // quit
 	g_menu_append_section(menu_game, NULL, G_MENU_MODEL (menu_exit));

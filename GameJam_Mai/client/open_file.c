@@ -59,7 +59,7 @@ void open_file(gpointer champ_data, gpointer ability_data)
 		default: g_print("This number is not available in the struct\n"); break;
 		}
 
-		g_print("%s", msg[0]);
+		//g_print("%s", msg[0]);
 		a++;
 
 	}

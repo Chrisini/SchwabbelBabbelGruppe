@@ -3,6 +3,8 @@ light green: #66CD00 102,205,0
 dark green: #458b00 69, 139, 0
 light red: #FF3030 255,48,48
 dark red: #8B0000 139,0,0
+light blue:
+dark blue: 	0,100,255
 
 */
 
@@ -22,9 +24,38 @@ progressbar{
 	background-size: cover;
 }
 
-separator{
-	border: 1px solid #777777;
+separator.hor{
+
+	border-top: 2px solid #777777;
+	border-bottom: 2px solid #777777;
+	margin-top: 10px;
+	margin-bottom: 10px;
+	padding: 5px;
 }
+separator.ver{
+
+	border-left: 2px solid #777777;
+	border-right: 2px solid #777777;
+	margin-left: 30px;
+	margin-right: 30px;
+	padding: 5px;
+}
+seperator.base{
+	border-left: 2px solid #777777;
+	border-right: 2px solid #777777;
+	margin-left: 10px;
+	margin-right: 10px;
+	padding: 5px;
+}
+
+.red{
+	border: 2px solid rgb(139,0,0);
+}
+
+.blue{
+	border: 2px solid rgb(0,100,255);
+}
+
 
 #menu{
 	background-color: #EEEEEE;

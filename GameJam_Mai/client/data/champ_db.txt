@@ -1,6 +1,6 @@
 Demon of wind
 Burgenland
-/img/demon.png
+img/demon.png
 Life
 100
 20
@@ -13,7 +13,7 @@ hurricane
 -
 Ghost of mountains
 Upper-Austria
-/img/berggeist.png
+img/berggeist.pngno
 Life
 100
 13
@@ -52,7 +52,7 @@ blizzard
 -
 Foolish woman
 Styria
-img/woman.png
+img/woman.pngno
 Life
 100
 14
