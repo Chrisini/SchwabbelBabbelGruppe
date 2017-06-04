@@ -53,7 +53,7 @@ void create_playground (gpointer data){
 	widgets *a = (widgets *) data;
 
 	button = (BUTTONS *)g_malloc(66 * sizeof (BUTTONS));
-	separator = (SEPARATOR *)g_malloc(60 * sizeof (SEPARATOR));
+	separator = (SEPARATOR *)g_malloc(80 * sizeof (SEPARATOR));
 	// layout containers *****
 	a->in_playground_layout = gtk_grid_new ();
 	gtk_widget_set_name(a->in_playground_layout, "playground");
@@ -163,46 +163,78 @@ void create_playground (gpointer data){
 
 	// 19-20
 	create_button(i, button, "Turm", "t_tu9", 0, 19, (gpointer) a);
-	create_button(i, button, "Feld", "d_fe14", 1, 19, (gpointer) a);
-	create_button(i, button, "Feld", "d_fe13", 3, 19, (gpointer) a);
+	create_sep_hor(j, separator, 1, 19, 1, 1, (gpointer) a);
+	create_sep_ver(j, separator, 0, 20, 1, 1, (gpointer) a);
+	create_button(i, button, "Feld", "d_fe14", 2, 19, (gpointer) a);
+	create_sep_hor(j, separator, 3, 19, 1, 1, (gpointer) a);
 	create_button(i, button, "Turm", "t_tu9", 4, 19, (gpointer) a);
-	create_button(i, button, "Feld", "d_fe12", 5, 19, (gpointer) a);
-	create_button(i, button, "Feld", "d_fe11", 7, 19, (gpointer) a);
+	create_sep_hor(j, separator, 5, 19, 1, 1, (gpointer) a);
+	create_sep_ver(j, separator, 4, 20, 1, 1, (gpointer) a);
+	create_button(i, button, "Feld", "d_fe12", 6, 19, (gpointer) a);
+	create_sep_hor(j, separator, 7, 19, 1, 1, (gpointer) a);
 	create_button(i, button, "Turm", "t_tu9", 8, 19, (gpointer) a);
+	create_sep_ver(j, separator, 8, 20, 1, 1, (gpointer) a);
 
 	// 21-22
 	create_button(i, button, "Feld", "d_fe10", 0, 21, (gpointer) a);
+	create_sep_hor(j, separator, 1, 21, 1, 1, (gpointer) a);
+	create_sep_ver(j, separator, 0, 22, 1, 1, (gpointer) a);
 	create_button(i, button, "Feld", "d_fe9", 2, 21, (gpointer) a);
+	create_sep_hor(j, separator, 3, 21, 1, 1, (gpointer) a);
 	create_button(i, button, "Feld", "d_fe8", 4, 21, (gpointer) a);
+	create_sep_hor(j, separator, 5, 21, 1, 1, (gpointer) a);
+	create_sep_ver(j, separator, 4, 22, 1, 1, (gpointer) a);
 	create_button(i, button, "Feld", "d_fe7", 6, 21, (gpointer) a);
+	create_sep_hor(j, separator, 7, 21, 1, 1, (gpointer) a);
 	create_button(i, button, "Feld", "d_fe6", 8, 21, (gpointer) a);
-
+	create_sep_ver(j, separator, 8, 22, 1, 1, (gpointer) a);
 	// 23-24
 	create_button(i, button, "Turm", "t_tu6", 0, 23, (gpointer) a);
+	create_sep_hor(j, separator, 1, 23, 3, 1, (gpointer) a);
+	create_sep_ver(j, separator, 0, 24, 1, 1, (gpointer) a);
 	create_button(i, button, "Turm", "t_tu5", 4, 23, (gpointer) a);
+	create_sep_hor(j, separator, 5, 23, 3, 1, (gpointer) a);
+	create_sep_ver(j, separator, 4, 24, 1, 1, (gpointer) a);
 	create_button(i, button, "Turm", "t_tu4", 8, 23, (gpointer) a);
+	create_sep_ver(j, separator, 8, 24, 1, 1, (gpointer) a);
 
 	// 25-26
 	create_button(i, button, "Feld", "d_fe5", 0, 25, (gpointer) a);
+	create_sep_hor(j, separator, 1, 25, 1, 1, (gpointer) a);
+	create_sep_ver(j, separator, 0, 26, 1, 1, (gpointer) a);
 	create_button(i, button, "Feld", "d_fe4", 2, 25, (gpointer) a);
+	create_sep_hor(j, separator, 3, 25, 1, 1, (gpointer) a);
 	create_button(i, button, "Feld", "d_fe3", 4, 25, (gpointer) a);
+	create_sep_hor(j, separator, 5, 25, 1, 1, (gpointer) a);
+	create_sep_ver(j, separator, 4, 26, 1, 1, (gpointer) a);
 	create_button(i, button, "Feld", "d_fe2", 6, 25, (gpointer) a);
+	create_sep_hor(j, separator, 7, 25, 1, 1, (gpointer) a);
 	create_button(i, button, "Feld", "d_fe1", 8, 25, (gpointer) a);
+	create_sep_ver(j, separator, 8, 26, 1, 1, (gpointer) a);
 	// 27
 /*	separator = gtk_separator_new (GTK_ORIENTATION_HORIZONTAL);
 	gtk_grid_attach (GTK_GRID (a->in_playground_layout), separator, 0, 14, 9, 1);
 */
 	// 28-29
 	create_button(i, button, "Turm", "t_tu3", 0, 28, (gpointer) a);
+	create_sep_hor(j, separator, 1, 28, 3, 1, (gpointer) a);
+	create_sep_ver(j, separator, 0, 29, 1, 1, (gpointer) a);
 	create_button(i, button, "Turm", "t_tu2", 4, 28, (gpointer) a);
+	create_sep_hor(j, separator, 5, 28, 3, 1, (gpointer) a);
 	create_button(i, button, "Turm", "t_tu1", 8, 28, (gpointer) a);
+	create_sep_ver(j, separator, 8, 29, 1, 1, (gpointer) a);
 
 	// 30-31
 	create_button(i, button, "Inhibitor", "t_in3", 0, 30, (gpointer) a);
+	create_sep_hor(j, separator, 1, 30, 3, 1, (gpointer) a);
 	create_button(i, button, "Inhibitor", "t_in2", 4, 30, (gpointer) a);
+	create_sep_hor(j, separator, 5, 30, 3, 1, (gpointer) a);
+	create_sep_ver(j, separator, 4, 31, 1, 1, (gpointer) a);
 	create_button(i, button, "Inhibitor", "t_in1", 8, 30, (gpointer) a);
+
 	// 32-33
 	create_button(i, button, "Nexus", "t_nexus", 4, 32, (gpointer) a);
+	create_sep_ver(j, separator, 4, 33, 1, 1, (gpointer) a);
 	// 34-35
 	create_button(i, button, "Team", "t_base5", 0, 34, (gpointer) a);
 	create_button(i, button, "Team", "t_base4", 2, 34, (gpointer) a);
