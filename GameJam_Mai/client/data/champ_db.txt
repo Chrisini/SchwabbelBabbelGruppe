@@ -1,0 +1,102 @@
+Demon of wind
+Burgenland
+/img/demon.png
+Life
+100
+20
+storm
+70
+20
+hurricane
+50
+15
+-
+Ghost of mountains
+Upper-Austria
+/img/berggeist.png
+Life
+100
+13
+falling rocks
+40
+14
+landslip
+30
+13
+-
+Salt-man
+Salzburg
+img/mannimsalz.png
+Life
+100
+12
+drying
+30
+14
+salt acid
+20
+16
+-
+Witch of weather
+Vorarlberg
+img/wetterhexe.png
+Life
+100
+13
+thunderbolt
+40
+12
+blizzard
+30
+13
+-
+Foolish woman
+Styria
+img/woman.png
+Life
+100
+14
+deadly glance
+35
+12
+shock
+26
+15
+-
+Drunken dward
+Carinthia
+img/zwerg.png
+Life
+100
+13
+hit
+30
+10
+beer barel
+40
+15
+-
+Dragon from Wildschoenau
+Tirol
+img/drake.png
+Life
+100
+3
+fireball
+40
+10
+fire-spit
+-
+Basilisk
+Vienna
+img/basilisk.png
+Life
+100
+5
+stench
+20
+10
+hypnosis
+40
+10
+-

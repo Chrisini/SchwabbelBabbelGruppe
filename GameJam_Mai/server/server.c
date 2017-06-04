@@ -50,7 +50,7 @@ int main (int argc, char **argv)
   // socket() open a file descriptor
   listenfd = socket(PF_INET,SOCK_STREAM,0) ;
   if (listenfd == -1)
-    perror("socket error");;
+    perror("socket error");
 
   // setsockopt() free previously used sockets()
   ret = setsockopt(listenfd, SOL_SOCKET, SO_REUSEADDR,

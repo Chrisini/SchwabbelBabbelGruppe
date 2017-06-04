@@ -164,5 +164,7 @@ int main (int argc, char **argv)
 	g_object_unref (a->app);
 
 	g_free (a);
+	//	g_free (c);
+	// 	g_free (ab);
 	return status;
 }

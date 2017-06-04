@@ -49,13 +49,14 @@ typedef struct but_field BUTTONS;
 
 typedef struct{
 	gchar *ability_name;
-	gint ability_max;
-	gdouble ability_fill;
-	gint ability_regeneration;
+	gint ability_max; // Max Fuellstatus zb 40 oder 100
+	gdouble ability_fill; // Fuellstatus 0.0 - 1.0
+	gint ability_regeneration; // how long it takes, until regenerated (round / move / time)
 }abilities;
 
 typedef struct {
 	gchar *name;
+	gchar *state;
 	gint id;
 	gchar *image_path;
 	abilities life;
@@ -97,6 +98,7 @@ void choose_game(gpointer data);
 void next_screen_2_choose (gpointer data); // visible
 void create_champions(gpointer champ_data, gpointer ability_data, gpointer data);
 void generate_champions(gint i[1], gpointer champ_data, gpointer ability_data);
+void open_file(gpointer champ_data, gpointer ability_data);
 
 // WAIT (3) *****
 void wait_connect(gpointer data);

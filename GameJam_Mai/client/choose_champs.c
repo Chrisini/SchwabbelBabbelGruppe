@@ -13,7 +13,7 @@ void but_demon(gpointer data)
 }
 
 
-void generate_champions(gint i[1], gpointer champ_data, gpointer ability_data)
+/*void generate_champions(gint i[1], gpointer champ_data, gpointer ability_data)
 {
 	champ *c = (champ *) champ_data;
 	abilities *ab = (abilities *) ability_data;
@@ -27,9 +27,11 @@ void generate_champions(gint i[1], gpointer champ_data, gpointer ability_data)
 	c[y].life.ability_fill = 0.5; // de: Fuellstatus
 	c[y].life.ability_regeneration = 3; // how fast it regenerates
 
+	// life ability ult
+
 	i[0]++;
 }
-
+*/
 
 void create_champions(gpointer champ_data, gpointer ability_data, gpointer data){
 
@@ -40,13 +42,15 @@ void create_champions(gpointer champ_data, gpointer ability_data, gpointer data)
 	GtkWidget *button, *label;
 	GtkWidget *image;
 
-	gint i[1];
-	i[0] = 0;
+	open_file((gpointer) c, (gpointer) ab);
 
-	generate_champions(i, (gpointer) c, (gpointer) ab);
 
-	image = gtk_image_new_from_file(c[0].image_path);
-
+	gchar *tmp_img, *tmp_img2;// = c[2].image_path;
+	tmp_img = "img/mannimsalz.png";
+	gsize length = sizeof(c[2].image_path);
+	g_strlcpy(tmp_img2, c[2].image_path, length-1);
+	g_print("image: \n%sa \n%sa", tmp_img, tmp_img2);
+	image = gtk_image_new_from_file(tmp_img);
 
 	a->choose_layout = gtk_grid_new();
 
@@ -57,8 +61,8 @@ void create_champions(gpointer champ_data, gpointer ability_data, gpointer data)
 	gtk_grid_attach (GTK_GRID (a->choose_layout), button, 0, 0, 1, 1);
 
 
-	label = gtk_label_new ("Demon");
-	gtk_grid_attach (GTK_GRID (a->choose_layout), label, 0, 1, 1, 1);
+	label = gtk_label_new (c[2].name);
+	gtk_grid_attach (GTK_GRID (a->choose_layout), label, 1, 1, 1, 1);
 
 	gtk_box_pack_start(GTK_BOX (a->main_box), a->choose_layout, FALSE, FALSE, 0);
 
