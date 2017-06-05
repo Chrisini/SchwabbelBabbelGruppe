@@ -1,4 +1,4 @@
-SOURCES = game_main.c choose_champs.c game_infolabel.c game_menubar.c game_visible.c in_game_algorithm.c in_game_playground.c in_game_progressbar.c in_game_sidebar.c open_file.c
+SOURCES = game_main.c in_game_popup_shop.c choose_champs.c game_infolabel.c game_menubar.c game_visible.c in_game_algorithm.c in_game_playground.c in_game_progressbar.c in_game_sidebar.c open_file.c
 RESOURCE = game_res
 
 TARGET = main

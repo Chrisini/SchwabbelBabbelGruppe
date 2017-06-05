@@ -1,10 +1,42 @@
-#include <header/game_main.h>
+#include "header/game_main.h"
 
-void shop_popup(){
+void play_response(GtkDialog *dialog, gint response_id)
+{
+
+	gtk_widget_destroy (GTK_WIDGET(dialog));
+	// gtk_statusbar_pop(GTK_STATUSBAR(a->info_label), a->info_id); // removes content
+	// gtk_statusbar_push(GTK_STATUSBAR(a->info_label), a->info_id, "Buy the things you want");
+
+}
+
+
+void shop_popup(gpointer data)
+{
+
+	widgets *a = (widgets *) data;
+	GtkWidget *dialog;
+	GtkWidget *grid;
+	GtkWidget *label;
+	GtkWidget *button;
+	GtkWidget *content_area;
 
 	gtk_statusbar_pop(GTK_STATUSBAR(a->info_label), a->info_id); // removes content
-	gtk_statusbar_push(GTK_STATUSBAR(a->info_label), a->info_id, "Buy the things you want");
+	gtk_statusbar_push(GTK_STATUSBAR(a->info_label), a->info_id, "In the shop, you can buy the things you want");
 
+	dialog = gtk_dialog_new_with_buttons("Shop",
+					     GTK_WINDOW (a->window),
+					     GTK_DIALOG_MODAL,
+					     ("Close"),
+					     GTK_RESPONSE_OK,
+					     NULL);
+	content_area = gtk_dialog_get_content_area (GTK_DIALOG (dialog));
+	grid = gtk_grid_new();
+	gtk_container_add(GTK_CONTAINER(content_area), grid);
+	label = gtk_label_new("Buy the things you need");
+	gtk_grid_attach(GTK_GRID(grid), label, 0,0,1,1);
+
+	gtk_widget_show_all(dialog);
+	g_signal_connect(GTK_DIALOG(dialog), "response", G_CALLBACK(play_response), NULL);
 
 
 }

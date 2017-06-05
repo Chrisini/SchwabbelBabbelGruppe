@@ -2,7 +2,7 @@
 #include <string.h>
 /*
  * Champions are created with data from the data/champ_db.txt
- *
+ * (Buttons + Label)
  */
 
 void but_demon(gpointer data)
@@ -50,32 +50,4 @@ void create_champions(gpointer champ_data, gpointer ability_data, gpointer data)
 	gtk_box_pack_start(GTK_BOX (a->main_box), a->choose_layout, FALSE, FALSE, 0);
 
 
-
-
-
-
-
-
-/*
-	typedef struct {
-		char player_name[30];
-		int player_id;
-		abilities life;
-		//abilities ability1;
-		//abilities ability2;
-		abilities ability;
-		abilities ult;
-	}player;
- */
-/*
-int j = i[0];
-
-	button[j].name = gtk_button_new_with_label (kategory);
-	gtk_widget_set_name(button[j].name, name);
-	g_signal_connect (button[j].name, "clicked", G_CALLBACK (step_to_but), NULL);
-	gtk_grid_attach (GTK_GRID (grid), button[j].name, pos_left, pos_top, 1, 1);
-
-	i[0]++;
-}
-*/
 }

@@ -41,15 +41,21 @@ void create_sidebar (gpointer data)
 	g_action_map_add_action_entries (G_ACTION_MAP (a->app), app_entries_but,
 					 G_N_ELEMENTS (app_entries_but), (gpointer) a);
 
+	// Shop Button
+	// display only, when player is in the base
+	button = gtk_button_new_with_label ("Shop");
+	g_signal_connect_swapped (button, "clicked", G_CALLBACK (shop_popup), (gpointer) a);
+	gtk_grid_attach (GTK_GRID (a->in_sidebar_layout), button, 0, 0, 1, 1);
+
 	// ability - buttons *****
 	// Base - B
 	button = gtk_button_new_with_label ("Base");
 	g_signal_connect (button, "clicked", G_CALLBACK (but_base), NULL);
-	gtk_grid_attach (GTK_GRID (a->in_sidebar_layout), button, 0, 0, 1, 1);
+	gtk_grid_attach (GTK_GRID (a->in_sidebar_layout), button, 1, 0, 1, 1);
 	// Life - Lebenspunkte aufladen
 	button = gtk_button_new_with_label ("Life");
 	g_signal_connect (button, "clicked", G_CALLBACK (but_life), NULL);
-	gtk_grid_attach (GTK_GRID (a->in_sidebar_layout), button, 0, 1, 1, 1);
+	gtk_grid_attach (GTK_GRID (a->in_sidebar_layout), button, 1, 1, 1, 1);
 	// Ability - Q - Point / Click Ability
 	//button = gtk_button_new_with_label ("ability 1");
 	//g_signal_connect (button, "clicked", G_CALLBACK (but_ability1), NULL);
@@ -61,15 +67,15 @@ void create_sidebar (gpointer data)
 	// Ability - E - passive damage
 	button = gtk_button_new_with_label ("Ability");
 	g_signal_connect (button, "clicked", G_CALLBACK (but_ability), NULL);
-	gtk_grid_attach (GTK_GRID (a->in_sidebar_layout), button, 0, 4, 1, 1);
+	gtk_grid_attach (GTK_GRID (a->in_sidebar_layout), button, 1, 4, 1, 1);
 	// Ability  - R - ulti
 	button = gtk_button_new_with_label ("Ult");
 	g_signal_connect (button, "clicked", G_CALLBACK (but_ult), NULL);
-	gtk_grid_attach (GTK_GRID (a->in_sidebar_layout), button, 0, 5, 1, 1);
+	gtk_grid_attach (GTK_GRID (a->in_sidebar_layout), button, 1, 5, 1, 1);
 	// Two turns for Mr X
 	button = gtk_button_new_with_label ("x2");
 	g_signal_connect (button, "clicked", G_CALLBACK (but_twice), NULL);
-	gtk_grid_attach (GTK_GRID (a->in_sidebar_layout), button, 0, 6, 1, 1);
+	gtk_grid_attach (GTK_GRID (a->in_sidebar_layout), button, 1, 6, 1, 1);
 
 	// connect keyboard accelerators *****
 	gtk_application_set_accels_for_action (GTK_APPLICATION (a->app), "app.life", accels_life);
