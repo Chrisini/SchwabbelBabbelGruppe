@@ -9,32 +9,24 @@
 void open_file(gpointer champ_data, gpointer ability_data)
 {
 	champ *c = (champ *) champ_data;
-	abilities *ab = (abilities *) ability_data;
 	gint i = 0;
-
-	//GFile *readFile = g_file_new_for_path("data/champ_db.txt");
-
-	/*GFileInputStream *input = g_file_read(readFile, NULL, NULL);
-	if(!input)
-	{
-		perror("Error Message Data File");
-		exit(EXIT_FAILURE);
-	}*/
 
 	GIOChannel *channel = g_io_channel_new_file("data/champ_db.txt", "r", NULL);
 	gchar **msg = g_malloc (sizeof(gchar)*100);
 	gsize length = 0;
 	gsize pos = 0;
-	GError *err = NULL;
+	//GError **err = NULL;
 	GIOStatus stat;
 	int a = 1;
 
-	while(TRUE){
+	while(TRUE)
+	{
 		stat = g_io_channel_read_line(channel, msg, &length, &pos, NULL);
 
 		if(stat == G_IO_STATUS_EOF){
 			break;
 		}
+
 		switch (a){
 		case 1: c[i].name = msg[0]; break;
 		case 2: c[i].state = msg[0]; break;
@@ -64,13 +56,31 @@ void open_file(gpointer champ_data, gpointer ability_data)
 
 	}
 
+	//g_io_channel_unref (channel);
+	//stat = g_io_channel_shutdown (channel, TRUE, err);
+	/*if(stat == G_IO_STATUS_ERROR){
+		perror("Error cant read Champs");
+		exit(EXIT_ON_FAILURE);
+	}*/
 
-	//g_print("%s", msg[0]);
-	//g_print("%s", msg[7]);
-	//g_print("%s", msg[10]);
-	/*gssize read;
+
+}
+
+// OLD VERSIONS BELOW
 
 
+
+	//GFile *readFile = g_file_new_for_path("data/champ_db.txt");
+
+	/*GFileInputStream *input = g_file_read(readFile, NULL, NULL);
+	if(!input)
+	{
+		perror("Error Message Data File");
+		exit(EXIT_FAILURE);
+	}*/
+
+
+/*
 	gchar buf[500];
 	char tmp;
 
@@ -116,4 +126,4 @@ void open_file(gpointer champ_data, gpointer ability_data)
 	g_object_unref(readFile);
 		g_object_unref(input);
 		g_object_unref(buf);*/
-}
+

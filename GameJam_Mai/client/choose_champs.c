@@ -40,7 +40,10 @@ void create_champions(gpointer champ_data, gpointer ability_data, gpointer data)
 		//gtk_toggle_button_set_mode(GTK_TOGGLE_BUTTON(button), TRUE);
 		g_signal_connect (button, "toggled", G_CALLBACK (but_demon), button);
 		gtk_grid_attach (GTK_GRID (a->choose_layout), button, i, 0, 1, 1);
+		gtk_widget_set_visible(image, FALSE);
+		//gtk_button_set_always_show_image (GTK_BUTTON(button), FALSE);
 
+		//gtk_button_set_always_show_image (GTK_BUTTON(button), FALSE);
 
 		label = gtk_label_new (c[i].name);
 		gtk_grid_attach (GTK_GRID (a->choose_layout), label, i, 1, 1, 1);
