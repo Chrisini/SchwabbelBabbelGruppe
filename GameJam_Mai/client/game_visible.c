@@ -14,6 +14,7 @@ void next_screen_1_start (gpointer data)
 
 	// Screen 2
 	gtk_widget_set_visible(a->choose_layout, FALSE);
+	gtk_widget_set_visible(a->choose_grid, FALSE);
 	gtk_widget_set_visible(a->choose_button, FALSE);
 
 	// Screen 3
@@ -43,7 +44,8 @@ void next_screen_2_choose (gpointer data)
 	gtk_statusbar_push(GTK_STATUSBAR(a->info_label), a->info_id, "Choose your champion and the level");
 
 	gtk_widget_show_all(a->choose_layout);
-	gtk_widget_show(a->choose_button);
+	gtk_widget_show_all(a->choose_grid);
+	gtk_widget_set_visible(a->choose_button, TRUE);
 
 
 }
@@ -54,6 +56,7 @@ void next_screen_3_wait (gpointer data)
 
 	// Screen 2
 	gtk_widget_set_visible(a->choose_layout, FALSE);
+	gtk_widget_set_visible(a->choose_grid, FALSE);
 	gtk_widget_set_visible(a->choose_button, FALSE);
 
 	// Screen 3

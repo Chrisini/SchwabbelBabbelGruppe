@@ -25,6 +25,7 @@ typedef struct {
 	// choose
 	GtkWidget *choose_layout;
 	GtkWidget *choose_button;
+	GtkWidget *choose_grid;
 	// wait
 	GtkWidget *wait_button;
 	// in game

@@ -8,7 +8,7 @@
 void but_demon(gpointer data)
 {
 
-	gtk_widget_set_name(GTK_WIDGET(data), "selectable");
+	// gboolean 	gtk_widget_is_focus (widget)
 
 }
 
@@ -17,7 +17,7 @@ void create_champions(gpointer champ_data, gpointer ability_data, gpointer data)
 
 	widgets *a = (widgets *) data;
 	champ *c = (champ *) champ_data;
-	abilities *ab = (abilities *) ability_data;
+	abilities *ab = (abilities*) ability_data;
 
 	GtkWidget *button, *label;
 	GtkWidget *image;
@@ -37,17 +37,12 @@ void create_champions(gpointer champ_data, gpointer ability_data, gpointer data)
 
 		button = gtk_toggle_button_new ();
 		gtk_button_set_image(GTK_BUTTON(button), image);
-		//gtk_toggle_button_set_mode(GTK_TOGGLE_BUTTON(button), TRUE);
 		g_signal_connect (button, "toggled", G_CALLBACK (but_demon), button);
 		gtk_grid_attach (GTK_GRID (a->choose_layout), button, i, 0, 1, 1);
-		gtk_widget_set_visible(image, FALSE);
-		//gtk_button_set_always_show_image (GTK_BUTTON(button), FALSE);
-
-		//gtk_button_set_always_show_image (GTK_BUTTON(button), FALSE);
-
+		//gtk_widget_set_visible(image, FALSE);
 		label = gtk_label_new (c[i].name);
 		gtk_grid_attach (GTK_GRID (a->choose_layout), label, i, 1, 1, 1);
-
+		gtk_widget_set_name(GTK_WIDGET(button), "champs");
 	}
 
 	gtk_box_pack_start(GTK_BOX (a->main_box), a->choose_layout, FALSE, FALSE, 0);

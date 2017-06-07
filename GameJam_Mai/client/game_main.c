@@ -48,8 +48,11 @@ void choose_game(gpointer data){
 	create_champions((gpointer) c, (gpointer) ab, (gpointer) a);
 
 	a->choose_button = gtk_button_new_with_label("Ready");
+	gtk_widget_set_halign (a->choose_button, GTK_ALIGN_CENTER);
+	// SET CENTER WIDGET
+	gtk_widget_set_size_request (a->choose_button, 150, 80);
 	g_signal_connect_swapped(a->choose_button, "clicked", G_CALLBACK(next_screen_3_wait), (gpointer) a);
-
+	gtk_widget_set_name(a->choose_button, "choose_button");
 	gtk_box_pack_end(GTK_BOX(a->main_box), a->choose_button, FALSE, FALSE, 0);
 
 	//a->visible = FALSE;
@@ -62,6 +65,13 @@ void choose_game(gpointer data){
 void wait_connect(gpointer data){
 
 	widgets *a = (widgets *) data;
+
+	GtkWidget *spinner;
+
+	spinner = gtk_spinner_new();
+	gtk_spinner_start(spinner);
+
+	gtk_box_pack_start(GTK_BOX(a->main_box), spinner, FALSE, FALSE, 0);
 
 	a->wait_button = gtk_button_new_with_label("Connect");
 	g_signal_connect_swapped(a->wait_button, "clicked", G_CALLBACK(next_screen_4_in_game), (gpointer) a);

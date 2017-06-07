@@ -64,13 +64,13 @@ seperator.base{
 button{
 	margin: 3px;
 }
-button.selectable{
-	border: 3px solid rgb(102,205,0);
+#champs:focus{
+	border: 5px solid rgb(102,3,205);
 }
-button#start_button{
+
+button#start_button, button#choose_button{
 	border-radius: 10px;
 	font-family: "Larkspur (BRK)";
 	font-size: 32px;
 	background-image: image(rgb(69, 139, 0));
 }
-
