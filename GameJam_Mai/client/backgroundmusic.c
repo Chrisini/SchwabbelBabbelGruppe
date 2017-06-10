@@ -1,11 +1,18 @@
-
+/*#include "header/game_main.h"
 #include <glib.h>
+#include <gst/base/gstbaseparse.h>
+#include <gst/base/gstbasesrc.h>
+#include <gst/controller/gstcontroller.h>
+*/
 #include <gst/gst.h>
+#include <glib.h>
 
-static gboolean
-bus_call (GstBus     *bus,
-          GstMessage *msg,
-          gpointer    data)
+
+/* sudo dnf install gstreamer1-devel gstreamer1-plugins-base-tools gstreamer1-devel-docs gstreamer1-plugins-base-devel gstreamer1-plugins-base-devel-docs gstreamer1-plugins-good gstreamer1-plugins-good-extras gstreamer1-plugins-ugly gstreamer1-plugins-ugly-devel-docs  gstreamer1-plugins-bad-free gstreamer1-plugins-bad-free-devel gstreamer1-plugins-bad-free-extras
+pkg-config --cflags --libs gstreamer-1.0
+*/
+
+static gboolean bus_call (GstBus *bus, GstMessage *msg, gpointer data)
 {
   GMainLoop *loop = (GMainLoop *) data;
 
@@ -37,10 +44,7 @@ bus_call (GstBus     *bus,
 }
 
 
-static void
-on_pad_added (GstElement *element,
-              GstPad     *pad,
-              gpointer    data)
+static void on_pad_added (GstElement *element, GstPad *pad, gpointer data)
 {
   GstPad *sinkpad;
   GstElement *decoder = (GstElement *) data;
@@ -57,9 +61,7 @@ on_pad_added (GstElement *element,
 
 
 
-int
-main (int   argc,
-      char *argv[])
+void music_player ()
 {
   GMainLoop *loop;
 
@@ -68,16 +70,11 @@ main (int   argc,
   guint bus_watch_id;
 
   /* Initialisation */
-  gst_init (&argc, &argv);
+  gst_init (NULL, NULL);
 
   loop = g_main_loop_new (NULL, FALSE);
 
 
-  /* Check input arguments */
-  if (argc != 2) {
-    g_printerr ("Usage: %s <Ogg/Vorbis filename>\n", argv[0]);
-    return -1;
-  }
 
 
   /* Create gstreamer elements */
@@ -90,13 +87,13 @@ main (int   argc,
 
   if (!pipeline || !source || !demuxer || !decoder || !conv || !sink) {
     g_printerr ("One element could not be created. Exiting.\n");
-    return -1;
+    return;
   }
 
   /* Set up the pipeline */
 
   /* we set the input filename to the source element */
-  g_object_set (G_OBJECT (source), "location", argv[1], NULL);
+  g_object_set (G_OBJECT (source), "location", "data/robin.ogg", NULL);
 
   /* we add a message handler */
   bus = gst_pipeline_get_bus (GST_PIPELINE (pipeline));
@@ -123,7 +120,7 @@ main (int   argc,
 
 
   /* Set the pipeline to "playing" state*/
-  g_print ("Now playing: %s\n", argv[1]);
+  g_print ("Now playing\n");
   gst_element_set_state (pipeline, GST_STATE_PLAYING);
 
 
@@ -141,8 +138,6 @@ main (int   argc,
   g_source_remove (bus_watch_id);
   g_main_loop_unref (loop);
 
-  return 0;
 }
-
 
 

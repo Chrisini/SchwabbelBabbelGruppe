@@ -15,6 +15,7 @@ void but_demon(gpointer data)
 
 void create_champions(gpointer champ_data, gpointer ability_data, gpointer data){
 
+
 	widgets *a = (widgets *) data;
 	champ *c = (champ *) champ_data;
 	abilities *ab = (abilities*) ability_data;
@@ -33,7 +34,8 @@ void create_champions(gpointer champ_data, gpointer ability_data, gpointer data)
 		// cut off /n - image
 		gsize length = strlen(c[i].image_path);
 		tmp_img = g_strndup(c[i].image_path, length-1);
-		image = gtk_image_new_from_file(tmp_img);
+		//image = gtk_image_new_from_file(tmp_img);
+		image = gtk_label_new("Text");
 
 		button = gtk_toggle_button_new ();
 		gtk_button_set_image(GTK_BUTTON(button), image);

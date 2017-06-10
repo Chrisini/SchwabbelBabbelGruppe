@@ -132,5 +132,7 @@ void but_base(GSimpleAction *action, GVariant *parameter, gpointer data);
 void shop_popup(gpointer data);
 void play_response(GtkDialog *dialog, gint response_i);
 
+// music
+void music_player ();
 
 #endif

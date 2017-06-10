@@ -26,7 +26,7 @@ void next_screen_1_start (gpointer data)
 	gtk_widget_set_visible(a->in_progressbar_layout, FALSE);
 	gtk_widget_set_visible(a->in_sidebar_layout, FALSE);
 
-
+	music_player();
 
 }
 

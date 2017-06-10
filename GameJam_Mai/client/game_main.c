@@ -36,6 +36,8 @@ void start_screen (gpointer data)
 
 	gtk_box_pack_start(GTK_BOX(a->main_box), a->start_layout, FALSE, FALSE, 0);
 
+
+
 }
 
 // CHOOSE (2)
@@ -66,12 +68,12 @@ void wait_connect(gpointer data){
 
 	widgets *a = (widgets *) data;
 
-	GtkWidget *spinner;
+	/*GtkWidget *spinner;
 
 	spinner = gtk_spinner_new();
-	gtk_spinner_start(spinner);
+	gtk_spinner_start(spinner);*/
 
-	gtk_box_pack_start(GTK_BOX(a->main_box), spinner, FALSE, FALSE, 0);
+	//gtk_box_pack_start(GTK_BOX(a->main_box), spinner, FALSE, FALSE, 0);
 
 	a->wait_button = gtk_button_new_with_label("Connect");
 	g_signal_connect_swapped(a->wait_button, "clicked", G_CALLBACK(next_screen_4_in_game), (gpointer) a);

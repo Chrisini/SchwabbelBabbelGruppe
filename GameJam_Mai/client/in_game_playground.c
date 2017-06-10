@@ -7,7 +7,14 @@ void create_button (int i[1], BUTTONS *button, gchar *kategory, gchar *name, gin
 	widgets *a = (widgets *) data;
 	int j = i[0];
 
-	button[j].name = gtk_button_new_with_label (kategory);
+	GtkWidget *label;
+	label = gtk_label_new("Test");
+	gtk_label_set_text(GTK_LABEL(label), kategory);
+
+	gtk_widget_set_visible(label, FALSE);
+
+	button[j].name = gtk_button_new_with_label (gtk_label_get_text(GTK_LABEL(label)));
+	gtk_widget_set_visible(label, FALSE);
 	gtk_widget_set_name(button[j].name, name);
 	g_signal_connect (button[j].name, "clicked", G_CALLBACK (step_to_but), NULL);
 	gtk_grid_attach (GTK_GRID (a->in_playground_layout), button[j].name, pos_left, pos_top, 1, 1);
