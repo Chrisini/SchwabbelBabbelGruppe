@@ -20,8 +20,8 @@ void shop_popup(gpointer data)
 	GtkWidget *button;
 	GtkWidget *content_area;
 
-	gtk_statusbar_pop(GTK_STATUSBAR(a->info_label), a->info_id); // removes content
-	gtk_statusbar_push(GTK_STATUSBAR(a->info_label), a->info_id, "In the shop, you can buy the things you want");
+	gtk_statusbar_pop(GTK_STATUSBAR(a->info.statusbar), a->info.id); // removes content
+	gtk_statusbar_push(GTK_STATUSBAR(a->info.statusbar), a->info.id, "In the shop, you can buy the things you want");
 
 	dialog = gtk_dialog_new_with_buttons("Shop",
 					     GTK_WINDOW (a->window),
@@ -37,6 +37,5 @@ void shop_popup(gpointer data)
 
 	gtk_widget_show_all(dialog);
 	g_signal_connect(GTK_DIALOG(dialog), "response", G_CALLBACK(play_response), NULL);
-
 
 }

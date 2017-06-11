@@ -138,8 +138,13 @@ void callback_about(GSimpleAction *action, GVariant *parameter, gpointer data)
 	GdkPixbuf *pixbuf;
 	GtkWidget *about_dialog;
 	const gchar *authors[] = {"Christina Bornberg", NULL};
-	about_dialog = gtk_about_dialog_new();
+
+	// Image
 	pixbuf = gdk_pixbuf_new_from_file("img/logo.png", NULL)	;
+
+	// Layout
+	about_dialog = gtk_about_dialog_new();
+
 	gtk_show_about_dialog(GTK_WINDOW (a->window),
 			      "program-name", "Hidden Demons",
 			      "version", "1.0",
@@ -150,6 +155,8 @@ void callback_about(GSimpleAction *action, GVariant *parameter, gpointer data)
 			      NULL);
 
 	g_signal_connect(GTK_DIALOG(about_dialog), "response", G_CALLBACK(close_dialog), NULL);
+
+	// Free
 	g_object_unref (pixbuf);
 
 }
@@ -160,13 +167,13 @@ void callback_help(GSimpleAction *action, GVariant *parameter, gpointer data)
 	widgets *a = (widgets *) data;
 	gboolean set_vis = TRUE;
 
-	if(gtk_widget_get_visible(a->info_grid))
+	if(gtk_widget_get_visible(a->info.layout))
 	{
 		set_vis = FALSE;
 	}
 
-	gtk_widget_set_visible(a->info_grid, set_vis);
-	gtk_widget_set_visible(a->info_label, set_vis);
+	gtk_widget_set_visible(a->info.layout, set_vis);
+	gtk_widget_set_visible(a->info.statusbar, set_vis);
 
 }
 

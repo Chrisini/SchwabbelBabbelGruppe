@@ -1,7 +1,7 @@
 #include "header/game_main.h"
 
 
-// BEI HOVER: INFO ÄNDERT SICH IDEE ToDo
+// BEI HOVER: INFO ÄNDERT SICH IDEE TODO
 void apply_css(GtkWidget *widget, GtkStyleProvider *css_s)
 {
 	gtk_style_context_add_provider (gtk_widget_get_style_context (widget),
@@ -19,24 +19,24 @@ void start_screen (gpointer data)
 	GtkStyleContext *context;
 	gint get_height, get_width;
 
-	gtk_widget_set_name(a->main_box, "background");
-
 	// Layout
-	a->start_layout = gtk_fixed_new();
+	a->start.layout = gtk_fixed_new();
 
 	// Button
-	a->start_button = gtk_button_new_with_label("Play Hidden Demon");
-	gtk_widget_set_size_request(a->start_button, 400,100);
-	g_signal_connect_swapped(a->start_button, "clicked", G_CALLBACK(next_screen_2_choose), (gpointer) a);
-	context = gtk_widget_get_style_context(a->start_button);
+	a->start.button = gtk_button_new_with_label("Play Hidden Demon");
+	gtk_widget_set_size_request(a->start.button, 400,100);
+	g_signal_connect_swapped(a->start.button, "clicked", G_CALLBACK(next_screen_2_choose), (gpointer) a);
+
+	// CSS
+	gtk_widget_set_name(a->main_box, "background");
+	gtk_widget_set_name(a->start.button, "start_button");
+	context = gtk_widget_get_style_context(a->start.button);
 	gtk_style_context_add_class(context, "selectable");
-	gtk_widget_set_name(a->start_button, "start_button");
+
+	// Layout
 	gtk_window_get_size(GTK_WINDOW(a->window), &get_width, &get_height);
-	gtk_fixed_put(GTK_FIXED(a->start_layout), a->start_button, (get_width-400) / 2, (get_height/2)-100);
-
-	gtk_box_pack_start(GTK_BOX(a->main_box), a->start_layout, FALSE, FALSE, 0);
-
-
+	gtk_fixed_put(GTK_FIXED(a->start.layout), a->start.button, (get_width-400) / 2, (get_height/2)-100);
+	gtk_box_pack_start(GTK_BOX(a->main_box), a->start.layout, FALSE, FALSE, 0);
 
 }
 
@@ -44,22 +44,21 @@ void start_screen (gpointer data)
 void choose_game(gpointer data){
 
 	widgets *a = (widgets *) data;
-	champ *c = g_malloc (8*sizeof(champ));
-	abilities *ab = g_malloc (8*sizeof(abilities));
 
-	create_champions((gpointer) c, (gpointer) ab, (gpointer) a);
+	create_champions((gpointer) a);
 
-	a->choose_button = gtk_button_new_with_label("Ready");
-	gtk_widget_set_halign (a->choose_button, GTK_ALIGN_CENTER);
-	// SET CENTER WIDGET
-	gtk_widget_set_size_request (a->choose_button, 150, 80);
-	g_signal_connect_swapped(a->choose_button, "clicked", G_CALLBACK(next_screen_3_wait), (gpointer) a);
-	gtk_widget_set_name(a->choose_button, "choose_button");
-	gtk_box_pack_end(GTK_BOX(a->main_box), a->choose_button, FALSE, FALSE, 0);
+	// Button
+	a->choose.button = gtk_button_new_with_label("Ready");
+	gtk_widget_set_halign (a->choose.button, GTK_ALIGN_CENTER);
+	// SET CENTER WIDGET TODO
+	gtk_widget_set_size_request (a->choose.button, 150, 80);
+	g_signal_connect_swapped(a->choose.button, "clicked", G_CALLBACK(next_screen_3_wait), (gpointer) a);
 
-	//a->visible = FALSE;
-	//g_signal_connect(a->start_button, "clicked", G_CALLBACK(in_visible_start_screen), NULL);
+	// CSS
+	gtk_widget_set_name(a->choose.button, "choose_button");
 
+	// Layout
+	gtk_box_pack_end(GTK_BOX(a->main_box), a->choose.button, FALSE, FALSE, 0);
 
 }
 
@@ -69,16 +68,17 @@ void wait_connect(gpointer data){
 	widgets *a = (widgets *) data;
 
 	/*GtkWidget *spinner;
-
 	spinner = gtk_spinner_new();
-	gtk_spinner_start(spinner);*/
+	gtk_spinner_start(spinner);
+	gtk_box_pack_start(GTK_BOX(a->main_box), spinner, FALSE, FALSE, 0);
+	*/
 
-	//gtk_box_pack_start(GTK_BOX(a->main_box), spinner, FALSE, FALSE, 0);
+	// Button
+	a->wait.button = gtk_button_new_with_label("Connect");
+	g_signal_connect_swapped(a->wait.button, "clicked", G_CALLBACK(next_screen_4_in_game), (gpointer) a);
 
-	a->wait_button = gtk_button_new_with_label("Connect");
-	g_signal_connect_swapped(a->wait_button, "clicked", G_CALLBACK(next_screen_4_in_game), (gpointer) a);
-
-	gtk_box_pack_end(GTK_BOX(a->main_box), a->wait_button, FALSE, FALSE, 0);
+	// Layout
+	gtk_box_pack_end(GTK_BOX(a->main_box), a->wait.button, FALSE, FALSE, 0);
 
 
 }
@@ -96,12 +96,13 @@ void in_game (gpointer data){
 	// playground *****
 	create_playground((gpointer) a);
 
-	// seperstor
+	// Separator
 	GtkWidget *separator;
 	separator = gtk_separator_new (GTK_ORIENTATION_VERTICAL);
 	gtk_box_pack_start(GTK_BOX(a->sub_box), separator, FALSE, FALSE, 0);
 
 	// ability - (sidebar) *****
+	// shop
 	create_sidebar((gpointer) a);
 
 	// regeneration - (progressbar) *****
@@ -130,7 +131,7 @@ void activate (GtkApplication *app, gpointer data)
 	a->sub_box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
 
 	// Calling all GUI functions
-	// in game_visible.c the visibility is handled
+	// in file game_visible.c the visibility is handled
 
 	// menu and info are shown everywhere *****
 	create_menu((gpointer) a);
@@ -140,8 +141,7 @@ void activate (GtkApplication *app, gpointer data)
 	gtk_box_pack_start(GTK_BOX((a->main_box)), a->sub_box, FALSE, FALSE, 0);
 
 	// SCREENS
-	// (1) startscreen *****
-	// calls the first screen
+	// (1)
 	start_screen((gpointer) a);
 	// (2)
 	choose_game((gpointer) a);
@@ -160,7 +160,7 @@ void activate (GtkApplication *app, gpointer data)
 	gtk_widget_show (a->main_box);
 	gtk_widget_show (a->sub_box);
 
-	// First Screen is available
+	// First Screen is visible
 	next_screen_1_start((gpointer) a);
 }
 
@@ -168,15 +168,31 @@ int main (int argc, char **argv)
 {
 	int status;
 
-	widgets *a = g_malloc (sizeof(widgets));
+
+	widgets *a = g_malloc(sizeof(widgets));
+	a->game.fieldbutton = g_malloc(66*sizeof(fieldbutton_struct));
+	a->champ = g_malloc(8*sizeof(champ_struct));
+	a->champ->ability.ability_name = g_malloc(30*sizeof(gchar));
+	a->champ->life.ability_name = g_malloc(30*sizeof(gchar));
+	a->champ->ult.ability_name = g_malloc(30*sizeof(gchar));
+	a->champ->name = g_malloc(30*sizeof(gchar));
+	a->champ->state = g_malloc(30*sizeof(gchar));
+	a->champ->image_path = g_malloc(50*sizeof(gchar));
 
 	a->app = gtk_application_new ("org.gtk.game", G_APPLICATION_FLAGS_NONE);
 	g_signal_connect (a->app, "activate", G_CALLBACK (activate), (gpointer) a);
 	status = g_application_run (G_APPLICATION (a->app), argc, argv);
 	g_object_unref (a->app);
 
+	g_free (a->champ->image_path);
+	g_free (a->champ->state);
+	g_free (a->champ->name);
+	g_free (a->champ->ult.ability_name);
+	g_free (a->champ->life.ability_name);
+	g_free (a->champ->ability.ability_name);
+	g_free (a->champ);
+	g_free (a->game.fieldbutton);
 	g_free (a);
-	//	g_free (c);
-	// 	g_free (ab);
+
 	return status;
 }

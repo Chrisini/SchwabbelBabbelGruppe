@@ -1,4 +1,4 @@
-#include "header/game_main.h"
+/*#include "header/game_main.h"
 #include <gio/gio.h>
 #include <glib.h>
 #include <stdio.h>
@@ -31,7 +31,7 @@ void open_file(gpointer champ_data, gpointer ability_data)
 		case 1: c[i].name = msg[0]; break;
 		case 2: c[i].state = msg[0]; break;
 		case 3: c[i].image_path = msg[0];
-			/*g_strlcpy(c[i].image_path, msg[0], length-1);*/ break;
+			/*g_strlcpy(c[i].image_path, msg[0], length-1); break;
 		case 4: c[i].life.ability_name = msg[0]; break;
 		case 5: c[i].life.ability_max = (gint) msg[0]; break;
 		case 6: c[i].life.ability_regeneration = (gint) msg[0]; break;
@@ -61,10 +61,11 @@ void open_file(gpointer champ_data, gpointer ability_data)
 	/*if(stat == G_IO_STATUS_ERROR){
 		perror("Error cant read Champs");
 		exit(EXIT_ON_FAILURE);
-	}*/
 
 
-}
+
+
+}*/
 
 // OLD VERSIONS BELOW
 

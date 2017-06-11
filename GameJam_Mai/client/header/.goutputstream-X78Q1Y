@@ -6,6 +6,22 @@
 
 #define MAX_STEP_NUMBER 2
 
+typedef struct {
+	GtkApplication *app;
+	GtkWidget *window;
+	GtkWidget *main_box;
+	GtkWidget *sub_box;
+	gboolean visible;
+	GtkStyleProvider *css_style;
+	// FUNCTION - WIDGETS
+	info_struct info; // statusbar
+	start_struct start; // startscreen
+	choose_struct choose; // choose champs screen
+	wait_struct wait; // wait screen / connecting of champs
+	game_struct game; // in game
+
+} widgets;
+
 typedef struct{
 	GtkWidget *layout;
 	GtkWidget *statusbar;
@@ -27,56 +43,56 @@ typedef struct{
 	GtkWidget *button;
 }wait_struct;
 
-typedef struct { // array -60x
-	GtkWidget *name;
-	int enable; // 1 = enable, 0 = disable
-	GtkWidget *beside_1;
-	GtkWidget *beside_2;
-	GtkWidget *beside_3;
-	GtkWidget *beside_4;
-}fieldbutton_struct;
-
 typedef struct{
 	GtkWidget *playground_layout;
 	GtkWidget *playground_scroll;
 	GtkWidget *progressbar_layout;
 	GtkWidget *sidebar_layout;
-	fieldbutton_struct *fieldbutton;
 }game_struct;
+
+struct but_field{
+	GtkWidget *name;
+	int enabled; // 1 = enabled, 0 = disabled
+	GtkWidget *nex_1;
+	GtkWidget *nex_2;
+	GtkWidget *nex_3;
+	GtkWidget *nex_4;
+	GtkWidget *nex_5;
+	GtkWidget *nex_6;
+};
+typedef struct but_field BUTTONS;
+
+struct separat{
+	GtkWidget *sep;
+};
+typedef struct separat SEPARATOR;
 
 typedef struct{
 	gchar *ability_name;
 	gint ability_max; // Max Fuellstatus zb 40 oder 100
 	gdouble ability_fill; // Fuellstatus 0.0 - 1.0
 	gint ability_regeneration; // how long it takes, until regenerated (round / move / time)
-}abilities_struct;
+}abilities;
 
-typedef struct { // array - 8x
+typedef struct {
 	gchar *name;
 	gchar *state;
 	gint id;
 	gchar *image_path;
-	abilities_struct life;
+	abilities life;
 	//abilities ability1;
 	//abilities ability2;
-	abilities_struct ability;
-	abilities_struct ult;
-}champ_struct;
+	abilities ability;
+	abilities ult;
+}champ;
+
+
 
 typedef struct {
-	GtkApplication *app;
-	GtkWidget *window;
-	GtkWidget *main_box;
-	GtkWidget *sub_box;
-	GtkStyleProvider *css_style;
-	// FUNCTION - WIDGETS
-	info_struct info; // statusbar
-	start_struct start; // startscreen
-	choose_struct choose; // choose champs screen
-	wait_struct wait; // wait screen / connecting of champs
-	game_struct game; // in game
-	champ_struct *champ; // struct of all champions
-} widgets;
+	GtkWidget *button;
+	int col;
+	int enabled; // enabled = 1, disabled = 0
+}playground;
 
 // PROTOTYPES
 
@@ -102,9 +118,9 @@ void next_screen_1_start (gpointer data); // visible
 // CHOOSE (2) *****
 void choose_game(gpointer data);
 void next_screen_2_choose (gpointer data); // visible
-void create_champions(gpointer data);
-void generate_champions(gint i[1], gpointer data);
-void open_file(gpointer data);
+void create_champions(gpointer champ_data, gpointer ability_data, gpointer data);
+void generate_champions(gint i[1], gpointer champ_data, gpointer ability_data);
+void open_file(gpointer champ_data, gpointer ability_data);
 
 // WAIT (3) *****
 void wait_connect(gpointer data);
