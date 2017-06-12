@@ -88,47 +88,62 @@ void callback_level(GSimpleAction *action, GVariant *parameter, gpointer data)
 
 void callback_highscore(GSimpleAction *action, GVariant *parameter, gpointer data)
 {
-	g_print("Music");
+	g_print("High Scoore is not working");
 }
 
 void callback_exit(GSimpleAction *action, GVariant *parameter, gpointer data)
 {
 	widgets *a = (widgets *) data;
-
+	quit_music((gpointer) a);
 	g_print("Good Bye\n");
 	g_application_quit(G_APPLICATION(a->app));
-	/*GtkWidget *dialog;
-	GtkWidget *grid;
-	GtkWidget *label;
-	GtkWidget *content_area;
-	widgets *a = (widgets *) data;
-
-	dialog = gtk_message_dialog_new_with_buttons ("Quit",
-					GTK_WINDOW (a->window),
-					GTK_DIALOG_MODAL,
-					_ ("_NO"),
-					GTK_RESPONSE_CANCEL,
-					_ ("YES"),
-					GTK_RESPONSE_OK,
-					 GTK_DIALOG_DESTROY_WITH_PARENT,
-					 GTK_MESSAGE_INFO,
-					 //GTK_BUTTON_CLOSE,
-					 "Do you want to quit?");
-	g_signal_connect(dialog, "response",
-			 G_CALLBACK (gtk_widget_destroy), NULL);*/
-	//gtk_widget_show(dialog);
-
 }
 
 void callback_music(GSimpleAction *action, GVariant *parameter, gpointer data)
 {
-	g_print("Music");
+	widgets *a = (widgets *) data;
+	GtkWidget *dialog;
+	GtkWidget *grid;
+	GtkWidget *label;
+	GtkWidget *button;
+	GtkWidget *content_area;
+	GtkWidget *button_play, *button_pause, *button_stop;
+
+	dialog = gtk_dialog_new_with_buttons("Music",
+					     GTK_WINDOW (a->window),
+					     GTK_DIALOG_MODAL,
+					     ("Close"),
+					     GTK_RESPONSE_OK,
+					     NULL);
+	content_area = gtk_dialog_get_content_area (GTK_DIALOG (dialog));
+	grid = gtk_grid_new();
+	gtk_container_add(GTK_CONTAINER(content_area), grid);
+	label = gtk_label_new("Start / Stop the music");
+	gtk_grid_attach(GTK_GRID(grid), label, 0,0,1,1);
+
+	button_play = gtk_button_new_with_label("Play");
+	g_signal_connect_swapped(button_play, "clicked", G_CALLBACK(play_music), (gpointer) a);
+
+	button_pause = gtk_button_new_with_label("Pause");
+	g_signal_connect_swapped(button_pause, "clicked", G_CALLBACK(pause_music), (gpointer) a);
+
+	button_stop = gtk_button_new_with_label("Stop");
+	g_signal_connect_swapped(button_stop, "clicked", G_CALLBACK(stop_music), (gpointer) a);
+
+
+	gtk_grid_attach(GTK_GRID(grid), button_play, 0,1,1,1);
+	gtk_grid_attach(GTK_GRID(grid), button_pause, 1,1,1,1);
+	gtk_grid_attach(GTK_GRID(grid), button_stop, 2,1,1,1);
+
+	gtk_widget_show_all(dialog);
+	g_signal_connect(GTK_DIALOG(dialog), "response", G_CALLBACK(destroy), NULL);
+
+
 }
 
 void close_dialog(GtkDialog *dialog, gint response_id, gpointer data)
 {
 	gtk_widget_destroy(GTK_WIDGET(dialog));
-
 }
 
 

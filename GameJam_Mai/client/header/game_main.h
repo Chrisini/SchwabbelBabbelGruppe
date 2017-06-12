@@ -3,6 +3,9 @@
 
 #include <gtk/gtk.h>
 #include <stdlib.h>
+#include <gst/gst.h>
+#include <glib.h>
+#include <string.h>
 
 #define MAX_STEP_NUMBER 2
 
@@ -66,6 +69,19 @@ typedef struct { // array - 8x
 	abilities_struct ult;
 }champ_struct;
 
+typedef struct{
+	GMainLoop *loop;
+	GstElement *source;
+	GstElement *demuxer;
+	GstElement *decoder;
+	GstElement *conv;
+	GstElement *sink;
+  	GstBus *bus;
+  	guint bus_watch_id;
+	GstElement *pipeline;
+}music_struct;
+
+
 typedef struct {
 	GtkApplication *app;
 	GtkWidget *window;
@@ -83,6 +99,7 @@ typedef struct {
 	wait_struct wait; // wait screen / connecting of champs
 	game_struct game; // in game
 	champ_struct *champ; // struct of all champions
+	music_struct music;
 } widgets;
 
 // PROTOTYPES
@@ -136,10 +153,14 @@ void but_ult(GSimpleAction *action, GVariant *parameter, gpointer data);
 void but_base(GSimpleAction *action, GVariant *parameter, gpointer data);
 // shop
 void shop_popup(gpointer data);
-void play_response(GtkDialog *dialog, gint response_i);
+void destroy(GtkDialog *dialog, gint response_id);
 
 // music
-void music_player ();
+void music_player (gpointer data);
+void play_music (gpointer data);
+void pause_music (gpointer data);
+void stop_music (gpointer data);
+void quit_music(gpointer data);
 
 void communicate(gpointer data);
 

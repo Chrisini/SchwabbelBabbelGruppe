@@ -26,7 +26,8 @@ void next_screen_1_start (gpointer data)
 	gtk_widget_set_visible(a->game.progressbar_layout, FALSE);
 	gtk_widget_set_visible(a->game.sidebar_layout, FALSE);
 
-	music_player();
+	music_player((gpointer) a);
+
 
 }
 
@@ -36,24 +37,27 @@ void next_screen_2_choose (gpointer data)
 	widgets *a = (widgets *) data;
 
 	a->player_name = (gchar*) gtk_entry_get_text (GTK_ENTRY (a->start.input_entry));
-	/*if(a->player_name == NULL)
+
+	if(strlen(a->player_name) < 1)
 	{
-		next_screen_1_start((gpointer)a);
-	}*/
+		g_print("Name is too short\n");
+		next_screen_1_start((gpointer) a);
+	}else{
 
-	//g_object_unref(a->start.input_entry);
-	communicate((gpointer) a); // initialisation
+		//g_object_unref(a->start.input_entry);
+		communicate((gpointer) a); // initialisation
 
-	// Screen 1
-	gtk_widget_set_visible(a->start.layout, FALSE);
-	gtk_widget_set_visible(a->start.button, FALSE);
+		// Screen 1
+		gtk_widget_set_visible(a->start.layout, FALSE);
+		gtk_widget_set_visible(a->start.button, FALSE);
 
-	gtk_statusbar_pop(GTK_STATUSBAR(a->info.statusbar), a->info.id); // removes content
-	gtk_statusbar_push(GTK_STATUSBAR(a->info.statusbar), a->info.id, "Choose your champion and the level");
+		gtk_statusbar_pop(GTK_STATUSBAR(a->info.statusbar), a->info.id); // removes content
+		gtk_statusbar_push(GTK_STATUSBAR(a->info.statusbar), a->info.id, "Choose your champion and the level");
 
-	gtk_widget_show_all(a->choose.layout);
-	gtk_widget_show_all(a->choose.layout);
-	gtk_widget_set_visible(a->choose.button, TRUE);
+		gtk_widget_show_all(a->choose.layout);
+		gtk_widget_show_all(a->choose.layout);
+		gtk_widget_set_visible(a->choose.button, TRUE);
+	}
 
 
 }

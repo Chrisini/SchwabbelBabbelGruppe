@@ -107,5 +107,8 @@ void but_ult(GSimpleAction *action, GVariant *parameter, gpointer data)
 
 
 void but_base(GSimpleAction *action, GVariant *parameter, gpointer data)
-{}
+{
+	widgets *a = (widgets *) data;
+	// a player position = id ?? // ausgangsposition is struct TODO
+}
 

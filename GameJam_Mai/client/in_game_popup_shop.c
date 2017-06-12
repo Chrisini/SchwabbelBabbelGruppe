@@ -1,6 +1,6 @@
 #include "header/game_main.h"
 
-void play_response(GtkDialog *dialog, gint response_id)
+void destroy(GtkDialog *dialog, gint response_id)
 {
 
 	gtk_widget_destroy (GTK_WIDGET(dialog));
@@ -36,6 +36,6 @@ void shop_popup(gpointer data)
 	gtk_grid_attach(GTK_GRID(grid), label, 0,0,1,1);
 
 	gtk_widget_show_all(dialog);
-	g_signal_connect(GTK_DIALOG(dialog), "response", G_CALLBACK(play_response), NULL);
+	g_signal_connect(GTK_DIALOG(dialog), "response", G_CALLBACK(destroy), NULL);
 
 }

@@ -195,6 +195,8 @@ int main (int argc, char **argv)
 	status = g_application_run (G_APPLICATION (a->app), argc, argv);
 	g_object_unref (a->app);
 
+	quit_music((gpointer) a);
+
 	g_free (a->champ->image_path);
 	g_free (a->champ->state);
 	g_free (a->champ->name);
@@ -205,5 +207,6 @@ int main (int argc, char **argv)
 	g_free (a->game.fieldbutton);
 	g_free (a);
 
-	return status;
+	//return status;
+	exit(EXIT_SUCCESS);
 }
