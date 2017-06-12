@@ -14,10 +14,11 @@
 
 
 
-void but_demon(gpointer data)
+void but_demon(GtkWidget *but, gpointer data)
 {
-
+	widgets *a = (widgets *) data;
 	// gboolean 	gtk_widget_is_focus (widget)
+	//a->champ[]
 
 }
 
@@ -110,7 +111,7 @@ void create_champions(gpointer data){
 
 		button = gtk_toggle_button_new ();
 		gtk_button_set_image(GTK_BUTTON(button), image);
-		g_signal_connect (button, "toggled", G_CALLBACK (but_demon), button);
+		g_signal_connect (button, "toggled", G_CALLBACK (but_demon), (gpointer) a);
 		gtk_grid_attach (GTK_GRID (a->choose.layout), button, i, 0, 1, 1);
 		//gtk_widget_set_visible(image, FALSE);
 		label = gtk_label_new (a->champ[i].name);

@@ -1,9 +1,16 @@
 #include "header/game_main.h"
 
-void en_disable_button(int i, gpointer data)
+void step_to_but(GSimpleAction *action, GVariant *parameter, gpointer data)
+{
+	g_print("but");
+}
+
+void en_disable_button(int i, gboolean sens, gpointer data)
 {
 	widgets *a = (widgets *) data;
-	a->game.fieldbutton[i];
+	// enable - disable of the button
+	gtk_widget_set_sensitive (a->game.fieldbutton[i].name, sens);
+
 }
 
 // 62 + 4 buttons
@@ -19,7 +26,7 @@ void create_button (int i[1], gchar *kategory, gchar *name, gint pos_left, gint 
 	gtk_widget_set_name(a->game.fieldbutton[j].name, name);
 	g_signal_connect (a->game.fieldbutton[j].name, "clicked", G_CALLBACK (step_to_but), NULL);
 	gtk_grid_attach (GTK_GRID (a->game.playground_layout), a->game.fieldbutton[j].name, pos_left, pos_top, 1, 1);
-
+	en_disable_button(j, FALSE, (gpointer) a);
 	i[0]++;
 }
 
@@ -66,10 +73,6 @@ void create_sep_ver(int aa, int b, int c, int d, gpointer data){
 	gtk_style_context_add_class(context, "ver");
 	gtk_grid_attach (GTK_GRID (a->game.playground_layout), sep_ver, aa, b, c, d);
 
-}
-void step_to_but(GSimpleAction *action, GVariant *parameter, gpointer data)
-{
-	g_print("but");
 }
 
 void create_playground (gpointer data)

@@ -15,6 +15,7 @@ typedef struct{
 typedef struct{
 	GtkWidget *layout;
 	GtkWidget *button;
+	GtkWidget *input_entry;
 }start_struct;
 
 typedef struct{
@@ -54,7 +55,9 @@ typedef struct{
 typedef struct { // array - 8x
 	gchar *name;
 	gchar *state;
+	gboolean *is_in_game;
 	gint id;
+	gint position;
 	gchar *image_path;
 	abilities_struct life;
 	//abilities ability1;
@@ -69,6 +72,10 @@ typedef struct {
 	GtkWidget *main_box;
 	GtkWidget *sub_box;
 	GtkStyleProvider *css_style;
+	gchar *player_name;
+	gint player_id;
+	GSocketConnection * socket_connection;
+	gchar message_buf[1024];
 	// FUNCTION - WIDGETS
 	info_struct info; // statusbar
 	start_struct start; // startscreen
@@ -133,5 +140,7 @@ void play_response(GtkDialog *dialog, gint response_i);
 
 // music
 void music_player ();
+
+void communicate(gpointer data);
 
 #endif

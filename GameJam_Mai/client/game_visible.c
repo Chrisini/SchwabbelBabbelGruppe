@@ -9,7 +9,7 @@ void next_screen_1_start (gpointer data)
 	// Screen 1
 	gtk_statusbar_pop(GTK_STATUSBAR(a->info.statusbar), a->info.id); // removes content
 	gtk_statusbar_push(GTK_STATUSBAR(a->info.statusbar), a->info.id,
-			   "Welcome to Hidden Demon, press the Button to choose your Champ");
+			   "Welcome to Hidden Demon, enter your name, press the Button to choose your Champ");
 	gtk_widget_show_all(a->start.layout);
 
 	// Screen 2
@@ -35,11 +35,19 @@ void next_screen_2_choose (gpointer data)
 
 	widgets *a = (widgets *) data;
 
+	a->player_name = (gchar*) gtk_entry_get_text (GTK_ENTRY (a->start.input_entry));
+	/*if(a->player_name == NULL)
+	{
+		next_screen_1_start((gpointer)a);
+	}*/
+
+	//g_object_unref(a->start.input_entry);
+	communicate((gpointer) a); // initialisation
+
 	// Screen 1
 	gtk_widget_set_visible(a->start.layout, FALSE);
 	gtk_widget_set_visible(a->start.button, FALSE);
 
-	// Screen 2
 	gtk_statusbar_pop(GTK_STATUSBAR(a->info.statusbar), a->info.id); // removes content
 	gtk_statusbar_push(GTK_STATUSBAR(a->info.statusbar), a->info.id, "Choose your champion and the level");
 

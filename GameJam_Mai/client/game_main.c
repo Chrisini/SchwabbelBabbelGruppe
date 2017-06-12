@@ -18,9 +18,17 @@ void start_screen (gpointer data)
 
 	GtkStyleContext *context;
 	gint get_height, get_width;
+	GtkWidget *label_name;
 
 	// Layout
 	a->start.layout = gtk_fixed_new();
+
+	// Label + Textinsert
+	label_name = gtk_label_new ("Whats your name?");
+	a->start.input_entry = gtk_entry_new();
+
+	// CSS
+	gtk_widget_set_name(label_name, "label_name");
 
 	// Button
 	a->start.button = gtk_button_new_with_label("Play Hidden Demon");
@@ -35,6 +43,8 @@ void start_screen (gpointer data)
 
 	// Layout
 	gtk_window_get_size(GTK_WINDOW(a->window), &get_width, &get_height);
+	gtk_fixed_put(GTK_FIXED(a->start.layout), label_name, (get_width-400) / 2, 50);
+	gtk_fixed_put(GTK_FIXED(a->start.layout), a->start.input_entry, (get_width-400) / 2, 80);
 	gtk_fixed_put(GTK_FIXED(a->start.layout), a->start.button, (get_width-400) / 2, (get_height/2)-100);
 	gtk_box_pack_start(GTK_BOX(a->main_box), a->start.layout, FALSE, FALSE, 0);
 
@@ -170,6 +180,7 @@ int main (int argc, char **argv)
 
 
 	widgets *a = g_malloc(sizeof(widgets));
+	a->player_name = g_malloc(50*sizeof(gchar));
 	a->game.fieldbutton = g_malloc(66*sizeof(fieldbutton_struct));
 	a->champ = g_malloc(8*sizeof(champ_struct));
 	a->champ->ability.ability_name = g_malloc(30*sizeof(gchar));
