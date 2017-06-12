@@ -1,19 +1,47 @@
 #include "header/game_main.h"
 
+void en_disable_button(int i, gpointer data)
+{
+	widgets *a = (widgets *) data;
+	a->game.fieldbutton[i];
+}
 
 // 62 + 4 buttons
-void create_button (int i[1], gchar *kategory, gchar *name, gint pos_left, gint pos_top, gpointer data){
-
+void create_button (int i[1], gchar *kategory, gchar *name, gint pos_left, gint pos_top, gpointer data)
+{
 	widgets *a = (widgets *) data;
 	int j = i[0];
+	gchar *c = g_malloc(5*sizeof(gchar));
+	g_ascii_dtostr (c, 5*sizeof(gchar), j);
 
-	a->game.fieldbutton[j].name = gtk_button_new_with_label (kategory);
+	//a->game.fieldbutton[j].name = gtk_button_new_with_label (kategory);
+	a->game.fieldbutton[j].name = gtk_button_new_with_label (c);
 	gtk_widget_set_name(a->game.fieldbutton[j].name, name);
 	g_signal_connect (a->game.fieldbutton[j].name, "clicked", G_CALLBACK (step_to_but), NULL);
 	gtk_grid_attach (GTK_GRID (a->game.playground_layout), a->game.fieldbutton[j].name, pos_left, pos_top, 1, 1);
 
 	i[0]++;
 }
+
+void define_connections(int n[1], int b1, int b2, int b3, int b4, gpointer data)
+{
+	widgets *a = (widgets *) data;
+	int j = n[0];
+
+	a->game.fieldbutton[j].enable = 0;
+	a->game.fieldbutton[j].beside_1 = a->game.fieldbutton[b1].name;
+	if(b2 != -1){
+		a->game.fieldbutton[j].beside_2 = a->game.fieldbutton[b2].name;
+		if(b3 != -1){
+			a->game.fieldbutton[j].beside_3 = a->game.fieldbutton[b3].name;
+			if(b4 != -1){
+				a->game.fieldbutton[j].beside_4 = a->game.fieldbutton[b4].name;
+			}
+		}
+	}
+	n[0]++;
+}
+
 void create_sep_hor(int aa, int b, int c, int d, gpointer data){
 
 	widgets *a = (widgets *) data;
@@ -239,10 +267,66 @@ void create_playground (gpointer data)
 
 	//gtk_widget_set_name(sep_ver, "ver");
 
-
-
-
-
+	i[0] = 0;
+	//int n, int b1, int b2, int b3, int b4
+	define_connections(i, 1, -1, -1, -1, (gpointer) a); // demon
+	define_connections(i, 0, 3, -1, -1, (gpointer) a); // nexus
+	define_connections(i, 3, 5, -1, -1, (gpointer) a); // inhibitor
+	define_connections(i, 1, 2, 4, -1, (gpointer) a);
+	define_connections(i, 3, 7, -1, -1, (gpointer) a);
+	define_connections(i, 2, 6, 8, -1, (gpointer) a); // 5
+	define_connections(i, 5, 7, 10, -1, (gpointer) a);
+	define_connections(i, 4, 6, 12, -1, (gpointer) a);
+	define_connections(i, 5, 9, 13, -1, (gpointer) a);
+	define_connections(i, 8, 10, -1, -1, (gpointer) a);
+	define_connections(i, 6, 9, 11, 14, (gpointer) a); // 10
+	define_connections(i, 10, 12, -1, -1, (gpointer) a);
+	define_connections(i, 7, 11, 15, -1, (gpointer) a);
+	define_connections(i, 8, 16, -1, -1, (gpointer) a);
+	define_connections(i, 10, 13, 15, 18, (gpointer) a);
+	define_connections(i, 12, 14, 20, -1, (gpointer) a); // 5
+	define_connections(i, 13, 17, 21, -1, (gpointer) a);
+	define_connections(i, 16, 18, -1, -1, (gpointer) a);
+	define_connections(i, 14, 17, 19, 23, (gpointer) a);
+	define_connections(i, 18, 20, -1, -1, (gpointer) a);
+	define_connections(i, 15, 19, 25, -1, (gpointer) a); // 20
+	define_connections(i, 16, 22, 28, -1, (gpointer) a);
+	define_connections(i, 21, 23, 26, -1, (gpointer) a);
+	define_connections(i, 18, 22, 24, 30, (gpointer) a);
+	define_connections(i, 23, 25, 27, -1, (gpointer) a);
+	define_connections(i, 20, 24, 32, -1, (gpointer) a); // 5
+	define_connections(i, 22, 29, -1, -1, (gpointer) a);
+	define_connections(i, 24, 31, -1, -1, (gpointer) a);
+	define_connections(i, 21, 29, 33, -1, (gpointer) a);
+	define_connections(i, 26, 28, 30, -1, (gpointer) a);
+	define_connections(i, 23, 29, 31, 35, (gpointer) a); // 30
+	define_connections(i, 27, 30, 32, -1, (gpointer) a);
+	define_connections(i, 25, 31, 37, -1, (gpointer) a);
+	define_connections(i, 28, 34, 38, -1, (gpointer) a);
+	define_connections(i, 33, 35, -1, -1, (gpointer) a);
+	define_connections(i, 30, 34, 36, 39, (gpointer) a); // 5
+	define_connections(i, 35, 37, -1, -1, (gpointer) a);
+	define_connections(i, 31, 36, 40, -1, (gpointer) a);
+	define_connections(i, 33, 39, 41, -1, (gpointer) a);
+	define_connections(i, 35, 38, 40, 43, (gpointer) a);
+	define_connections(i, 37, 39, 45, -1, (gpointer) a); // 40
+	define_connections(i, 38, 42, 46, -1, (gpointer) a);
+	define_connections(i, 41, 43, -1, -1, (gpointer) a);
+	define_connections(i, 39, 42, 44, 47, (gpointer) a);
+	define_connections(i, 42, 45, -1, -1, (gpointer) a);
+	define_connections(i, 40, 44, 48, -1, (gpointer) a); // 5
+	define_connections(i, 41, 47, 49, -1, (gpointer) a);
+	define_connections(i, 43, 46, 48, -1, (gpointer) a);
+	define_connections(i, 45, 47, 51, -1, (gpointer) a);
+	define_connections(i, 46, 50, -1, -1, (gpointer) a);
+	define_connections(i, 49, 51, 52, -1, (gpointer) a); // 50
+	define_connections(i, 48, 50, -1, -1, (gpointer) a);
+	define_connections(i, 55, -1, -1, -1, (gpointer) a);
+	define_connections(i, 52, -1, -1, -1, (gpointer) a);
+	define_connections(i, 52, -1, -1, -1, (gpointer) a);
+	define_connections(i, 52, -1, -1, -1, (gpointer) a); // 5
+	define_connections(i, 52, -1, -1, -1, (gpointer) a);
+	define_connections(i, 52, -1, -1, -1, (gpointer) a); // 57
 
 
 	gtk_box_pack_start(GTK_BOX(a->sub_box), a->game.playground_scroll, FALSE, FALSE, 0);
