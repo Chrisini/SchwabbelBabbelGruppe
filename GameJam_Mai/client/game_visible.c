@@ -26,12 +26,12 @@ void next_screen_1_start (gpointer data)
 	gtk_widget_set_visible(a->game.progressbar_layout, FALSE);
 	gtk_widget_set_visible(a->game.sidebar_layout, FALSE);
 
-	music_player((gpointer) a);
+	//music_player((gpointer) a);
 
 
 }
 
-void next_screen_2_choose (gpointer data)
+void next_screen_2_choose (GtkWidget *wid, gpointer data)
 {
 
 	widgets *a = (widgets *) data;
@@ -62,7 +62,7 @@ void next_screen_2_choose (gpointer data)
 
 }
 
-void next_screen_3_wait (gpointer data)
+void next_screen_3_wait (GtkWidget *wid, gpointer data)
 {
 	widgets *a = (widgets *) data;
 
@@ -79,7 +79,7 @@ void next_screen_3_wait (gpointer data)
 
 }
 
-void next_screen_4_in_game (gpointer data)
+void next_screen_4_in_game (GtkWidget *wid, gpointer data)
 {
 	widgets *a = (widgets *) data;
 

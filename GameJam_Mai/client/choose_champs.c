@@ -14,7 +14,7 @@
 
 
 
-void but_demon(GtkWidget *but, gpointer data)
+void but_demon(GtkWidget *wid, gpointer data)
 {
 	widgets *a = (widgets *) data;
 	// gboolean 	gtk_widget_is_focus (widget)

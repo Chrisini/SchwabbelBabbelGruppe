@@ -83,7 +83,7 @@ void callback_newgame(GSimpleAction *action, GVariant *parameter, gpointer data)
 
 void callback_level(GSimpleAction *action, GVariant *parameter, gpointer data)
 {
-	g_print("Music");
+	g_print("Level");
 }
 
 void callback_highscore(GSimpleAction *action, GVariant *parameter, gpointer data)
@@ -94,7 +94,6 @@ void callback_highscore(GSimpleAction *action, GVariant *parameter, gpointer dat
 void callback_exit(GSimpleAction *action, GVariant *parameter, gpointer data)
 {
 	widgets *a = (widgets *) data;
-	quit_music((gpointer) a);
 	g_print("Good Bye\n");
 	g_application_quit(G_APPLICATION(a->app));
 }
@@ -141,12 +140,6 @@ void callback_music(GSimpleAction *action, GVariant *parameter, gpointer data)
 
 }
 
-void close_dialog(GtkDialog *dialog, gint response_id, gpointer data)
-{
-	gtk_widget_destroy(GTK_WIDGET(dialog));
-}
-
-
 void callback_about(GSimpleAction *action, GVariant *parameter, gpointer data)
 {
 	widgets *a = (widgets *) data;
@@ -169,7 +162,7 @@ void callback_about(GSimpleAction *action, GVariant *parameter, gpointer data)
 			      "logo", pixbuf,
 			      NULL);
 
-	g_signal_connect(GTK_DIALOG(about_dialog), "response", G_CALLBACK(close_dialog), NULL);
+	g_signal_connect(GTK_DIALOG(about_dialog), "response", G_CALLBACK(destroy), NULL);
 
 	// Free
 	g_object_unref (pixbuf);

@@ -10,7 +10,7 @@ void destroy(GtkDialog *dialog, gint response_id)
 }
 
 
-void shop_popup(gpointer data)
+void shop_popup(GtkWidget *wid, gpointer data)
 {
 
 	widgets *a = (widgets *) data;

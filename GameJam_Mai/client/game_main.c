@@ -33,7 +33,7 @@ void start_screen (gpointer data)
 	// Button
 	a->start.button = gtk_button_new_with_label("Play Hidden Demon");
 	gtk_widget_set_size_request(a->start.button, 400,100);
-	g_signal_connect_swapped(a->start.button, "clicked", G_CALLBACK(next_screen_2_choose), (gpointer) a);
+	g_signal_connect(a->start.button, "clicked", G_CALLBACK(next_screen_2_choose), (gpointer) a);
 
 	// CSS
 	gtk_widget_set_name(a->main_box, "background");
@@ -62,7 +62,7 @@ void choose_game(gpointer data){
 	gtk_widget_set_halign (a->choose.button, GTK_ALIGN_CENTER);
 	// SET CENTER WIDGET TODO
 	gtk_widget_set_size_request (a->choose.button, 150, 80);
-	g_signal_connect_swapped(a->choose.button, "clicked", G_CALLBACK(next_screen_3_wait), (gpointer) a);
+	g_signal_connect(a->choose.button, "clicked", G_CALLBACK(next_screen_3_wait), (gpointer) a);
 
 	// CSS
 	gtk_widget_set_name(a->choose.button, "choose_button");
@@ -85,7 +85,7 @@ void wait_connect(gpointer data){
 
 	// Button
 	a->wait.button = gtk_button_new_with_label("Connect");
-	g_signal_connect_swapped(a->wait.button, "clicked", G_CALLBACK(next_screen_4_in_game), (gpointer) a);
+	g_signal_connect(a->wait.button, "clicked", G_CALLBACK(next_screen_4_in_game), (gpointer) a);
 
 	// Layout
 	gtk_box_pack_end(GTK_BOX(a->main_box), a->wait.button, FALSE, FALSE, 0);
@@ -122,6 +122,8 @@ void in_game (gpointer data){
 void activate (GtkApplication *app, gpointer data)
 {
 	widgets *a = (widgets *) data;
+
+	init_music((gpointer) a);
 
 	a->css_style = GTK_STYLE_PROVIDER (gtk_css_provider_new ());
 	gtk_css_provider_load_from_resource (GTK_CSS_PROVIDER(a->css_style), "/game_res/css/style.css");
@@ -193,9 +195,15 @@ int main (int argc, char **argv)
 	a->app = gtk_application_new ("org.gtk.game", G_APPLICATION_FLAGS_NONE);
 	g_signal_connect (a->app, "activate", G_CALLBACK (activate), (gpointer) a);
 	status = g_application_run (G_APPLICATION (a->app), argc, argv);
-	g_object_unref (a->app);
+
+	g_print("Main, unref\n");
 
 	quit_music((gpointer) a);
+
+	g_object_unref (a->app);
+
+	gst_object_unref (GST_OBJECT (a->music.pipeline));
+	g_source_remove (a->music.bus_watch_id);
 
 	g_free (a->champ->image_path);
 	g_free (a->champ->state);
@@ -207,6 +215,5 @@ int main (int argc, char **argv)
 	g_free (a->game.fieldbutton);
 	g_free (a);
 
-	//return status;
-	exit(EXIT_SUCCESS);
+	return status;
 }

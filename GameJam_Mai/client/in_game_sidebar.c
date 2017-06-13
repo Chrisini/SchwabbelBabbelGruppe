@@ -44,7 +44,7 @@ void create_sidebar (gpointer data)
 	// Shop Button
 	// display only, when player is in the base
 	button = gtk_button_new_with_label ("Shop");
-	g_signal_connect_swapped (button, "clicked", G_CALLBACK (shop_popup), (gpointer) a);
+	g_signal_connect (button, "clicked", G_CALLBACK (shop_popup), (gpointer) a);
 	gtk_grid_attach (GTK_GRID (a->game.sidebar_layout), button, 0, 0, 1, 1);
 
 	// ability - buttons *****

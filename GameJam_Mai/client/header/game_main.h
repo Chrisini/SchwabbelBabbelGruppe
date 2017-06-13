@@ -125,18 +125,18 @@ void next_screen_1_start (gpointer data); // visible
 
 // CHOOSE (2) *****
 void choose_game(gpointer data);
-void next_screen_2_choose (gpointer data); // visible
+void next_screen_2_choose (GtkWidget *wid, gpointer data); // visible
 void create_champions(gpointer data);
 void generate_champions(gint i[1], gpointer data);
 void open_file(gpointer data);
 
 // WAIT (3) *****
 void wait_connect(gpointer data);
-void next_screen_3_wait (gpointer data); // visible
+void next_screen_3_wait (GtkWidget *wid, gpointer data); // visible
 
 // IN GAME (4) *****
 void in_game(gpointer data);
-void next_screen_4_in_game (gpointer data); // visible
+void next_screen_4_in_game (GtkWidget *wid, gpointer data); // visible
 // progress
 void create_progress (gpointer data);
 // plaground
@@ -152,14 +152,14 @@ void but_ability(GSimpleAction *action, GVariant *parameter, gpointer data);
 void but_ult(GSimpleAction *action, GVariant *parameter, gpointer data);
 void but_base(GSimpleAction *action, GVariant *parameter, gpointer data);
 // shop
-void shop_popup(gpointer data);
+void shop_popup(GtkWidget *wid, gpointer data); // callback
 void destroy(GtkDialog *dialog, gint response_id);
 
 // music
 void music_player (gpointer data);
-void play_music (gpointer data);
-void pause_music (gpointer data);
-void stop_music (gpointer data);
+void play_music (gpointer data); // callback swapped
+void pause_music (gpointer data); // callback swapped
+void stop_music (gpointer data); // callback swapped
 void quit_music(gpointer data);
 
 void communicate(gpointer data);
