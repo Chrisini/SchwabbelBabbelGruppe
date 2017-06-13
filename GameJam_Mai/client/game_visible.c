@@ -86,6 +86,7 @@ void next_screen_4_in_game (GtkWidget *wid, gpointer data)
 {
 	widgets *a = (widgets *) data;
 
+	init_position((gpointer) a);
 
 	// Screen 3
 	gtk_widget_set_visible(a->wait.button, FALSE);

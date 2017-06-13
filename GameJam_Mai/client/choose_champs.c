@@ -185,5 +185,4 @@ void create_champions(gpointer data){
 
 	gtk_box_pack_start(GTK_BOX (a->main_box), a->choose.layout, FALSE, FALSE, 0);
 
-
 }

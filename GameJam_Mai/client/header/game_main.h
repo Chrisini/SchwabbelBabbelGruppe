@@ -33,11 +33,9 @@ typedef struct{
 
 typedef struct { // array -60x
 	GtkWidget *name;
+	//gint button_id;
 	int enable; // 1 = enable, 0 = disable
-	GtkWidget *beside_1;
-	GtkWidget *beside_2;
-	GtkWidget *beside_3;
-	GtkWidget *beside_4;
+	GtkWidget *beside[4];
 }fieldbutton_struct;
 
 typedef struct{
@@ -101,6 +99,7 @@ typedef struct {
 	GtkStyleProvider *css_style;
 	GSocketConnection * socket_connection;
 	gchar message_buf[1024];
+	gint tmp;
 	// FUNCTION - WIDGETS
 	info_struct info; // statusbar
 	start_struct start; // startscreen
@@ -154,6 +153,8 @@ void create_progress (gpointer data);
 // plaground
 void create_playground (gpointer data);
 void step_to_but(GSimpleAction *action, GVariant *parameter, gpointer data);
+void en_disable_button(gint i, gboolean sens, gpointer data);
+void init_position(gpointer data);
 // sidebar
 void create_sidebar (gpointer data);
 void but_life(GSimpleAction *action, GVariant *parameter, gpointer data);

@@ -138,7 +138,6 @@ void callback_music(GSimpleAction *action, GVariant *parameter, gpointer data)
 	gtk_widget_show_all(dialog);
 	g_signal_connect(GTK_DIALOG(dialog), "response", G_CALLBACK(destroy), NULL);
 
-
 }
 
 void callback_about(GSimpleAction *action, GVariant *parameter, gpointer data)

@@ -1,15 +1,39 @@
 #include "header/game_main.h"
 
+
+
 void step_to_but(GSimpleAction *action, GVariant *parameter, gpointer data)
 {
-	g_print("but");
+	widgets *a = (widgets *) data;
+
+
 }
 
-void en_disable_button(int i, gboolean sens, gpointer data)
+void init_position(gpointer data){
+	widgets *a = (widgets *) data;
+
+	// DEMON
+	if(a->thisplayer.id_from_champ == 0){
+		a->champ[0].position = 0;
+	}else{
+		a->champ[0].position = 55;
+	}
+
+
+}
+
+void en_disable_button(gint i, gboolean sens, gpointer data)
 {
 	widgets *a = (widgets *) data;
+	gtk_widget_set_sensitive (a->game.fieldbutton[j].name, FALSE);
 	// enable - disable of the button
-	gtk_widget_set_sensitive (a->game.fieldbutton[i].name, sens);
+	gint tmp;
+	gtk_widget_set_sensitive (a->game.fieldbutton[a->thisplayer.id_from_champ].name, sens);
+	for(tmp = 0; tmp < 4; tmp ++){
+			gtk_widget_set_sensitive (a->game.fieldbutton[a->thisplayer.id_from_champ].beside[tmp], sens);
+
+	}
+
 
 }
 
@@ -24,9 +48,10 @@ void create_button (int i[1], gchar *kategory, gchar *name, gint pos_left, gint 
 	//a->game.fieldbutton[j].name = gtk_button_new_with_label (kategory);
 	a->game.fieldbutton[j].name = gtk_button_new_with_label (c);
 	gtk_widget_set_name(a->game.fieldbutton[j].name, name);
-	g_signal_connect (a->game.fieldbutton[j].name, "clicked", G_CALLBACK (step_to_but), NULL);
+	g_signal_connect (a->game.fieldbutton[j].name, "clicked", G_CALLBACK (step_to_but), (gpointer) a);
 	gtk_grid_attach (GTK_GRID (a->game.playground_layout), a->game.fieldbutton[j].name, pos_left, pos_top, 1, 1);
-	en_disable_button(j, FALSE, (gpointer) a);
+	// init: all deactivated
+	gtk_widget_set_sensitive (a->game.fieldbutton[j].name, FALSE);
 	i[0]++;
 }
 
@@ -36,13 +61,13 @@ void define_connections(int n[1], int b1, int b2, int b3, int b4, gpointer data)
 	int j = n[0];
 
 	a->game.fieldbutton[j].enable = 0;
-	a->game.fieldbutton[j].beside_1 = a->game.fieldbutton[b1].name;
+	a->game.fieldbutton[j].beside[0] = a->game.fieldbutton[b1].name;
 	if(b2 != -1){
-		a->game.fieldbutton[j].beside_2 = a->game.fieldbutton[b2].name;
+		a->game.fieldbutton[j].beside[1] = a->game.fieldbutton[b2].name;
 		if(b3 != -1){
-			a->game.fieldbutton[j].beside_3 = a->game.fieldbutton[b3].name;
+			a->game.fieldbutton[j].beside[2] = a->game.fieldbutton[b3].name;
 			if(b4 != -1){
-				a->game.fieldbutton[j].beside_4 = a->game.fieldbutton[b4].name;
+				a->game.fieldbutton[j].beside[3] = a->game.fieldbutton[b4].name;
 			}
 		}
 	}
