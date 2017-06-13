@@ -1,10 +1,10 @@
-SOURCES = client_communication.c backgroundmusic.c game_main.c in_game_popup_shop.c choose_champs.c game_infolabel.c game_menubar.c game_visible.c in_game_algorithm.c in_game_playground.c in_game_progressbar.c in_game_sidebar.c
+SOURCES = move_complete.c client_communication.c backgroundmusic.c game_main.c in_game_popup_shop.c choose_champs.c game_infolabel.c game_menubar.c game_visible.c in_game_algorithm.c in_game_playground.c in_game_progressbar.c in_game_sidebar.c
 RESOURCE = game_res
 
 TARGET = main
 
 CXX = gcc
-CXXFLAGS = `pkg-config --cflags --libs gtk+-3.0 gstreamer-1.0` -Wall -g
+CXXFLAGS = `pkg-config --cflags --libs gtk+-3.0 gstreamer-1.0 json-glib-1.0` -Wall -g
 CXXFLAGS += -I.
 LDFLAGS = -lm
 

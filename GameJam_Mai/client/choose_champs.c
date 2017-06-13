@@ -1,4 +1,6 @@
 /*
+ * Opening a file with gio
+ * TODO: /0 instead of /n
  * Champions are created with data from the data/champ_db.txt
  * (Buttons + Label)
  */
@@ -14,11 +16,18 @@
 
 
 
-void but_demon(GtkWidget *wid, gpointer data)
+void get_champ(GtkWidget *wid, gpointer data)
 {
 	widgets *a = (widgets *) data;
-	// gboolean 	gtk_widget_is_focus (widget)
-	//a->champ[]
+
+	//gboolean 	gtk_widget_is_focus (widget)
+	gint id = g_strtod (gtk_widget_get_name(wid), NULL);
+
+	a->thisplayer.id_from_champ = a->champ[id].id;
+
+	g_print("id: %d\n", a->thisplayer.id_from_champ);
+
+	gtk_widget_set_sensitive (a->choose.button, TRUE);
 
 }
 
@@ -77,7 +86,7 @@ void open_file(gpointer data)
 
 	}
 
-	//g_io_channel_unref (channel);
+	g_io_channel_unref (channel);
 	//stat = g_io_channel_shutdown (channel, TRUE, err);
 	/*if(stat == G_IO_STATUS_ERROR){
 		perror("Error cant read Champs");
@@ -87,14 +96,59 @@ void open_file(gpointer data)
 
 }
 
+void get_level(gpointer data){
+
+	widgets *a = (widgets *) data;
+
+	if(gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(a->level.level1))){
+		g_print("Whatever in LVL1 is different\n");
+	}else if(gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(a->level.level2))){
+		g_print("Whatever in LVL2 is different\n");
+	}else{
+		g_print("Whatever in LVL3 is different\n");
+	}
+
+}
+
+void choose_level(gpointer data){
+
+	widgets *a = (widgets *) data;
+
+	// TODO: Just set visible, if player is demon
+
+	a->level.level1 = gtk_radio_button_new_with_label (NULL, "Level 1");
+
+	gtk_radio_button_get_group(GTK_RADIO_BUTTON(a->level.level1));
+
+	a->level.level2 = gtk_radio_button_new_with_label(
+                 gtk_radio_button_get_group (GTK_RADIO_BUTTON (a->level.level1)),
+                 "Level 2");
+
+	a->level.level3 = gtk_radio_button_new_with_label(
+                 gtk_radio_button_get_group (GTK_RADIO_BUTTON (a->level.level2)),
+                 "Level 3");
+
+	gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON(a->level.level2), TRUE);
+
+	// Pack them into a box, then show all the widgets
+	gtk_grid_attach (GTK_GRID (a->choose.layout), a->level.level1, 0, 2, 1, 1);
+	gtk_grid_attach (GTK_GRID (a->choose.layout), a->level.level2, 1, 2, 1, 1);
+	gtk_grid_attach (GTK_GRID (a->choose.layout), a->level.level3, 2, 2, 1, 1);
+
+
+}
 void create_champions(gpointer data){
 
 
 	widgets *a = (widgets *) data;
 
-	GtkWidget *button, *label;
+	GtkWidget *label;
 	GtkWidget *image;
 	gchar *tmp_img;
+	GtkStyleContext *context;
+	gchar *buf;
+
+	GtkWidget **buttons = g_malloc(6 * sizeof(GtkWidget));
 
 	gint i = 0;
 
@@ -109,15 +163,25 @@ void create_champions(gpointer data){
 		image = gtk_image_new_from_file(tmp_img);
 		//image = gtk_label_new("Text");
 
-		button = gtk_toggle_button_new ();
-		gtk_button_set_image(GTK_BUTTON(button), image);
-		g_signal_connect (button, "toggled", G_CALLBACK (but_demon), (gpointer) a);
-		gtk_grid_attach (GTK_GRID (a->choose.layout), button, i, 0, 1, 1);
+		buttons[i] = gtk_toggle_button_new ();
+		gtk_button_set_image(GTK_BUTTON(buttons[i]), image);
+
+		buf = g_malloc(2*sizeof(gchar));
+		g_ascii_dtostr (buf, 2, i);
+		gtk_widget_set_name(GTK_WIDGET(buttons[i]), buf);
+		g_free(buf);
+		g_signal_connect (buttons[i], "toggled", G_CALLBACK (get_champ), (gpointer) a);
+		gtk_grid_attach (GTK_GRID (a->choose.layout), buttons[i], i, 0, 1, 1);
 		//gtk_widget_set_visible(image, FALSE);
 		label = gtk_label_new (a->champ[i].name);
+
+		context = gtk_widget_get_style_context(buttons[i]);
+		gtk_style_context_add_class(context, "focused");
 		gtk_grid_attach (GTK_GRID (a->choose.layout), label, i, 1, 1, 1);
-		gtk_widget_set_name(GTK_WIDGET(button), "champs");
+
 	}
+
+	choose_level((gpointer) a);
 
 	gtk_box_pack_start(GTK_BOX (a->main_box), a->choose.layout, FALSE, FALSE, 0);
 

@@ -1,11 +1,11 @@
 // samantha fuchs begin
 
 #include <glib.h>
-#include <glib-json/glib-json.h>
+#include <json-glib/json-glib.h>
 #include <gtk/gtk.h>
 
-void get_json(char[20] filename){
-	JsonParser *parser
+void get_json(char filename[20]){
+	JsonParser *parser;
 	GError *error;
 	JsonNode *root;
 	JsonReader *reader;
@@ -33,7 +33,7 @@ void get_json(char[20] filename){
 	json_reader_read_member(reader, "spieler");
 	tmp_node = json_reader_get_value(reader);
 	tmp_reader = json_reader_new(tmp_node);
-	int *i;
+	int i;
 	for(i = 0; i <= 5; i++){
 		json_reader_read_member(tmp_reader, i);
 		json_reader_read_member(tmp_reader, "health");
@@ -50,7 +50,7 @@ void get_json(char[20] filename){
 int main (int argc, char **argv)
 {
 
-	void get_json("bsp.json"){
+	get_json("bsp.json");
 
-	return status;
+
 }

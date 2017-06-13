@@ -65,7 +65,7 @@ seperator.base{
 button{
 	margin: 3px;
 }
-#champs:focus{
+.focused:focus{
 	border: 5px solid rgb(102,3,205);
 }
 

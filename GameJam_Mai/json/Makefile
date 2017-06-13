@@ -3,7 +3,7 @@ SOURCES = code.c
 TARGET = main
 
 CXX = gcc
-CXXFLAGS = `pkg-config --cflags --libs gtk+-3.0 --libs glib --libs json-glib` -Wall -g
+CXXFLAGS = `pkg-config --cflags --libs gtk+-3.0 json-glib-1.0` -Wall -g
 CXXFLAGS += -I.
 LDFLAGS = -lm
 

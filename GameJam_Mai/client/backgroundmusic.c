@@ -1,15 +1,20 @@
+// Hidden Demon
+// This part is working quite good
+
 #include "header/game_main.h"
-/*#include <glib.h>
-#include <gst/base/gstbaseparse.h>
-#include <gst/base/gstbasesrc.h>
-#include <gst/controller/gstcontroller.h>
+
+/* sudo dnf install gstreamer1-devel gstreamer1-plugins-base-tools
+ * gstreamer1-devel-docs gstreamer1-plugins-base-devel
+ * gstreamer1-plugins-base-devel-docs gstreamer1-plugins-good
+ * gstreamer1-plugins-good-extras gstreamer1-plugins-ugly
+ * gstreamer1-plugins-ugly-devel-docs  gstreamer1-plugins-bad-free
+ * gstreamer1-plugins-bad-free-devel gstreamer1-plugins-bad-free-extras
+ *
+ * pkg-config --cflags --libs gstreamer-1.0
 */
 
-
-
-/* sudo dnf install gstreamer1-devel gstreamer1-plugins-base-tools gstreamer1-devel-docs gstreamer1-plugins-base-devel gstreamer1-plugins-base-devel-docs gstreamer1-plugins-good gstreamer1-plugins-good-extras gstreamer1-plugins-ugly gstreamer1-plugins-ugly-devel-docs  gstreamer1-plugins-bad-free gstreamer1-plugins-bad-free-devel gstreamer1-plugins-bad-free-extras
-pkg-config --cflags --libs gstreamer-1.0
-*/
+// https://gstreamer.freedesktop.org/documentation/application-development/basics/helloworld.html
+// The example helped a lot! :)
 
 static gboolean bus_call (GstBus *bus, GstMessage *msg, gpointer data)
 {
@@ -20,8 +25,8 @@ static gboolean bus_call (GstBus *bus, GstMessage *msg, gpointer data)
 
     case GST_MESSAGE_EOS:
       	g_print ("End of stream\n");
-      	stop_music((gpointer)a);
-	play_music ((gpointer)a);
+      	stop_music((gpointer) a);
+	play_music ((gpointer) a);
       break;
 
     case GST_MESSAGE_ERROR: {
@@ -56,7 +61,8 @@ static void on_pad_added (GstElement *element, GstPad *pad, gpointer data)
   gst_object_unref (sinkpad);
 }
 
-void quit_music(gpointer data){ //quit_music((gpointer) a);
+// quit music - in the end (main function)
+void quit_music(gpointer data){
 	widgets *a = (widgets *) data;
 	stop_music((gpointer)a);
 	GstStateChangeReturn ret = GST_STATE_CHANGE_SUCCESS;
@@ -69,32 +75,28 @@ void quit_music(gpointer data){ //quit_music((gpointer) a);
 	g_print("good\n");
 }
 
-/* This function is called when the PLAY button is clicked */
+// play button
 void play_music (gpointer data) {
 	widgets *a = (widgets *) data;
 	gst_element_set_state (a->music.pipeline, GST_STATE_PLAYING);
-	if(!(g_main_loop_is_running)){
+	// Code is working like this, and I don't know why xD
+	if((g_main_loop_is_running(a->music.loop)) == TRUE){
 		g_main_loop_run (a->music.loop);
 	}
-
 }
 
-/* This function is called when the PAUSE button is clicked */
+// pause button
 void pause_music (gpointer data) {
 	widgets *a = (widgets *) data;
 	gst_element_set_state (a->music.pipeline, GST_STATE_PAUSED);
 	g_main_loop_quit (a->music.loop);
 }
 
-/* This function is called when the STOP button is clicked */
+// stop button - resets music
 void stop_music (gpointer data) {
 	widgets *a = (widgets *) data;
   	gst_element_set_state (a->music.pipeline, GST_STATE_READY);
 	g_main_loop_quit (a->music.loop);
-}
-
-void loop_music(gpointer data){
-
 }
 
 
@@ -102,20 +104,20 @@ void init_music (gpointer data)
 {
 	widgets *a = (widgets *) data;
 
-  	/* Initialisation */
+  	// Initialisation
   	gst_init (NULL, NULL);
 
 	// creates main loop
   	a->music.loop = g_main_loop_new (NULL, FALSE);
 
 
-  /* Create gstreamer elements */
-  a->music.pipeline = gst_pipeline_new ("audio-player");
-  a->music.source   = gst_element_factory_make ("filesrc",       "file-source");
-  a->music.demuxer  = gst_element_factory_make ("oggdemux",      "ogg-demuxer");
-  a->music.decoder  = gst_element_factory_make ("vorbisdec",     "vorbis-decoder");
-  a->music.conv     = gst_element_factory_make ("audioconvert",  "converter");
-  a->music.sink     = gst_element_factory_make ("autoaudiosink", "audio-output");
+  	// Create gstreamer elements
+  	a->music.pipeline = gst_pipeline_new ("audio-player");
+  	a->music.source   = gst_element_factory_make ("filesrc",       "file-source");
+  	a->music.demuxer  = gst_element_factory_make ("oggdemux",      "ogg-demuxer");
+  	a->music.decoder  = gst_element_factory_make ("vorbisdec",     "vorbis-decoder");
+  	a->music.conv     = gst_element_factory_make ("audioconvert",  "converter");
+  	a->music.sink     = gst_element_factory_make ("autoaudiosink", "audio-output");
 
 	if (!a->music.pipeline || !a->music.source || !a->music.demuxer || !a->music.decoder || !a->music.conv || !a->music.sink)
 	{
@@ -132,19 +134,19 @@ void init_music (gpointer data)
 	a->music.bus_watch_id = gst_bus_add_watch (a->music.bus, bus_call, (gpointer) a);
 	gst_object_unref (a->music.bus);
 
-  // Add elements to pipeline
-  /* file-source | ogg-demuxer | vorbis-decoder | converter | alsa-output */
-  gst_bin_add_many (GST_BIN (a->music.pipeline),
+  	// Add elements to pipeline
+  	/* file-source | ogg-demuxer | vorbis-decoder | converter | alsa-output */
+ 	gst_bin_add_many (GST_BIN (a->music.pipeline),
                     a->music.source, a->music.demuxer, a->music.decoder, a->music.conv, a->music.sink, NULL);
 
-  // Link element together
-  /* file-source -> ogg-demuxer ~> vorbis-decoder -> converter -> alsa-output */
-  gst_element_link (a->music.source, a->music.demuxer);
+	// Link element together
+	/* file-source -> ogg-demuxer ~> vorbis-decoder -> converter -> alsa-output */
+	gst_element_link (a->music.source, a->music.demuxer);
 	gst_element_link_many (a->music.decoder, a->music.conv, a->music.sink, NULL);
 	g_signal_connect (a->music.demuxer, "pad-added", G_CALLBACK (on_pad_added), a->music.decoder);
 
 
-	/* Set the pipeline to "ready" state*/
+	// Set pipeline to "ready" state
 	g_print ("Music is ready\n");
 	gst_element_set_state (a->music.pipeline, GST_STATE_READY);
 

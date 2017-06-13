@@ -47,6 +47,12 @@ void create_sidebar (gpointer data)
 	g_signal_connect (button, "clicked", G_CALLBACK (shop_popup), (gpointer) a);
 	gtk_grid_attach (GTK_GRID (a->game.sidebar_layout), button, 0, 0, 1, 1);
 
+	// Send Button
+	// display only, when player is in the base
+	button = gtk_button_new_with_label ("Move complete");
+	g_signal_connect (button, "clicked", G_CALLBACK (move_complete), (gpointer) a);
+	gtk_grid_attach (GTK_GRID (a->game.sidebar_layout), button, 0, 1, 1, 1);
+
 	// ability - buttons *****
 	// Base - B
 	button = gtk_button_new_with_label ("Base");

@@ -83,7 +83,8 @@ void callback_newgame(GSimpleAction *action, GVariant *parameter, gpointer data)
 
 void callback_level(GSimpleAction *action, GVariant *parameter, gpointer data)
 {
-	g_print("Level");
+	widgets *a = (widgets *) data;
+	next_screen_2_choose(NULL, (gpointer) a);
 }
 
 void callback_highscore(GSimpleAction *action, GVariant *parameter, gpointer data)

@@ -74,8 +74,8 @@ void communicate(gpointer data){
 	}
 
 
-	//send_message((*gchar)a->player_name, (gpointer) a);
-	g_strlcpy(a->message_buf, a->player_name, 1024);
+	// First Message is the name - it's the inital message
+	g_strlcpy(a->message_buf, a->thisplayer.player_name, 1024);
 	send_message((gpointer) a);
 
 	// TODO Free with: g_object_unref()

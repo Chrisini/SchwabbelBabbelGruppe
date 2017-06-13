@@ -36,9 +36,9 @@ void next_screen_2_choose (GtkWidget *wid, gpointer data)
 
 	widgets *a = (widgets *) data;
 
-	a->player_name = (gchar*) gtk_entry_get_text (GTK_ENTRY (a->start.input_entry));
+	a->thisplayer.player_name = (gchar*) gtk_entry_get_text (GTK_ENTRY (a->start.input_entry));
 
-	if(strlen(a->player_name) < 1)
+	if(strlen(a->thisplayer.player_name) < 1)
 	{
 		g_print("Name is too short\n");
 		next_screen_1_start((gpointer) a);
@@ -57,6 +57,7 @@ void next_screen_2_choose (GtkWidget *wid, gpointer data)
 		gtk_widget_show_all(a->choose.layout);
 		gtk_widget_show_all(a->choose.layout);
 		gtk_widget_set_visible(a->choose.button, TRUE);
+		gtk_widget_set_sensitive (a->choose.button, FALSE);
 	}
 
 
@@ -65,6 +66,8 @@ void next_screen_2_choose (GtkWidget *wid, gpointer data)
 void next_screen_3_wait (GtkWidget *wid, gpointer data)
 {
 	widgets *a = (widgets *) data;
+
+	get_level((gpointer) a);
 
 	// Screen 2
 	gtk_widget_set_visible(a->choose.layout, FALSE);

@@ -81,6 +81,17 @@ typedef struct{
 	GstElement *pipeline;
 }music_struct;
 
+typedef struct{
+	GtkWidget *level1;
+	GtkWidget *level2;
+	GtkWidget *level3;
+}level_struct;
+
+typedef struct{
+	gchar *player_name;
+	gint id_from_champ;
+	gint id_from_server;
+}thisplayer_struct;
 
 typedef struct {
 	GtkApplication *app;
@@ -88,8 +99,6 @@ typedef struct {
 	GtkWidget *main_box;
 	GtkWidget *sub_box;
 	GtkStyleProvider *css_style;
-	gchar *player_name;
-	gint player_id;
 	GSocketConnection * socket_connection;
 	gchar message_buf[1024];
 	// FUNCTION - WIDGETS
@@ -99,6 +108,8 @@ typedef struct {
 	wait_struct wait; // wait screen / connecting of champs
 	game_struct game; // in game
 	champ_struct *champ; // struct of all champions
+	level_struct level;
+	thisplayer_struct thisplayer;
 	music_struct music;
 } widgets;
 
@@ -129,6 +140,7 @@ void next_screen_2_choose (GtkWidget *wid, gpointer data); // visible
 void create_champions(gpointer data);
 void generate_champions(gint i[1], gpointer data);
 void open_file(gpointer data);
+void get_level(gpointer data);
 
 // WAIT (3) *****
 void wait_connect(gpointer data);
@@ -162,6 +174,8 @@ void pause_music (gpointer data); // callback swapped
 void stop_music (gpointer data); // callback swapped
 void quit_music(gpointer data);
 
+// communication
+void move_complete(GtkWidget *wid, gpointer data); // callback
 void communicate(gpointer data);
 
 #endif
