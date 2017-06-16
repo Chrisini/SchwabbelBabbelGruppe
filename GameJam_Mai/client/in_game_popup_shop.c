@@ -1,11 +1,11 @@
 #include "header/game_main.h"
 
-void destroy(GtkDialog *dialog, gint response_id)
+void destroy(GtkDialog *dialog, gint response_id, gpointer data)
 {
-
+	widgets *a = (widgets *) data;
 	gtk_widget_destroy (GTK_WIDGET(dialog));
-	// gtk_statusbar_pop(GTK_STATUSBAR(a->info_label), a->info_id); // removes content
-	// gtk_statusbar_push(GTK_STATUSBAR(a->info_label), a->info_id, "Buy the things you want");
+	gtk_statusbar_pop(GTK_STATUSBAR(a->info.statusbar), a->info.id); // removes content
+	gtk_statusbar_push(GTK_STATUSBAR(a->info.statusbar), a->info.id, "Buy the things you want");
 
 }
 
@@ -36,6 +36,6 @@ void shop_popup(GtkWidget *wid, gpointer data)
 	gtk_grid_attach(GTK_GRID(grid), label, 0,0,1,1);
 
 	gtk_widget_show_all(dialog);
-	g_signal_connect(GTK_DIALOG(dialog), "response", G_CALLBACK(destroy), NULL);
+	g_signal_connect(GTK_DIALOG(dialog), "response", G_CALLBACK(destroy), (gpointer) a);
 
 }

@@ -20,6 +20,8 @@ void get_champ(GtkWidget *wid, gpointer data)
 {
 	widgets *a = (widgets *) data;
 
+	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(wid), TRUE);
+
 	//gboolean 	gtk_widget_is_focus (widget)
 	gint id = g_strtod (gtk_widget_get_name(wid), NULL);
 
@@ -45,17 +47,22 @@ void open_file(gpointer data)
 	gchar **msg = g_malloc (sizeof(gchar)*100);
 	gsize length = 0;
 	gsize pos = 0;
-	//GError **err = NULL;
+	GError *err = NULL;
 	GIOStatus stat;
 
 
 	while(TRUE)
 	{
-		stat = g_io_channel_read_line(channel, msg, &length, &pos, NULL); // err
+		stat = g_io_channel_read_line(channel, msg, &length, &pos, &err); // err
 
 		if(stat == G_IO_STATUS_EOF){
 			break;
 		}
+		if(err != NULL){
+			g_printerr ("Error: %s\n", err->message);
+      			g_error_free (err);
+		}
+
 
 		switch (count){
 		case 1: a->champ[i].name = msg[0]; break;

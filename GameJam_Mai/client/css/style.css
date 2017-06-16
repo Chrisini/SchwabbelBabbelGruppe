@@ -69,6 +69,10 @@ button{
 	border: 5px solid rgb(102,3,205);
 }
 
+.foc{
+	border: 5px solid rgb(102,3,205);
+}
+
 button#start_button, button#choose_button{
 	border-radius: 10px;
 	font-family: "Larkspur (BRK)";

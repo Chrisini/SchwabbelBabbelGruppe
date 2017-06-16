@@ -33,6 +33,7 @@ typedef struct{
 
 typedef struct { // array -60x
 	GtkWidget *name;
+	GtkWidget *grid;
 	//gint button_id;
 	int enable; // 1 = enable, 0 = disable
 	GtkWidget *beside[4];
@@ -166,10 +167,10 @@ void but_ult(GSimpleAction *action, GVariant *parameter, gpointer data);
 void but_base(GSimpleAction *action, GVariant *parameter, gpointer data);
 // shop
 void shop_popup(GtkWidget *wid, gpointer data); // callback
-void destroy(GtkDialog *dialog, gint response_id);
+void destroy(GtkDialog *dialog, gint response_id, gpointer data);
 
 // music
-void music_player (gpointer data);
+void init_music (gpointer data); // initialises the music player
 void play_music (gpointer data); // callback swapped
 void pause_music (gpointer data); // callback swapped
 void stop_music (gpointer data); // callback swapped

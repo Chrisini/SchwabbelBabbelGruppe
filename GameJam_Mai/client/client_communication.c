@@ -38,6 +38,13 @@ void recieve_message(gpointer data){
 	/* use the connection */
 	GInputStream * istream = g_io_stream_get_input_stream (G_IO_STREAM (a->socket_connection));
 
+	gchar message [1024];
+	g_input_stream_read  (istream,
+		message,
+		1024,
+		NULL,
+		NULL);
+	g_print("Message was: \"%s\"\n", message);
 
 }
 
