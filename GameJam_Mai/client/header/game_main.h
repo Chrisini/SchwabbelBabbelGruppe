@@ -33,10 +33,12 @@ typedef struct{
 
 typedef struct { // array -60x
 	GtkWidget *name;
+	gint name_pos;
 	GtkWidget *grid;
 	//gint button_id;
 	int enable; // 1 = enable, 0 = disable
 	GtkWidget *beside[4];
+	gint beside_pos[4];
 }fieldbutton_struct;
 
 typedef struct{
@@ -153,7 +155,7 @@ void next_screen_4_in_game (GtkWidget *wid, gpointer data); // visible
 void create_progress (gpointer data);
 // plaground
 void create_playground (gpointer data);
-void step_to_but(GSimpleAction *action, GVariant *parameter, gpointer data);
+void step_to_but(GtkWidget *wid, gpointer data);
 void en_disable_button(gint i, gboolean sens, gpointer data);
 void init_position(gpointer data);
 // sidebar
@@ -169,6 +171,17 @@ void but_base(GSimpleAction *action, GVariant *parameter, gpointer data);
 void shop_popup(GtkWidget *wid, gpointer data); // callback
 void destroy(GtkDialog *dialog, gint response_id, gpointer data);
 
+// special buttons
+void special_button(gint id, gpointer data);
+void button_field(gint id, gpointer data);
+void button_tower(gint id, gpointer data);
+void button_inhi(gint id, gpointer data);
+void button_nexus(gint id, gpointer data);
+void button_die(gint id, gpointer data);
+void button_basil(gint id, gpointer data);
+void button_drake(gint id, gpointer data);
+void button_fight(gint id, gpointer data);
+void button_base(gint id, gpointer data);
 // music
 void init_music (gpointer data); // initialises the music player
 void play_music (gpointer data); // callback swapped
@@ -179,5 +192,7 @@ void quit_music(gpointer data);
 // communication
 void move_complete(GtkWidget *wid, gpointer data); // callback
 void communicate(gpointer data);
+
+
 
 #endif

@@ -183,7 +183,7 @@ int main (int argc, char **argv)
 
 	widgets *a = g_malloc(sizeof(widgets));
 	a->thisplayer.player_name = g_malloc(50*sizeof(gchar));
-	a->game.fieldbutton = g_malloc(53*sizeof(fieldbutton_struct));
+	a->game.fieldbutton = g_malloc(55*sizeof(fieldbutton_struct)); // 53
 	a->champ = g_malloc(8*sizeof(champ_struct));
 	a->champ->ability.ability_name = g_malloc(30*sizeof(gchar));
 	a->champ->life.ability_name = g_malloc(30*sizeof(gchar));
@@ -213,6 +213,7 @@ int main (int argc, char **argv)
 	g_free (a->champ->ability.ability_name);
 	g_free (a->champ);
 	g_free (a->game.fieldbutton);
+	g_free (a->thisplayer.player_name);
 	g_free (a);
 
 	return status;

@@ -85,6 +85,7 @@ void callback_level(GSimpleAction *action, GVariant *parameter, gpointer data)
 {
 	widgets *a = (widgets *) data;
 	next_screen_2_choose(NULL, (gpointer) a);
+	// send to server: new game!
 }
 
 void callback_highscore(GSimpleAction *action, GVariant *parameter, gpointer data)
@@ -105,7 +106,6 @@ void callback_music(GSimpleAction *action, GVariant *parameter, gpointer data)
 	GtkWidget *dialog;
 	GtkWidget *grid;
 	GtkWidget *label;
-	GtkWidget *button;
 	GtkWidget *content_area;
 	GtkWidget *button_play, *button_pause, *button_stop;
 
@@ -136,7 +136,7 @@ void callback_music(GSimpleAction *action, GVariant *parameter, gpointer data)
 	gtk_grid_attach(GTK_GRID(grid), button_stop, 2,1,1,1);
 
 	gtk_widget_show_all(dialog);
-	g_signal_connect(GTK_DIALOG(dialog), "response", G_CALLBACK(destroy), NULL);
+	g_signal_connect(GTK_DIALOG(dialog), "response", G_CALLBACK(destroy), (gpointer) a);
 
 }
 
@@ -162,7 +162,7 @@ void callback_about(GSimpleAction *action, GVariant *parameter, gpointer data)
 			      "logo", pixbuf,
 			      NULL);
 
-	g_signal_connect(GTK_DIALOG(about_dialog), "response", G_CALLBACK(destroy), NULL);
+	g_signal_connect(GTK_DIALOG(about_dialog), "response", G_CALLBACK(destroy), (gpointer) a);
 
 	// Free
 	g_object_unref (pixbuf);

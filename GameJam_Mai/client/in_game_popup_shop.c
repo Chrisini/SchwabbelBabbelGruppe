@@ -17,7 +17,6 @@ void shop_popup(GtkWidget *wid, gpointer data)
 	GtkWidget *dialog;
 	GtkWidget *grid;
 	GtkWidget *label;
-	GtkWidget *button;
 	GtkWidget *content_area;
 
 	gtk_statusbar_pop(GTK_STATUSBAR(a->info.statusbar), a->info.id); // removes content

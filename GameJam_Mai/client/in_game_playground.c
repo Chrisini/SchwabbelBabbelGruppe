@@ -2,50 +2,80 @@
 
 
 
-void step_to_but(GSimpleAction *action, GVariant *parameter, gpointer data)
+void step_to_but(GtkWidget *wid, gpointer data)
 {
-	widgets *a = (widgets *) data;
-	int i = 0;
-	for(i=0; i <=4; i++){
+	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(wid), TRUE);
 
-		if(gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(a->game.fieldbutton[a->champ[a->thisplayer.id_from_champ].position].beside[i]))){
-			a->champ[a->thisplayer.id_from_champ].position = i;
+	widgets *a = (widgets *) data;
+
+	en_disable_button(a->champ[a->thisplayer.id_from_champ].position, FALSE, (gpointer) a);
+
+	int i = 0;
+	if(gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(a->game.fieldbutton[a->champ[a->thisplayer.id_from_champ].position].name)))
+	{
+		a->champ[a->thisplayer.id_from_champ].position =
+				a->game.fieldbutton[a->champ[a->thisplayer.id_from_champ].position].name_pos;
+		g_print("your Button %d\n", a->game.fieldbutton[a->champ[a->thisplayer.id_from_champ].position].name_pos);
+
+		// a->champ[a->thisplayer.id_from_champ].position = a->game.fieldbutton[a->champ[a->thisplayer.id_from_champ].position].beside_pos[i];
+
+	}
+
+
+	for(i=0; i <4; i++){
+
+
+		if(a->game.fieldbutton[a->champ[a->thisplayer.id_from_champ].position].beside[i] == NULL){
+
+			break;
 		}
-		else
+		if(gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(a->game.fieldbutton[a->champ[a->thisplayer.id_from_champ].position].beside[i])))
 		{
-			gtk_widget_set_sensitive (a->game.fieldbutton[a->champ[a->thisplayer.id_from_champ].position].name, FALSE);
+			a->champ[a->thisplayer.id_from_champ].position =
+				a->game.fieldbutton[a->champ[a->thisplayer.id_from_champ].position].beside_pos[i];
+
+			g_print("Button %d\n", a->game.fieldbutton[a->champ[a->thisplayer.id_from_champ].position].name_pos);
+
+
 		}
 	}
-	en_disable_button(5, TRUE, (gpointer) a);
+
+	en_disable_button(a->champ[a->thisplayer.id_from_champ].position, TRUE, (gpointer) a);
+
+	special_button(a->champ[a->thisplayer.id_from_champ].position, (gpointer) a);
+
+	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(wid), FALSE);
 }
 
 void init_position(gpointer data){
 	widgets *a = (widgets *) data;
 
-	// DEMON
+	// demon
 	if(a->thisplayer.id_from_champ == 0){
-		a->champ[0].position = 0;
-		a->thisplayer.id_from_champ = 0;
+		a->champ[a->thisplayer.id_from_champ].position = 0;
 
 	}else{
-		a->champ[0].position = 52;
-		a->thisplayer.id_from_champ = 0;
+		a->champ[a->thisplayer.id_from_champ].position = 53;
 	}
-	en_disable_button(a->champ[0].position, TRUE, (gpointer) a);
+	en_disable_button(a->champ[a->thisplayer.id_from_champ].position, TRUE, (gpointer) a);
 }
 
 void en_disable_button(gint i, gboolean sens, gpointer data)
 {
 	widgets *a = (widgets *) data;
+	g_print("en/dis\n");
 	//gtk_widget_set_sensitive (a->game.fieldbutton[i].name, FALSE);
 	// enable - disable of the button
 	gint tmp;
-	gtk_widget_set_sensitive (a->game.fieldbutton[a->champ[0].position].name, sens);
+	// clicked button
+	gtk_widget_set_sensitive (a->game.fieldbutton[i].name, sens);
+	// neibourgh buttons
 	for(tmp = 0; tmp < 4; tmp ++){
-			if(a->game.fieldbutton[a->champ[0].position].beside[tmp] != NULL)
+			if(a->game.fieldbutton[i].beside[tmp] == NULL)
 			{
-				gtk_widget_set_sensitive (a->game.fieldbutton[a->champ[0].position].beside[tmp], sens);
+				break;
 			}
+			gtk_widget_set_sensitive (a->game.fieldbutton[i].beside[tmp], sens);
 	}
 }
 
@@ -54,21 +84,27 @@ void create_button (int i[1], gchar *kategory, gchar *name, gint pos_left, gint 
 {
 	widgets *a = (widgets *) data;
 	int j = i[0];
-	//gchar *c = g_malloc(5*sizeof(gchar));
-	//g_ascii_dtostr (c, 5*sizeof(gchar), j);
+
+	gchar *c = g_malloc(5*sizeof(gchar));
+	g_ascii_dtostr (c, 5*sizeof(gchar), j);
+
 
 	a->game.fieldbutton[j].grid = gtk_grid_new();
 	GtkWidget *label = gtk_label_new(kategory);
+	GtkWidget *label2 = gtk_label_new(c);
 
+	a->game.fieldbutton[j].name_pos = j;
 	a->game.fieldbutton[j].name = gtk_toggle_button_new();
+	gtk_grid_attach(GTK_GRID(a->game.fieldbutton[j].grid), label2, 0,1,1,1);
 	gtk_grid_attach(GTK_GRID(a->game.fieldbutton[j].grid), label, 0,0,1,1);
 
 	gtk_widget_show(a->game.fieldbutton[j].grid);
 	gtk_widget_show(label);
+	gtk_widget_show(label2);
 
 	gtk_button_set_image(GTK_BUTTON(a->game.fieldbutton[j].name), a->game.fieldbutton[j].grid);
 	gtk_widget_set_name(a->game.fieldbutton[j].name, name);
-	g_signal_connect (a->game.fieldbutton[j].name, "clicked", G_CALLBACK (step_to_but), (gpointer) a);
+	g_signal_connect (a->game.fieldbutton[j].name, "pressed", G_CALLBACK (step_to_but), (gpointer) a);
 	gtk_grid_attach (GTK_GRID (a->game.playground_layout), a->game.fieldbutton[j].name, pos_left, pos_top, 1, 1);
 	// init: all deactivated
 	gtk_widget_set_sensitive (a->game.fieldbutton[j].name, FALSE);
@@ -80,21 +116,28 @@ void define_connections(int n[1], int b1, int b2, int b3, int b4, gpointer data)
 	widgets *a = (widgets *) data;
 	int j = n[0];
 
-	a->game.fieldbutton[j].enable = 0;
+
+	a->game.fieldbutton[j].beside_pos[0] = a->game.fieldbutton[b1].name_pos;
 	a->game.fieldbutton[j].beside[0] = a->game.fieldbutton[b1].name;
-	if(b2 != -1){
+		if(b2 != -1){
+		a->game.fieldbutton[j].beside_pos[1] = a->game.fieldbutton[b2].name_pos;
 		a->game.fieldbutton[j].beside[1] = a->game.fieldbutton[b2].name;
 		if(b3 != -1){
+			a->game.fieldbutton[j].beside_pos[2] = a->game.fieldbutton[b3].name_pos;
 			a->game.fieldbutton[j].beside[2] = a->game.fieldbutton[b3].name;
 			if(b4 != -1){
+				a->game.fieldbutton[j].beside_pos[3] = a->game.fieldbutton[b4].name_pos;
 				a->game.fieldbutton[j].beside[3] = a->game.fieldbutton[b4].name;
 			}else{
+				a->game.fieldbutton[j].beside_pos[3] = -1;
 				a->game.fieldbutton[j].beside[3] = NULL;
 			}
 		}else{
+			a->game.fieldbutton[j].beside_pos[2] = -1;
 			a->game.fieldbutton[j].beside[2] = NULL;
 		}
 	}else{
+		a->game.fieldbutton[j].beside_pos[1] = -1;
 		a->game.fieldbutton[j].beside[1] = NULL;
 	}
 	n[0]++;
@@ -160,17 +203,17 @@ void create_playground (gpointer data)
 	create_sep_ver(0, 5, 1, 1, (gpointer) a);
 	create_button(i, "Inhibitor", "d_in2", 4, 4, (gpointer) a);
 	create_sep_hor(5, 4, 3, 1, (gpointer) a);
-	// NO CONNECTION TO TOWER
+	// NO CONNECTION TO Tower
 	create_button(i, "Inhibitor", "d_in3", 8, 4, (gpointer) a);
 	create_sep_ver(8, 5, 1, 1, (gpointer) a);
 	// 67
-	create_button(i, "Turm", "d_tu1", 0, 6, (gpointer) a);
+	create_button(i, "Tower", "d_to1", 0, 6, (gpointer) a);
 	create_sep_hor(1, 6, 3, 1, (gpointer) a);
 	create_sep_ver(0, 7, 1, 1, (gpointer) a);
-	create_button(i, "Turm", "d_tu2", 4, 6, (gpointer) a);
+	create_button(i, "Tower", "d_to2", 4, 6, (gpointer) a);
 	create_sep_hor(5, 6, 3, 1, (gpointer) a);
 	create_sep_ver(4, 7, 1, 1, (gpointer) a);
-	create_button(i, "Turm", "d_tu3", 8, 6, (gpointer) a);
+	create_button(i, "Tower", "d_to3", 8, 6, (gpointer) a);
 	create_sep_ver(8, 7, 1, 1, (gpointer) a);
 	// 8
 	/*separator = gtk_separator_new (GTK_ORIENTATION_HORIZONTAL);
@@ -178,57 +221,57 @@ void create_playground (gpointer data)
 	j[0]++;
 */
 	// 9-10
-	create_button(i, "Feld", "d_fe1", 0, 9, (gpointer) a);
+	create_button(i, "Field", "fi1", 0, 9, (gpointer) a);
 	create_sep_hor(1, 9, 1, 1, (gpointer) a);
 	create_sep_ver(0, 10, 1, 1, (gpointer) a);
-	create_button(i, "Feld", "d_fe2", 2, 9, (gpointer) a);
+	create_button(i, "Field", "fi2", 2, 9, (gpointer) a);
 	create_sep_hor(3, 9, 1, 1, (gpointer) a);
-	create_button(i, "Feld", "d_fe3", 4, 9, (gpointer) a);
+	create_button(i, "Field", "fi3", 4, 9, (gpointer) a);
 	create_sep_hor(5, 9, 1, 1, (gpointer) a);
 	create_sep_ver(4, 10, 1, 1, (gpointer) a);
-	create_button(i, "Feld", "d_fe4", 6, 9, (gpointer) a);
+	create_button(i, "Field", "fi4", 6, 9, (gpointer) a);
 	create_sep_hor(7, 9, 1, 1, (gpointer) a);
-	create_button(i, "Feld", "d_fe5", 8, 9, (gpointer) a);
+	create_button(i, "Field", "fi5", 8, 9, (gpointer) a);
 	create_sep_ver(8, 10, 1, 1, (gpointer) a);
 
 	// 11-12
-	create_button(i, "Turm", "d_tu4", 0, 11, (gpointer) a);
+	create_button(i, "Tower", "d_to4", 0, 11, (gpointer) a);
 	create_sep_hor(1, 11, 3, 1, (gpointer) a);
 	create_sep_ver(0, 12, 1, 1, (gpointer) a);
-	create_button(i, "Turm", "d_tu5", 4, 11, (gpointer) a);
+	create_button(i, "Tower", "d_to5", 4, 11, (gpointer) a);
 	create_sep_hor(5, 11, 3, 1, (gpointer) a);
 	create_sep_ver(4, 12, 1, 1, (gpointer) a);
-	create_button(i, "Turm", "d_tu6", 8, 11, (gpointer) a);
+	create_button(i, "Tower", "d_to6", 8, 11, (gpointer) a);
 	create_sep_ver(8, 12, 1, 1, (gpointer) a);
 
 	// 13-14
-	create_button(i, "Feld", "d_fe6", 0, 13, (gpointer) a);
+	create_button(i, "Field", "fi6", 0, 13, (gpointer) a);
 	create_sep_hor(1, 13, 1, 1, (gpointer) a);
 	create_sep_ver(0, 14, 1, 1, (gpointer) a);
-	create_button(i, "Feld", "d_fe7", 2, 13, (gpointer) a);
+	create_button(i, "Field", "fi7", 2, 13, (gpointer) a);
 	create_sep_hor(3, 13, 1, 1, (gpointer) a);
-	create_button(i, "Feld", "d_fe8", 4, 13, (gpointer) a);
+	create_button(i, "Field", "fi8", 4, 13, (gpointer) a);
 	create_sep_hor(5, 13, 1, 1, (gpointer) a);
 	create_sep_ver(4, 14, 1, 1, (gpointer) a);
-	create_button(i, "Feld", "d_fe9", 6, 13, (gpointer) a);
+	create_button(i, "Field", "fi9", 6, 13, (gpointer) a);
 	create_sep_hor(7, 13, 1, 1, (gpointer) a);
-	create_button(i, "Feld", "d_fe10", 8, 13, (gpointer) a);
+	create_button(i, "Field", "fi10", 8, 13, (gpointer) a);
 	create_sep_ver(8, 14, 1, 1, (gpointer) a);
 
 	// 15-16
-	create_button(i, "Turm", "d_tu7", 0, 15, (gpointer) a);
+	create_button(i, "Tower", "d_to7", 0, 15, (gpointer) a);
 	create_sep_hor(1, 15, 1, 1, (gpointer) a);
 	create_sep_ver(0, 16, 1, 3, (gpointer) a);
-	create_button(i, "Feld", "d_fe11", 2, 15, (gpointer) a);
+	create_button(i, "Field", "fi11", 2, 15, (gpointer) a);
 	create_sep_hor(3, 15, 1, 1, (gpointer) a);
 	create_sep_ver(2, 16, 1, 1, (gpointer) a);
-	create_button(i, "Turm", "d_tu8", 4, 15, (gpointer) a);
+	create_button(i, "Tower", "d_to8", 4, 15, (gpointer) a);
 	create_sep_hor(5, 15, 1, 1, (gpointer) a);
 	create_sep_ver(4, 16, 1, 3, (gpointer) a);
-	create_button(i, "Feld", "d_fe13", 6, 15, (gpointer) a);
+	create_button(i, "Field", "fi13", 6, 15, (gpointer) a);
 	create_sep_hor(7, 15, 1, 1, (gpointer) a);
 	create_sep_ver(6, 16, 1, 1, (gpointer) a);
-	create_button(i, "Turm", "d_tu9", 8, 15, (gpointer) a);
+	create_button(i, "Tower", "d_to9", 8, 15, (gpointer) a);
 	create_sep_ver(8, 16, 1, 3, (gpointer) a);
 
 	// 17-18
@@ -238,66 +281,66 @@ void create_playground (gpointer data)
 	create_sep_ver(6, 18, 1, 1, (gpointer) a);
 
 	// 19-20
-	create_button(i, "Turm", "t_tu9", 0, 19, (gpointer) a);
+	create_button(i, "Tower", "t_to9", 0, 19, (gpointer) a);
 	create_sep_hor(1, 19, 1, 1, (gpointer) a);
 	create_sep_ver(0, 20, 1, 1, (gpointer) a);
-	create_button(i, "Feld", "d_fe14", 2, 19, (gpointer) a);
+	create_button(i, "Field", "fi14", 2, 19, (gpointer) a);
 	create_sep_hor(3, 19, 1, 1, (gpointer) a);
-	create_button(i, "Turm", "t_tu9", 4, 19, (gpointer) a);
+	create_button(i, "Tower", "t_to9", 4, 19, (gpointer) a);
 	create_sep_hor(5, 19, 1, 1, (gpointer) a);
 	create_sep_ver(4, 20, 1, 1, (gpointer) a);
-	create_button(i, "Feld", "d_fe12", 6, 19, (gpointer) a);
+	create_button(i, "Field", "fi12", 6, 19, (gpointer) a);
 	create_sep_hor(7, 19, 1, 1, (gpointer) a);
-	create_button(i, "Turm", "t_tu9", 8, 19, (gpointer) a);
+	create_button(i, "Tower", "t_to9", 8, 19, (gpointer) a);
 	create_sep_ver(8, 20, 1, 1, (gpointer) a);
 
 	// 21-22
-	create_button(i, "Feld", "d_fe10", 0, 21, (gpointer) a);
+	create_button(i, "Field", "fi10", 0, 21, (gpointer) a);
 	create_sep_hor(1, 21, 1, 1, (gpointer) a);
 	create_sep_ver(0, 22, 1, 1, (gpointer) a);
-	create_button(i, "Feld", "d_fe9", 2, 21, (gpointer) a);
+	create_button(i, "Field", "fi9", 2, 21, (gpointer) a);
 	create_sep_hor(3, 21, 1, 1, (gpointer) a);
-	create_button(i, "Feld", "d_fe8", 4, 21, (gpointer) a);
+	create_button(i, "Field", "fi8", 4, 21, (gpointer) a);
 	create_sep_hor(5, 21, 1, 1, (gpointer) a);
 	create_sep_ver(4, 22, 1, 1, (gpointer) a);
-	create_button(i, "Feld", "d_fe7", 6, 21, (gpointer) a);
+	create_button(i, "Field", "fi7", 6, 21, (gpointer) a);
 	create_sep_hor(7, 21, 1, 1, (gpointer) a);
-	create_button(i, "Feld", "d_fe6", 8, 21, (gpointer) a);
+	create_button(i, "Field", "fi6", 8, 21, (gpointer) a);
 	create_sep_ver(8, 22, 1, 1, (gpointer) a);
 	// 23-24
-	create_button(i, "Turm", "t_tu6", 0, 23, (gpointer) a);
+	create_button(i, "Tower", "t_to6", 0, 23, (gpointer) a);
 	create_sep_hor(1, 23, 3, 1, (gpointer) a);
 	create_sep_ver(0, 24, 1, 1, (gpointer) a);
-	create_button(i, "Turm", "t_tu5", 4, 23, (gpointer) a);
+	create_button(i, "Tower", "t_to5", 4, 23, (gpointer) a);
 	create_sep_hor(5, 23, 3, 1, (gpointer) a);
 	create_sep_ver(4, 24, 1, 1, (gpointer) a);
-	create_button(i, "Turm", "t_tu4", 8, 23, (gpointer) a);
+	create_button(i, "Tower", "t_to4", 8, 23, (gpointer) a);
 	create_sep_ver(8, 24, 1, 1, (gpointer) a);
 
 	// 25-26
-	create_button(i, "Feld", "d_fe5", 0, 25, (gpointer) a);
+	create_button(i, "Field", "fi5", 0, 25, (gpointer) a);
 	create_sep_hor(1, 25, 1, 1, (gpointer) a);
 	create_sep_ver(0, 26, 1, 1, (gpointer) a);
-	create_button(i, "Feld", "d_fe4", 2, 25, (gpointer) a);
+	create_button(i, "Field", "fi4", 2, 25, (gpointer) a);
 	create_sep_hor(3, 25, 1, 1, (gpointer) a);
-	create_button(i, "Feld", "d_fe3", 4, 25, (gpointer) a);
+	create_button(i, "Field", "fi3", 4, 25, (gpointer) a);
 	create_sep_hor(5, 25, 1, 1, (gpointer) a);
 	create_sep_ver(4, 26, 1, 1, (gpointer) a);
-	create_button(i, "Feld", "d_fe2", 6, 25, (gpointer) a);
+	create_button(i, "Field", "fi2", 6, 25, (gpointer) a);
 	create_sep_hor(7, 25, 1, 1, (gpointer) a);
-	create_button(i, "Feld", "d_fe1", 8, 25, (gpointer) a);
+	create_button(i, "Field", "fi1", 8, 25, (gpointer) a);
 	create_sep_ver(8, 26, 1, 1, (gpointer) a);
 	// 27
 /*	separator = gtk_separator_new (GTK_ORIENTATION_HORIZONTAL);
 	gtk_grid_attach (GTK_GRID (a->in_playground_layout), separator, 0, 14, 9, 1);
 */
 	// 28-29
-	create_button(i, "Turm", "t_tu3", 0, 28, (gpointer) a);
+	create_button(i, "Tower", "t_to3", 0, 28, (gpointer) a);
 	create_sep_hor(1, 28, 3, 1, (gpointer) a);
 	create_sep_ver(0, 29, 1, 1, (gpointer) a);
-	create_button(i, "Turm", "t_tu2", 4, 28, (gpointer) a);
+	create_button(i, "Tower", "t_to2", 4, 28, (gpointer) a);
 	create_sep_hor(5, 28, 3, 1, (gpointer) a);
-	create_button(i, "Turm", "t_tu1", 8, 28, (gpointer) a);
+	create_button(i, "Tower", "t_to1", 8, 28, (gpointer) a);
 	create_sep_ver(8, 29, 1, 1, (gpointer) a);
 
 	// 30-31
@@ -324,7 +367,7 @@ void create_playground (gpointer data)
 	i[0] = 0;
 	//int n, int b1, int b2, int b3, int b4
 	define_connections(i, 1, -1, -1, -1, (gpointer) a); // demon
-	define_connections(i, 0, 3, -1, -1, (gpointer) a); // nexus
+	define_connections(i, 0, 3, -1, -1, (gpointer) a); // Nexus
 	define_connections(i, 3, 5, -1, -1, (gpointer) a); // inhibitor
 	define_connections(i, 1, 2, 4, -1, (gpointer) a);
 	define_connections(i, 3, 7, -1, -1, (gpointer) a);
@@ -360,14 +403,14 @@ void create_playground (gpointer data)
 	define_connections(i, 33, 35, -1, -1, (gpointer) a);
 	define_connections(i, 30, 34, 36, 39, (gpointer) a); // 5
 	define_connections(i, 35, 37, -1, -1, (gpointer) a);
-	define_connections(i, 31, 36, 40, -1, (gpointer) a);
+	define_connections(i, 32, 36, 40, -1, (gpointer) a);
 	define_connections(i, 33, 39, 41, -1, (gpointer) a);
 	define_connections(i, 35, 38, 40, 43, (gpointer) a);
 	define_connections(i, 37, 39, 45, -1, (gpointer) a); // 40
 	define_connections(i, 38, 42, 46, -1, (gpointer) a);
 	define_connections(i, 41, 43, -1, -1, (gpointer) a);
 	define_connections(i, 39, 42, 44, 47, (gpointer) a);
-	define_connections(i, 42, 45, -1, -1, (gpointer) a);
+	define_connections(i, 43, 45, -1, -1, (gpointer) a);
 	define_connections(i, 40, 44, 48, -1, (gpointer) a); // 5
 	define_connections(i, 41, 47, 49, -1, (gpointer) a);
 	define_connections(i, 43, 46, 48, -1, (gpointer) a);
@@ -375,7 +418,7 @@ void create_playground (gpointer data)
 	define_connections(i, 46, 50, -1, -1, (gpointer) a);
 	define_connections(i, 49, 51, 52, -1, (gpointer) a); // 50
 	define_connections(i, 48, 50, -1, -1, (gpointer) a);
-	define_connections(i, 53, -1, -1, -1, (gpointer) a);
+	define_connections(i, 53, 50, -1, -1, (gpointer) a);
 	define_connections(i, 52, -1, -1, -1, (gpointer) a); // base of team work
 	/*define_connections(i, 52, -1, -1, -1, (gpointer) a);
 	define_connections(i, 52, -1, -1, -1, (gpointer) a); // 5
