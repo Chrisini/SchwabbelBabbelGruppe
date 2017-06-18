@@ -1,7 +1,8 @@
 // Where anyone could go next
 #include "header/game_main.h"
 
-void special_dialogs(GtkWidget *champ, GtkWidget *building, gchar title[20], gint id, gpointer data){
+// Dialog forthe special fields: fight, inhibitor, tower, drake, basilisk
+void special_dialogs(gchar title[20], gint id, gpointer data){ //GtkWidget *champ, GtkWidget *building,
 
 	widgets *a = (widgets *) data;
 
@@ -19,7 +20,7 @@ void special_dialogs(GtkWidget *champ, GtkWidget *building, gchar title[20], gin
 	content_area = gtk_dialog_get_content_area (GTK_DIALOG (dialog));
 	grid = gtk_grid_new();
 	gtk_container_add(GTK_CONTAINER(content_area), grid);
-	label = gtk_label_new("You have won the game! :D");
+	label = gtk_label_new(title);
 	gtk_grid_attach(GTK_GRID(grid), label, 0,0,1,1);
 
 	gtk_widget_show_all(dialog);
@@ -131,6 +132,9 @@ void button_tower(gint id, gpointer data){
 	gtk_statusbar_push(GTK_STATUSBAR(a->info.statusbar), a->info.id,
 			   "Destroy the tower, be careful, it hits you back");
 
+	special_dialogs("Tower", 0, (gpointer) a);
+
+
 	update_progress (a->game.progressbar[2], -0.25, (gpointer) a);
 }
 
@@ -141,7 +145,7 @@ void button_inhi(gint id, gpointer data){
 	gtk_statusbar_push(GTK_STATUSBAR(a->info.statusbar), a->info.id,
 			   "Destroy the inhibitor");
 
-
+	special_dialogs("Inhibitor", 0, (gpointer) a);
 }
 
 void button_nexus(gint id, gboolean detection, gpointer data){
@@ -178,7 +182,7 @@ void button_nexus(gint id, gboolean detection, gpointer data){
 	gtk_grid_attach(GTK_GRID(grid), label, 0,0,1,1);
 
 	gtk_widget_show_all(dialog);
-	//g_signal_connect(GTK_DIALOG(dialog), "response", G_CALLBACK(callback_exit), (gpointer) a);
+	g_signal_connect(GTK_DIALOG(dialog), "response", G_CALLBACK(callback_exit), (gpointer) a);
 }
 
 void button_die(gint id, gpointer data){
@@ -186,7 +190,7 @@ void button_die(gint id, gpointer data){
 
 	gtk_statusbar_pop(GTK_STATUSBAR(a->info.statusbar), a->info.id); // removes content
 	gtk_statusbar_push(GTK_STATUSBAR(a->info.statusbar), a->info.id,
-			   "You are dead now!");
+			   "You are dead now! Back to base is not working, you get full life");
 	// go back to base
 }
 
@@ -196,6 +200,7 @@ void button_basil(gint id, gpointer data){
 	gtk_statusbar_pop(GTK_STATUSBAR(a->info.statusbar), a->info.id); // removes content
 	gtk_statusbar_push(GTK_STATUSBAR(a->info.statusbar), a->info.id,
 			   "Kill the basilisk");
+	special_dialogs("Basilisk", 0, (gpointer) a);
 }
 
 void button_drake(gint id, gpointer data){
@@ -204,7 +209,7 @@ void button_drake(gint id, gpointer data){
 	gtk_statusbar_pop(GTK_STATUSBAR(a->info.statusbar), a->info.id); // removes content
 	gtk_statusbar_push(GTK_STATUSBAR(a->info.statusbar), a->info.id,
 			   "Kill the dragon");
-
+	special_dialogs("Drake", 0, (gpointer) a);
 
 }
 

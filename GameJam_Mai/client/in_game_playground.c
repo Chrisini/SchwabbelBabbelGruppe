@@ -8,6 +8,9 @@ void step_to_but(GtkWidget *wid, gpointer data)
 
 	widgets *a = (widgets *) data;
 
+	// get more life in every round
+	update_progress (a->game.progressbar[2], 0.1, (gpointer) a);
+
 	champ_to_button(a->champ[a->thisplayer.id_from_champ].position, a->thisplayer.id_from_champ, FALSE, (gpointer)a);
 
 	en_disable_button(a->champ[a->thisplayer.id_from_champ].position, FALSE, (gpointer) a);

@@ -113,9 +113,9 @@ typedef struct {
 	wait_struct wait; // wait screen / connecting of champs
 	game_struct game; // in game
 	champ_struct *champ; // struct of all champions
-	level_struct level;
-	thisplayer_struct thisplayer;
-	music_struct music;
+	level_struct level; // choose a level
+	thisplayer_struct thisplayer; // ids from this player
+	music_struct music; // music player (settings)
 } widgets;
 
 // PROTOTYPES
@@ -178,6 +178,7 @@ void destroy(GtkDialog *dialog, gint response_id, gpointer data);
 
 // special buttons
 void special_button(gint id, gpointer data);
+void special_dialogs(gchar title[20], gint id, gpointer data);
 void button_field(gint id, gpointer data);
 void button_tower(gint id, gpointer data);
 void button_inhi(gint id, gpointer data);
