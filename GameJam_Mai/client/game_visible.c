@@ -19,6 +19,7 @@ void next_screen_1_start (gpointer data)
 
 	// Screen 3
 	gtk_widget_set_visible(a->wait.button, FALSE);
+	gtk_widget_set_visible(a->wait.spinner, FALSE);
 
 	// Screen 4
 	gtk_widget_set_visible(a->game.playground_layout, FALSE);
@@ -76,6 +77,7 @@ void next_screen_3_wait (GtkWidget *wid, gpointer data)
 	gtk_statusbar_push(GTK_STATUSBAR(a->info.statusbar), a->info.id, "Wait, until everyone is connected");
 
 	gtk_widget_show(a->wait.button);
+	gtk_widget_show(a->wait.spinner);
 
 }
 
@@ -87,6 +89,7 @@ void next_screen_4_in_game (GtkWidget *wid, gpointer data)
 
 	// Screen 3
 	gtk_widget_set_visible(a->wait.button, FALSE);
+	gtk_widget_set_visible(a->wait.spinner, FALSE);
 
 
 	// Screen 4

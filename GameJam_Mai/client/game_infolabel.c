@@ -28,7 +28,7 @@ void create_info (gpointer data)
 	gtk_widget_show_all(a->info.layout);
 }
 
-/*void create_info_old (gpointer data)
+/*void create_info_v2 (gpointer data)
 {
 
 	widgets *a = (widgets *) data;

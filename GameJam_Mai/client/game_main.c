@@ -1,7 +1,6 @@
 #include "header/game_main.h"
 
-
-// BEI HOVER: INFO ÄNDERT SICH IDEE TODO
+// CSS Provider
 void apply_css(GtkWidget *widget, GtkStyleProvider *css_s)
 {
 	gtk_style_context_add_provider (gtk_widget_get_style_context (widget),
@@ -12,6 +11,8 @@ void apply_css(GtkWidget *widget, GtkStyleProvider *css_s)
 }
 
 // START (1)
+// Function calls sections of start screen
+// The visibility is done in game_visible.c
 void start_screen (gpointer data)
 {
 	widgets *a = (widgets *) data;
@@ -51,8 +52,8 @@ void start_screen (gpointer data)
 }
 
 // CHOOSE (2)
-void choose_game(gpointer data){
-
+void choose_game(gpointer data)
+{
 	widgets *a = (widgets *) data;
 
 	create_champions((gpointer) a);
@@ -73,15 +74,14 @@ void choose_game(gpointer data){
 }
 
 // WAIT (3)
-void wait_connect(gpointer data){
-
+void wait_connect(gpointer data)
+{
 	widgets *a = (widgets *) data;
 
-	/*GtkWidget *spinner;
-	spinner = gtk_spinner_new();
-	gtk_spinner_start(spinner);
-	gtk_box_pack_start(GTK_BOX(a->main_box), spinner, FALSE, FALSE, 0);
-	*/
+	a->wait.spinner = gtk_spinner_new();
+	gtk_widget_set_size_request(a->wait.spinner, 300,300);
+	gtk_spinner_start(GTK_SPINNER(a->wait.spinner));
+	gtk_box_pack_start(GTK_BOX(a->main_box), a->wait.spinner, FALSE, FALSE, 0);
 
 	// Button
 	a->wait.button = gtk_button_new_with_label("Connect");
@@ -93,17 +93,13 @@ void wait_connect(gpointer data){
 
 }
 
-// (3b)
-void no_game(gpointer data){
-
-}
 
 // IN GAME (4)
-void in_game (gpointer data){
-
+void in_game (gpointer data)
+{
 	widgets *a = (widgets *) data;
 
-	// playground *****
+	// Playground
 	create_playground((gpointer) a);
 
 	// Separator
@@ -111,8 +107,7 @@ void in_game (gpointer data){
 	separator = gtk_separator_new (GTK_ORIENTATION_VERTICAL);
 	gtk_box_pack_start(GTK_BOX(a->sub_box), separator, FALSE, FALSE, 0);
 
-	// ability - (sidebar) *****
-	// shop
+	// abilities and shop - (sidebar) *****
 	create_sidebar((gpointer) a);
 
 	// regeneration - (progressbar) *****
@@ -159,8 +154,6 @@ void activate (GtkApplication *app, gpointer data)
 	choose_game((gpointer) a);
 	// (3)
 	wait_connect((gpointer) a);
-	// (3b)
-	no_game((gpointer) a);
 	// (4)
 	in_game((gpointer) a);
 

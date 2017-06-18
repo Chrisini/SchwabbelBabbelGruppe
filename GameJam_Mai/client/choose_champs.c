@@ -1,8 +1,8 @@
 /*
  * Opening a file with gio
- * TODO: /0 instead of /n
  * Champions are created with data from the data/champ_db.txt
  * (Buttons + Label)
+ * IDEA at fieldbutton box instead of grid
  */
 
 #include "header/game_main.h"
@@ -14,30 +14,22 @@
 #include <ctype.h>
 #include <string.h>
 
-
-
+// this player gets the id from selected champion
 void get_champ(GtkWidget *wid, gpointer data)
 {
 	widgets *a = (widgets *) data;
 
+	gint id;
+
 	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(wid), TRUE);
-
-	//gboolean 	gtk_widget_is_focus (widget)
-	gint id = g_strtod (gtk_widget_get_name(wid), NULL);
-
+	id = g_strtod (gtk_widget_get_name(wid), NULL);
 	a->thisplayer.id_from_champ = a->champ[id].id;
-
-	g_print("id: %d\n", a->thisplayer.id_from_champ);
-
 	gtk_widget_set_sensitive (a->choose.button, TRUE);
-
 }
 
-
-
+// reads champion data from file to the champ / ability struct
 void open_file(gpointer data)
 {
-
 	widgets *a = (widgets *) data;
 
 	gint i = 0;
@@ -49,11 +41,11 @@ void open_file(gpointer data)
 	gsize pos = 0;
 	GError *err = NULL;
 	GIOStatus stat;
-
+	gsize cut = 0;
 
 	while(TRUE)
 	{
-		stat = g_io_channel_read_line(channel, msg, &length, &pos, &err); // err
+		stat = g_io_channel_read_line(channel, msg, &length, &pos, &err);
 
 		if(stat == G_IO_STATUS_EOF){
 			break;
@@ -63,19 +55,35 @@ void open_file(gpointer data)
       			g_error_free (err);
 		}
 
-
 		switch (count){
-		case 1: a->champ[i].name = msg[0]; break;
-		case 2: a->champ[i].state = msg[0]; break;
+		case 1: a->champ[i].name = msg[0];
+			cut = strlen(a->champ[i].name);
+			a->champ[i].name[cut-1] = '\0';
+			break;
+		case 2: a->champ[i].state = msg[0];
+			cut = strlen(a->champ[i].state);
+			a->champ[i].state[cut-1] = '\0';
+			break;
 		case 3: a->champ[i].image_path = msg[0];
-			/*g_strlcpy(a->champ[i].image_path, msg[0], length-1);*/ break;
-		case 4: a->champ[i].life.ability_name = msg[0]; break;
+			cut = strlen(a->champ[i].image_path);
+			a->champ[i].image_path[cut-1] = '\0';
+			break;
+		case 4: a->champ[i].life.ability_name = msg[0];
+			cut = strlen(a->champ[i].life.ability_name);
+			a->champ[i].life.ability_name[cut-1] = '\0';
+			break;
 		case 5: a->champ[i].life.ability_max = g_ascii_strtod (msg[0], NULL); break;
 		case 6: a->champ[i].life.ability_regeneration = g_ascii_strtod (msg[0], NULL); break;
-		case 7: a->champ[i].ability.ability_name = msg[0]; break;
+		case 7: a->champ[i].ability.ability_name = msg[0];
+			cut = strlen(a->champ[i].ability.ability_name);
+			a->champ[i].ability.ability_name[cut-1] = '\0';
+			break;
 		case 8: a->champ[i].ability.ability_max = g_ascii_strtod (msg[0], NULL); break;
 		case 9: a->champ[i].ability.ability_regeneration = g_ascii_strtod (msg[0], NULL); break;
-		case 10: a->champ[i].ult.ability_name = msg[0]; break;
+		case 10: a->champ[i].ult.ability_name = msg[0];
+			cut = strlen(a->champ[i].ult.ability_name);
+			a->champ[i].ult.ability_name[cut-1] = '\0';
+			break;
 		case 11: a->champ[i].ult.ability_max = g_ascii_strtod (msg[0], NULL); break;
 		case 12: a->champ[i].ult.ability_regeneration = g_ascii_strtod (msg[0], NULL); break;
 		case 13: a->champ[i].id = i;
@@ -88,22 +96,14 @@ void open_file(gpointer data)
 		default: g_print("This number is not available in the struct\n"); break;
 		}
 
-		//g_print("%s", msg[0]);
 		count++;
-
 	}
-
 	g_io_channel_unref (channel);
-	//stat = g_io_channel_shutdown (channel, TRUE, err);
-	/*if(stat == G_IO_STATUS_ERROR){
-		perror("Error cant read Champs");
-		exit(EXIT_ON_FAILURE);
-	}*/
-
-
 }
 
-void get_level(gpointer data){
+// Level detection
+void get_level(gpointer data)
+{
 
 	widgets *a = (widgets *) data;
 
@@ -117,11 +117,11 @@ void get_level(gpointer data){
 
 }
 
-void choose_level(gpointer data){
-
+// Player could choose a level
+// Idea: Just set visible, if player is demon ?
+void choose_level(gpointer data)
+{
 	widgets *a = (widgets *) data;
-
-	// TODO: Just set visible, if player is demon
 
 	a->level.level1 = gtk_radio_button_new_with_label (NULL, "Level 1");
 
@@ -142,36 +142,29 @@ void choose_level(gpointer data){
 	gtk_grid_attach (GTK_GRID (a->choose.layout), a->level.level2, 1, 2, 1, 1);
 	gtk_grid_attach (GTK_GRID (a->choose.layout), a->level.level3, 2, 2, 1, 1);
 
-
 }
-void create_champions(gpointer data){
-
-
+void create_champions(gpointer data)
+{
 	widgets *a = (widgets *) data;
 
 	GtkWidget *label;
-	GtkWidget *image;
-	gchar *tmp_img;
 	GtkStyleContext *context;
 	gchar *buf;
-
-	GtkWidget **buttons = g_malloc(6 * sizeof(GtkWidget));
-
 	gint i = 0;
+	GtkWidget **buttons = g_malloc(6 * sizeof(GtkWidget));
 
 	open_file((gpointer) a);
 
 	a->choose.layout = gtk_grid_new();
 
 	for(i = 0; i < 6; i++){
-		// cut off /n - image
-		gsize length = strlen(a->champ[i].image_path);
-		tmp_img = g_strndup(a->champ[i].image_path, length-1);
-		image = gtk_image_new_from_file(tmp_img);
-		//image = gtk_label_new("Text");
 
+		a->champ[i].image = gtk_image_new_from_file(a->champ[i].image_path);
+
+		gtk_image_set_pixel_size(GTK_IMAGE(a->champ[i].image), 50);
 		buttons[i] = gtk_toggle_button_new ();
-		gtk_button_set_image(GTK_BUTTON(buttons[i]), image);
+		gtk_widget_set_size_request(buttons[i], 200, 100);
+		gtk_button_set_image(GTK_BUTTON(buttons[i]), a->champ[i].image);
 
 		buf = g_malloc(2*sizeof(gchar));
 		g_ascii_dtostr (buf, 2, i);
@@ -179,17 +172,15 @@ void create_champions(gpointer data){
 		g_free(buf);
 		g_signal_connect (buttons[i], "toggled", G_CALLBACK (get_champ), (gpointer) a);
 		gtk_grid_attach (GTK_GRID (a->choose.layout), buttons[i], i, 0, 1, 1);
-		//gtk_widget_set_visible(image, FALSE);
 		label = gtk_label_new (a->champ[i].name);
 
+		// CSS
 		context = gtk_widget_get_style_context(buttons[i]);
 		gtk_style_context_add_class(context, "focused");
 		gtk_grid_attach (GTK_GRID (a->choose.layout), label, i, 1, 1, 1);
-
 	}
 
 	choose_level((gpointer) a);
 
 	gtk_box_pack_start(GTK_BOX (a->main_box), a->choose.layout, FALSE, FALSE, 0);
-
 }

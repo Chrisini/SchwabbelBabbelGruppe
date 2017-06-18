@@ -4,11 +4,11 @@
 // this example helped me a lot :)
 // https://stackoverflow.com/questions/9513327/gio-socket-server-client-example
 
-int send_message(gpointer data){
+int send_message(gpointer data)
+{
 
 	widgets *a = (widgets *) data;
-	GError *error = NULL;
-
+	GError *err = NULL;
 
 	/* use the connection */
 	GOutputStream * ostream = g_io_stream_get_output_stream (G_IO_STREAM (a->socket_connection));
@@ -16,12 +16,13 @@ int send_message(gpointer data){
  		a->message_buf, /* your message goes here */
 		1024, /* length of your message */
   		NULL,
- 		&error);
+ 		&err);
 
-	// Error Handling
-	if (error != NULL)
+	// err Handling
+	if (err != NULL)
 	{
-		g_print("Error");
+		g_printerr ("Error: %s\n", err->message);
+		g_error_free (err);
 	}
 	else
 	{
@@ -30,10 +31,9 @@ int send_message(gpointer data){
 	return 1;
 }
 
-void recieve_message(gpointer data){
-
+void recieve_message(gpointer data)
+{
 	widgets *a = (widgets *) data;
-	GError *error = NULL;
 
 	/* use the connection */
 	GInputStream * istream = g_io_stream_get_input_stream (G_IO_STREAM (a->socket_connection));
@@ -48,8 +48,8 @@ void recieve_message(gpointer data){
 
 }
 
-void communicate(gpointer data){
-
+void communicate(gpointer data)
+{
 	widgets *a = (widgets *) data;
 
 	// Client *****
@@ -59,7 +59,7 @@ void communicate(gpointer data){
 	gchar *host_and_port = "localhost";
 	guint16 default_port = 1500; // any port?
 	GCancellable *cancellable = NULL;
-	GError *error = NULL;
+	GError *err = NULL;
 
 	// Connection *****
 	// Attempts to create a TCP connection to the named host.
@@ -67,19 +67,18 @@ void communicate(gpointer data){
                                  host_and_port,
                                  default_port,
                                  cancellable,
-                                 &error);
-
+                                 &err);
 
 	// Error Handling
-	if (error != NULL)
+	if (err != NULL)
 	{
-		g_print("Error");
+		g_printerr ("Error: %s\n", err->message);
+		g_error_free (err);
 	}
 	else
 	{
 		g_print ("Connection successful!\n");
 	}
-
 
 	// First Message is the name - it's the inital message
 	g_strlcpy(a->message_buf, a->thisplayer.player_name, 1024);

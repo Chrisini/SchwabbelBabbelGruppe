@@ -21,47 +21,44 @@ static gboolean bus_call (GstBus *bus, GstMessage *msg, gpointer data)
 
 	widgets *a = (widgets *) data;
 
-  switch (GST_MESSAGE_TYPE (msg)) {
+  	switch (GST_MESSAGE_TYPE (msg)) {
 
-    case GST_MESSAGE_EOS:
-      	g_print ("End of stream\n");
-      	stop_music((gpointer) a);
-	play_music ((gpointer) a);
-      break;
+    	case GST_MESSAGE_EOS:
+	      	g_print ("End of stream\n");
+	      	stop_music((gpointer) a);
+		play_music ((gpointer) a);
+      		break;
 
-    case GST_MESSAGE_ERROR: {
-      gchar  *debug;
-      GError *error;
+    	case GST_MESSAGE_ERROR: {
+	      gchar  *debug;
+	      GError *error;
 
-      gst_message_parse_error (msg, &error, &debug);
-      g_free (debug);
+	      gst_message_parse_error (msg, &error, &debug);
+	      g_free (debug);
 
-      g_printerr ("Error: %s\n", error->message);
-      g_error_free (error);
+	      g_printerr ("Error: %s\n", error->message);
+	      g_error_free (error);
 
-      g_main_loop_quit (a->music.loop);
-      break;
-    }
-    default:
-      break;
+	      g_main_loop_quit (a->music.loop);
+	      break;
+    	}
+    	default: break;
   }
 
   return TRUE;
 }
 
-
 static void on_pad_added (GstElement *element, GstPad *pad, gpointer data)
 {
-  GstPad *sinkpad;
-  GstElement *decoder = (GstElement *) data;
-  /* We can now link this pad with the vorbis-decoder sink pad */
-  //g_print ("Dynamic pad created, linking demuxer/decoder\n");
-  sinkpad = gst_element_get_static_pad (decoder, "sink");
-  gst_pad_link (pad, sinkpad);
-  gst_object_unref (sinkpad);
+	GstPad *sinkpad;
+	GstElement *decoder = (GstElement *) data;
+	// We can now link this pad with the vorbis-decoder sink pad
+	sinkpad = gst_element_get_static_pad (decoder, "sink");
+	gst_pad_link (pad, sinkpad);
+	gst_object_unref (sinkpad);
 }
 
-// quit music - in the end (main function)
+// quit music (main function)
 void quit_music(gpointer data){
 	widgets *a = (widgets *) data;
 	stop_music((gpointer)a);
@@ -110,7 +107,6 @@ void init_music (gpointer data)
 	// creates main loop
   	a->music.loop = g_main_loop_new (NULL, FALSE);
 
-
   	// Create gstreamer elements
   	a->music.pipeline = gst_pipeline_new ("audio-player");
   	a->music.source   = gst_element_factory_make ("filesrc",       "file-source");
@@ -123,8 +119,7 @@ void init_music (gpointer data)
 	{
  		g_printerr ("One element could not be created. Exiting.\n");
     		return;
-
-	  }
+	}
 
 	// Playing file
   	g_object_set (G_OBJECT (a->music.source), "location", "data/robin.ogg", NULL);
@@ -151,5 +146,3 @@ void init_music (gpointer data)
 	gst_element_set_state (a->music.pipeline, GST_STATE_READY);
 
 }
-
-

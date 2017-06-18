@@ -17,12 +17,13 @@ void create_menu (gpointer data)
 	GtkWidget *menubar;
 	GMenu *menu, *menu_game, *menu_settings, *menu_help, *menu_exit;
 
-	char c_music[2] = {"m"};
+	// if people like different shortcuts - Settings idea
+	char c_music[8] = {"<Ctrl>m"};
 
 	// keyboard accelerators
-	const gchar *accels_music[2] = {c_music, NULL};
+	const gchar *accels_music[8] = {c_music, NULL};
 	const gchar *accels_help[2] = {"F1", NULL};
-	const gchar *accels_exit[2] = {"x", NULL};
+	const gchar *accels_exit[8] = {"<Ctrl>x", NULL};
 
 	// map entries and actions *****
 	g_action_map_add_action_entries (G_ACTION_MAP (a->app), app_entries,

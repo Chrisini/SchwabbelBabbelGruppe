@@ -12,8 +12,7 @@ progressbar{
 	margin: 3px;
 }
 
-:not(button)>label
-/*#info_statusbar, #name_label*/{
+:not(button)>label, progressbar{
 	margin: 3px;
 	padding: 4px;
 	background-color: rgba(255,255,255,0.7);
@@ -48,6 +47,10 @@ seperator.base{
 	margin-right: 10px;
 	padding: 5px;
 }
+
+/*.focused image{
+	width: 50px;
+}*/
 
 .red{
 	border: 2px solid rgb(139,0,0);

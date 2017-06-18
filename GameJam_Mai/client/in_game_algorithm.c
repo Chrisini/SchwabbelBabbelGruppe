@@ -1,6 +1,30 @@
 // Where anyone could go next
 #include "header/game_main.h"
 
+void special_dialogs(GtkWidget *champ, GtkWidget *building, gchar title[20], gint id, gpointer data){
+
+	widgets *a = (widgets *) data;
+
+	GtkWidget *dialog;
+	GtkWidget *grid;
+	GtkWidget *label;
+	GtkWidget *content_area;
+
+		dialog = gtk_dialog_new_with_buttons(title,
+					     GTK_WINDOW (a->window),
+					     GTK_DIALOG_MODAL,
+					     ("Close"),
+					     GTK_RESPONSE_OK,
+					     NULL);
+	content_area = gtk_dialog_get_content_area (GTK_DIALOG (dialog));
+	grid = gtk_grid_new();
+	gtk_container_add(GTK_CONTAINER(content_area), grid);
+	label = gtk_label_new("You have won the game! :D");
+	gtk_grid_attach(GTK_GRID(grid), label, 0,0,1,1);
+
+	gtk_widget_show_all(dialog);
+	g_signal_connect(GTK_DIALOG(dialog), "response", G_CALLBACK(destroy), (gpointer) a);
+}
 
 // Every button has its own special "power"
 void special_button(gint id, gpointer data)
@@ -39,7 +63,7 @@ void special_button(gint id, gpointer data)
 		}
 		else if (g_str_has_prefix(gtk_widget_get_name(a->game.fieldbutton[id].name), "t_nexus"))
 		{
-			button_nexus(id, (gpointer) a);
+			button_nexus(id, TRUE, (gpointer) a); // TRUE if won
 		}
 		else if (g_str_has_prefix(gtk_widget_get_name(a->game.fieldbutton[id].name), "t_base"))
 		{
@@ -47,7 +71,10 @@ void special_button(gint id, gpointer data)
 		}
 		else
 		{
-			 g_print("You have clicked a button, we don't know :(");
+			 gtk_statusbar_pop(GTK_STATUSBAR(a->info.statusbar), a->info.id); // removes content
+			 gtk_statusbar_push(GTK_STATUSBAR(a->info.statusbar), a->info.id,
+			   "Congratulation, you have found a secret button, maybe you'll get a gift");
+
 		}
 
 	}else{
@@ -70,7 +97,7 @@ void special_button(gint id, gpointer data)
 		}
 		else if (g_str_has_prefix(gtk_widget_get_name(a->game.fieldbutton[id].name), "d_nexus"))
 		{
-			button_nexus(id, (gpointer) a);
+			button_nexus(id, TRUE, (gpointer) a); // TRUE if won
 		}
 		else if (g_str_has_prefix(gtk_widget_get_name(a->game.fieldbutton[id].name), "d_base"))
 		{
@@ -78,7 +105,10 @@ void special_button(gint id, gpointer data)
 		}
 		else
 		{
-			 g_print("You have clicked a button, we don't know :(");
+			gtk_statusbar_pop(GTK_STATUSBAR(a->info.statusbar), a->info.id); // removes content
+			gtk_statusbar_push(GTK_STATUSBAR(a->info.statusbar), a->info.id,
+			   "Congratulation, you have found a secret button, maybe you'll get a gift");
+
 		}
 	}
 
@@ -92,7 +122,6 @@ void button_field(gint id, gpointer data){
 	gtk_statusbar_push(GTK_STATUSBAR(a->info.statusbar), a->info.id,
 			   "Nothing happens here");
 
-
 }
 
 void button_tower(gint id, gpointer data){
@@ -102,7 +131,7 @@ void button_tower(gint id, gpointer data){
 	gtk_statusbar_push(GTK_STATUSBAR(a->info.statusbar), a->info.id,
 			   "Destroy the tower, be careful, it hits you back");
 
-
+	update_progress (a->game.progressbar[2], -0.25, (gpointer) a);
 }
 
 void button_inhi(gint id, gpointer data){
@@ -115,19 +144,29 @@ void button_inhi(gint id, gpointer data){
 
 }
 
-void button_nexus(gint id, gpointer data){
+void button_nexus(gint id, gboolean detection, gpointer data){
 	widgets *a = (widgets *) data;
 
 	GtkWidget *dialog;
 	GtkWidget *grid;
 	GtkWidget *label;
 	GtkWidget *content_area;
+	gchar title[7];
 
 	gtk_statusbar_pop(GTK_STATUSBAR(a->info.statusbar), a->info.id); // removes content
-	gtk_statusbar_push(GTK_STATUSBAR(a->info.statusbar), a->info.id,
+	if(detection){
+		gtk_statusbar_push(GTK_STATUSBAR(a->info.statusbar), a->info.id,
 			   "You have won the game !!! :D");
+		label = gtk_label_new("You have won the game! :D");
+		g_strlcpy(title, "Winner", 7);
+	}else{
+		gtk_statusbar_push(GTK_STATUSBAR(a->info.statusbar), a->info.id,
+			   "You have lost the game !!! :(");
+		label = gtk_label_new("You have lost the game !!! :(");
+		g_strlcpy(title, "Looser", 7);
+	}
 
-	dialog = gtk_dialog_new_with_buttons("Winner",
+	dialog = gtk_dialog_new_with_buttons(title,
 					     GTK_WINDOW (a->window),
 					     GTK_DIALOG_MODAL,
 					     ("Close"),
@@ -136,13 +175,10 @@ void button_nexus(gint id, gpointer data){
 	content_area = gtk_dialog_get_content_area (GTK_DIALOG (dialog));
 	grid = gtk_grid_new();
 	gtk_container_add(GTK_CONTAINER(content_area), grid);
-	label = gtk_label_new("You have won the game! :D");
 	gtk_grid_attach(GTK_GRID(grid), label, 0,0,1,1);
 
 	gtk_widget_show_all(dialog);
-	g_signal_connect(GTK_DIALOG(dialog), "response", G_CALLBACK(destroy), (gpointer) a);
-
-	next_screen_1_start ((gpointer) a);
+	//g_signal_connect(GTK_DIALOG(dialog), "response", G_CALLBACK(callback_exit), (gpointer) a);
 }
 
 void button_die(gint id, gpointer data){
@@ -151,12 +187,7 @@ void button_die(gint id, gpointer data){
 	gtk_statusbar_pop(GTK_STATUSBAR(a->info.statusbar), a->info.id); // removes content
 	gtk_statusbar_push(GTK_STATUSBAR(a->info.statusbar), a->info.id,
 			   "You are dead now!");
-	if(a->thisplayer.id_from_champ == 0){
-		a->champ[a->thisplayer.id_from_champ].position = 0;
-	}else{
-		a->champ[a->thisplayer.id_from_champ].position = 52;
-	}
-
+	// go back to base
 }
 
 void button_basil(gint id, gpointer data){

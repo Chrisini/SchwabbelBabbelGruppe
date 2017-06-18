@@ -8,6 +8,8 @@ void step_to_but(GtkWidget *wid, gpointer data)
 
 	widgets *a = (widgets *) data;
 
+	champ_to_button(a->champ[a->thisplayer.id_from_champ].position, a->thisplayer.id_from_champ, FALSE, (gpointer)a);
+
 	en_disable_button(a->champ[a->thisplayer.id_from_champ].position, FALSE, (gpointer) a);
 
 	int i = 0;
@@ -15,18 +17,13 @@ void step_to_but(GtkWidget *wid, gpointer data)
 	{
 		a->champ[a->thisplayer.id_from_champ].position =
 				a->game.fieldbutton[a->champ[a->thisplayer.id_from_champ].position].name_pos;
-		g_print("your Button %d\n", a->game.fieldbutton[a->champ[a->thisplayer.id_from_champ].position].name_pos);
-
-		// a->champ[a->thisplayer.id_from_champ].position = a->game.fieldbutton[a->champ[a->thisplayer.id_from_champ].position].beside_pos[i];
-
+		// g_print("your Button %d\n", a->game.fieldbutton[a->champ[a->thisplayer.id_from_champ].position].name_pos);
 	}
-
 
 	for(i=0; i <4; i++){
 
-
-		if(a->game.fieldbutton[a->champ[a->thisplayer.id_from_champ].position].beside[i] == NULL){
-
+		if(a->game.fieldbutton[a->champ[a->thisplayer.id_from_champ].position].beside[i] == NULL)
+		{
 			break;
 		}
 		if(gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(a->game.fieldbutton[a->champ[a->thisplayer.id_from_champ].position].beside[i])))
@@ -34,9 +31,7 @@ void step_to_but(GtkWidget *wid, gpointer data)
 			a->champ[a->thisplayer.id_from_champ].position =
 				a->game.fieldbutton[a->champ[a->thisplayer.id_from_champ].position].beside_pos[i];
 
-			g_print("Button %d\n", a->game.fieldbutton[a->champ[a->thisplayer.id_from_champ].position].name_pos);
-
-
+			// g_print("Button %d\n", a->game.fieldbutton[a->champ[a->thisplayer.id_from_champ].position].name_pos);
 		}
 	}
 
@@ -44,8 +39,26 @@ void step_to_but(GtkWidget *wid, gpointer data)
 
 	special_button(a->champ[a->thisplayer.id_from_champ].position, (gpointer) a);
 
+	champ_to_button(a->champ[a->thisplayer.id_from_champ].position, a->thisplayer.id_from_champ, TRUE, (gpointer)a);
 	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(wid), FALSE);
 }
+
+// is working for all champions - also the positions from server
+void champ_to_button(gint pos, gint champ_id, gboolean visible, gpointer data)
+{
+	widgets *a = (widgets *) data;
+	a->champ[champ_id].image = gtk_image_new_from_file(a->champ[champ_id].image_path);
+
+	if(visible){
+		gtk_grid_attach(GTK_GRID(a->game.fieldbutton[pos].grid), a->champ[champ_id].image, 1,0,1,1);
+	}else{
+		gtk_grid_remove_column(GTK_GRID(a->game.fieldbutton[pos].grid), 1);
+	}
+	gtk_widget_show(a->champ[champ_id].image);
+
+}
+
+
 
 void init_position(gpointer data){
 	widgets *a = (widgets *) data;
@@ -53,18 +66,16 @@ void init_position(gpointer data){
 	// demon
 	if(a->thisplayer.id_from_champ == 0){
 		a->champ[a->thisplayer.id_from_champ].position = 0;
-
 	}else{
 		a->champ[a->thisplayer.id_from_champ].position = 53;
 	}
+	champ_to_button(a->champ[a->thisplayer.id_from_champ].position, a->thisplayer.id_from_champ, TRUE, (gpointer) a);
 	en_disable_button(a->champ[a->thisplayer.id_from_champ].position, TRUE, (gpointer) a);
 }
 
 void en_disable_button(gint i, gboolean sens, gpointer data)
 {
 	widgets *a = (widgets *) data;
-	g_print("en/dis\n");
-	//gtk_widget_set_sensitive (a->game.fieldbutton[i].name, FALSE);
 	// enable - disable of the button
 	gint tmp;
 	// clicked button
@@ -88,20 +99,20 @@ void create_button (int i[1], gchar *kategory, gchar *name, gint pos_left, gint 
 	gchar *c = g_malloc(5*sizeof(gchar));
 	g_ascii_dtostr (c, 5*sizeof(gchar), j);
 
-
 	a->game.fieldbutton[j].grid = gtk_grid_new();
 	GtkWidget *label = gtk_label_new(kategory);
 	GtkWidget *label2 = gtk_label_new(c);
 
 	a->game.fieldbutton[j].name_pos = j;
 	a->game.fieldbutton[j].name = gtk_toggle_button_new();
-	gtk_grid_attach(GTK_GRID(a->game.fieldbutton[j].grid), label2, 0,1,1,1);
+	//gtk_grid_attach(GTK_GRID(a->game.fieldbutton[j].grid), label2, 1,0,1,1);
 	gtk_grid_attach(GTK_GRID(a->game.fieldbutton[j].grid), label, 0,0,1,1);
 
 	gtk_widget_show(a->game.fieldbutton[j].grid);
 	gtk_widget_show(label);
 	gtk_widget_show(label2);
 
+	gtk_widget_set_size_request(a->game.fieldbutton[j].name, 150, 50);
 	gtk_button_set_image(GTK_BUTTON(a->game.fieldbutton[j].name), a->game.fieldbutton[j].grid);
 	gtk_widget_set_name(a->game.fieldbutton[j].name, name);
 	g_signal_connect (a->game.fieldbutton[j].name, "pressed", G_CALLBACK (step_to_but), (gpointer) a);
@@ -183,7 +194,7 @@ void create_playground (gpointer data)
 	i[0] = 0;
 
 	a->game.playground_scroll = gtk_scrolled_window_new(NULL, NULL);
-	gtk_scrolled_window_set_min_content_width(GTK_SCROLLED_WINDOW(a->game.playground_scroll), 700);
+	gtk_scrolled_window_set_min_content_width(GTK_SCROLLED_WINDOW(a->game.playground_scroll), 800);
 	gtk_scrolled_window_set_min_content_height(GTK_SCROLLED_WINDOW(a->game.playground_scroll), 400);
 	gtk_container_add(GTK_CONTAINER(a->game.playground_scroll), a->game.playground_layout);
 
@@ -195,7 +206,7 @@ void create_playground (gpointer data)
 	create_button(i, "Demon", "d_base", 4, 0, (gpointer) a);
 	create_sep_ver(4, 1, 1, 1, (gpointer) a);
 	// 23
-	create_button(i, "Nexus", "d_nex", 4, 2, (gpointer) a);
+	create_button(i, "Nexus", "d_nexus", 4, 2, (gpointer) a);
 	create_sep_ver(4, 3, 1, 1, (gpointer) a);
 	// 45
 	create_button(i, "Inhibitor", "d_in1", 0, 4, (gpointer) a);
@@ -356,13 +367,7 @@ void create_playground (gpointer data)
 	create_sep_ver(4, 33, 1, 1, (gpointer) a);
 	// 34
 	create_button(i, "Team", "t_base", 4, 34, (gpointer) a);
-	/*create_button(i, "Team", "t_base4", 2, 34, (gpointer) a);
-	create_button(i, "Team", "t_base3", 4, 34, (gpointer) a);
-	create_button(i, "Team", "t_base2", 6, 34, (gpointer) a);
-	create_button(i, "Team", "t_base1", 8, 34, (gpointer) a);*/
 
-
-	//gtk_widget_set_name(sep_ver, "ver");
 
 	i[0] = 0;
 	//int n, int b1, int b2, int b3, int b4
@@ -420,10 +425,7 @@ void create_playground (gpointer data)
 	define_connections(i, 48, 50, -1, -1, (gpointer) a);
 	define_connections(i, 53, 50, -1, -1, (gpointer) a);
 	define_connections(i, 52, -1, -1, -1, (gpointer) a); // base of team work
-	/*define_connections(i, 52, -1, -1, -1, (gpointer) a);
-	define_connections(i, 52, -1, -1, -1, (gpointer) a); // 5
-	define_connections(i, 52, -1, -1, -1, (gpointer) a);
-	define_connections(i, 52, -1, -1, -1, (gpointer) a); // 57*/
+
 
 
 	gtk_box_pack_start(GTK_BOX(a->sub_box), a->game.playground_scroll, FALSE, FALSE, 0);

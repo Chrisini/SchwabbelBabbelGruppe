@@ -4,7 +4,8 @@ RESOURCE = game_res
 TARGET = main
 
 CXX = gcc
-CXXFLAGS = `pkg-config --cflags --libs gtk+-3.0 gstreamer-1.0 json-glib-1.0` -Wall -g
+#json-glib-1.0
+CXXFLAGS = `pkg-config --cflags --libs gtk+-3.0 gstreamer-1.0` -Wall -g
 CXXFLAGS += -I.
 LDFLAGS = -lm
 

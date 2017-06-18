@@ -29,6 +29,7 @@ typedef struct{
 
 typedef struct{
 	GtkWidget *button;
+	GtkWidget *spinner;
 }wait_struct;
 
 typedef struct { // array -60x
@@ -45,6 +46,7 @@ typedef struct{
 	GtkWidget *playground_layout;
 	GtkWidget *playground_scroll;
 	GtkWidget *progressbar_layout;
+	GtkWidget *progressbar[4];
 	GtkWidget *sidebar_layout;
 	fieldbutton_struct *fieldbutton;
 }game_struct;
@@ -63,6 +65,7 @@ typedef struct { // array - 8x
 	gint id;
 	gint position;
 	gchar *image_path;
+	GtkWidget *image;
 	abilities_struct life;
 	//abilities ability1;
 	//abilities ability2;
@@ -153,11 +156,13 @@ void in_game(gpointer data);
 void next_screen_4_in_game (GtkWidget *wid, gpointer data); // visible
 // progress
 void create_progress (gpointer data);
+void update_progress (GtkWidget *progressbar, gdouble change, gpointer data);
 // plaground
 void create_playground (gpointer data);
 void step_to_but(GtkWidget *wid, gpointer data);
 void en_disable_button(gint i, gboolean sens, gpointer data);
 void init_position(gpointer data);
+void champ_to_button(gint pos, gint champ_id, gboolean visible, gpointer data);
 // sidebar
 void create_sidebar (gpointer data);
 void but_life(GSimpleAction *action, GVariant *parameter, gpointer data);
@@ -166,7 +171,7 @@ void but_twice(GSimpleAction *action, GVariant *parameter, gpointer data);
 //void but_ability2(GSimpleAction *action, GVariant *parameter, gpointer data);
 void but_ability(GSimpleAction *action, GVariant *parameter, gpointer data);
 void but_ult(GSimpleAction *action, GVariant *parameter, gpointer data);
-void but_base(GSimpleAction *action, GVariant *parameter, gpointer data);
+void but_base(GtkWidget *wid, gpointer data);
 // shop
 void shop_popup(GtkWidget *wid, gpointer data); // callback
 void destroy(GtkDialog *dialog, gint response_id, gpointer data);
@@ -176,7 +181,7 @@ void special_button(gint id, gpointer data);
 void button_field(gint id, gpointer data);
 void button_tower(gint id, gpointer data);
 void button_inhi(gint id, gpointer data);
-void button_nexus(gint id, gpointer data);
+void button_nexus(gint id, gboolean detection, gpointer data);
 void button_die(gint id, gpointer data);
 void button_basil(gint id, gpointer data);
 void button_drake(gint id, gpointer data);

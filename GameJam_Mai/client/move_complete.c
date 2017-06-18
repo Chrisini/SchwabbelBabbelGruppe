@@ -1,6 +1,6 @@
 #include "header/game_main.h"
 
-
+// Nothing is working here
 
 void name_initialisation(gpointer data)
 {
@@ -59,6 +59,6 @@ void if_inhibitor(gpointer data)
  * after clicking the "Move complete Button" (Sidebar)
  */
 void move_complete(GtkWidget *wid, gpointer data){
-	widgets *a = (widgets *) data;
+	//widgets *a = (widgets *) data;
 
 }
