@@ -3,15 +3,14 @@
 // CSS Provider
 void apply_css(GtkWidget *widget, GtkStyleProvider *css_s)
 {
-	gtk_style_context_add_provider (gtk_widget_get_style_context (widget),
-					css_s, G_MAXUINT);
+	gtk_style_context_add_provider (gtk_widget_get_style_context (widget), css_s, G_MAXUINT);
 	if(GTK_IS_CONTAINER (widget)){
 		gtk_container_forall (GTK_CONTAINER (widget), (GtkCallback) apply_css, css_s);
 	}
 }
 
 // START (1)
-// Function calls sections of start screen
+// Function calls sections of start screen	
 // The visibility is done in game_visible.c
 void start_screen (gpointer data)
 {
@@ -185,9 +184,16 @@ int main (int argc, char **argv)
 	a->champ->state = g_malloc(30*sizeof(gchar));
 	a->champ->image_path = g_malloc(50*sizeof(gchar));
 
+
+
 	a->app = gtk_application_new ("org.gtk.game", G_APPLICATION_FLAGS_NONE);
 	g_signal_connect (a->app, "activate", G_CALLBACK (activate), (gpointer) a);
 	status = g_application_run (G_APPLICATION (a->app), argc, argv);
+
+
+
+
+
 
 	g_print("Main, unref\n");
 

@@ -103,7 +103,7 @@ typedef struct {
 	GtkWidget *main_box;
 	GtkWidget *sub_box;
 	GtkStyleProvider *css_style;
-	GSocketConnection * socket_connection;
+	GSocketConnection *socket_connection;
 	gchar message_buf[1024];
 	gint tmp;
 	// FUNCTION - WIDGETS
